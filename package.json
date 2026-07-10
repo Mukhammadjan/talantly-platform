@@ -11,6 +11,7 @@
     "dev:bot": "npm run dev --workspace apps/bot",
     "dev:webapp": "npm run dev --workspace apps/webapp",
     "dev:admin": "npm run dev --workspace apps/admin",
+    "dev:web": "npm run dev --workspace apps/web",
     "test": "npm run test --workspaces --if-present",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts",
