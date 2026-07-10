@@ -2,10 +2,28 @@ import type { ReactNode } from "react";
 import { requireAdmin } from "@/lib/auth";
 import { Logo } from "@/components/Logo";
 import { NavLink } from "@/components/NavLink";
-import { IconUsers } from "@/components/icons";
+import {
+  IconBuilding,
+  IconCalendar,
+  IconChart,
+  IconDashboard,
+  IconInbox,
+  IconMatch,
+  IconQuestion,
+  IconUsers,
+} from "@/components/icons";
 import { signOut } from "@/app/login/actions";
 
-const NAV = [{ href: "/talantlar", label: "Talantlar", icon: <IconUsers /> }];
+const NAV = [
+  { href: "/dashboard", label: "Boshqaruv", icon: <IconDashboard /> },
+  { href: "/talantlar", label: "Talantlar", icon: <IconUsers /> },
+  { href: "/izlovchilar", label: "Izlovchilar", icon: <IconBuilding /> },
+  { href: "/sorovlar", label: "So'rovlar", icon: <IconInbox /> },
+  { href: "/suhbatlar", label: "Suhbatlar", icon: <IconCalendar /> },
+  { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch /> },
+  { href: "/savollar", label: "Savollar", icon: <IconQuestion /> },
+  { href: "/statistika", label: "Statistika", icon: <IconChart /> },
+];
 
 export default async function PanelLayout({
   children,

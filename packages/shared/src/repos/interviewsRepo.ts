@@ -110,6 +110,44 @@ export async function decide(
   return row;
 }
 
+export async function listByTalentId(
+  client: TalantlyClient,
+  talentId: string,
+): Promise<InterviewRow[]> {
+  const { data, error } = await client
+    .from("interviews")
+    .select("*")
+    .eq("talent_id", talentId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(
+      `interviewsRepo.listByTalentId(${talentId}) failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as InterviewRow[];
+}
+
+export interface InterviewWithTalent extends InterviewRow {
+  talents: { id: string; full_name: string | null } | null;
+}
+
+export async function listWithTalents(
+  client: TalantlyClient,
+): Promise<InterviewWithTalent[]> {
+  const { data, error } = await client
+    .from("interviews")
+    .select("*, talents(id, full_name)")
+    .order("scheduled_at", { ascending: false });
+
+  if (error) {
+    throw new Error(
+      `interviewsRepo.listWithTalents failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as unknown as InterviewWithTalent[];
+}
+
 /** Undecided interviews scheduled inside [from, to] — used for reminders. */
 export async function findScheduledBetween(
   client: TalantlyClient,

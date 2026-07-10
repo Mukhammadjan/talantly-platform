@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { SkillTestRow, TalentRow } from "@talantly/shared";
 import { skillTestsRepo, talentsRepo } from "@talantly/shared";
 import { LevelChip, StatusChip, Tag } from "@/components/chips";
@@ -159,12 +160,17 @@ export default async function TalantlarPage({
                     className="border-b border-line transition-colors last:border-b-0 hover:bg-cream"
                   >
                     <td className="px-4 py-3.5">
-                      <p className="text-[14px] font-semibold text-ink">
-                        {talent.full_name ?? "Nomsiz"}
-                      </p>
-                      <p className="text-[12px] text-ink-faint">
-                        {talent.headline ?? talent.city ?? ""}
-                      </p>
+                      <Link
+                        href={`/talantlar/${talent.id}`}
+                        className="group block"
+                      >
+                        <p className="text-[14px] font-semibold text-ink transition-colors group-hover:text-orange">
+                          {talent.full_name ?? "Nomsiz"}
+                        </p>
+                        <p className="text-[12px] text-ink-faint">
+                          {talent.headline ?? talent.city ?? ""}
+                        </p>
+                      </Link>
                     </td>
                     <td className="px-4 py-3.5">
                       <LevelChip level={talent.level} />

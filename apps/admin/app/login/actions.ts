@@ -25,7 +25,7 @@ export async function signIn(
   if (error) {
     return { error: "Email yoki parol noto'g'ri." };
   }
-  redirect("/talantlar");
+  redirect("/dashboard");
 }
 
 export async function signOut(): Promise<void> {

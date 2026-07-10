@@ -61,6 +61,42 @@ export async function claim(
   return rows[0] ?? null;
 }
 
+/** All future slots, taken or not — for the admin schedule view. */
+export async function listFuture(
+  client: TalantlyClient,
+): Promise<InterviewSlotRow[]> {
+  const { data, error } = await client
+    .from("interview_slots")
+    .select("*")
+    .gt("starts_at", new Date().toISOString())
+    .order("starts_at", { ascending: true });
+
+  if (error) {
+    throw new Error(
+      `interviewSlotsRepo.listFuture failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as InterviewSlotRow[];
+}
+
+export async function insert(
+  client: TalantlyClient,
+  values: InterviewSlotInsert,
+): Promise<InterviewSlotRow> {
+  const { data, error } = await client
+    .from("interview_slots")
+    .insert(values)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(
+      `interviewSlotsRepo.insert failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return data as InterviewSlotRow;
+}
+
 export async function insertMany(
   client: TalantlyClient,
   values: InterviewSlotInsert[],

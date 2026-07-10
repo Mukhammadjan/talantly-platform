@@ -2,6 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  // Public tokenized share pages for companies — no session required
+  if (request.nextUrl.pathname.startsWith("/ulashish")) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -34,7 +39,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return NextResponse.redirect(new URL("/login", request.url));
   }
   if (user && isLoginPage) {
-    return NextResponse.redirect(new URL("/talantlar", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
   return response;
 }

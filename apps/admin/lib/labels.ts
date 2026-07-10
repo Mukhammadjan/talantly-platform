@@ -1,7 +1,9 @@
 import type {
   Archetype,
+  CompanyKind,
   CompanyStatus,
   Direction,
+  NeededLevel,
   RequestStatus,
   TalentLevel,
   TalentStatus,
@@ -82,3 +84,31 @@ export const URGENCY_LABELS: Record<Urgency, string> = {
   oy_ichida: "Oy ichida",
   korib_turibman: "Ko'rib turibman",
 };
+
+export const COMPANY_KIND_LABELS: Record<CompanyKind, string> = {
+  kompaniya: "Kompaniya",
+  tashkilot: "Tashkilot",
+  startup: "Startup",
+  shaxsiy: "Shaxsiy",
+};
+
+export const NEEDED_LEVEL_LABELS: Record<NeededLevel, string> = {
+  intern: "Intern",
+  mutaxassis: "Mutaxassis",
+  ikkalasi: "Ikkalasi",
+};
+
+export const COMPANY_STATUS_ORDER: CompanyStatus[] = [
+  "yangi",
+  "boglanildi",
+  "nomzod_yuborildi",
+  "joylashuv",
+  "tolov_olindi",
+];
+
+export const REQUEST_STATUS_ORDER: RequestStatus[] = [
+  "yangi",
+  "korildi",
+  "boglanildi",
+  "yopildi",
+];
