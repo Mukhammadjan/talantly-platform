@@ -9,8 +9,12 @@ import type {
   InterviewSlotRow,
   PaymentInsert,
   PaymentRow,
+  PersonalityQuestionInsert,
+  PersonalityQuestionRow,
   PlacementInsert,
   PlacementRow,
+  RequestInsert,
+  RequestRow,
   SkillTestInsert,
   SkillTestRow,
   StatusLogInsert,
@@ -44,6 +48,11 @@ export type Database = {
       companies: TableDef<CompanyRow, CompanyInsert>;
       placements: TableDef<PlacementRow, PlacementInsert>;
       status_log: TableDef<StatusLogRow, StatusLogInsert>;
+      requests: TableDef<RequestRow, RequestInsert>;
+      personality_questions: TableDef<
+        PersonalityQuestionRow,
+        PersonalityQuestionInsert
+      >;
     };
     Views: { [_ in never]: never };
     Functions: { [_ in never]: never };

@@ -19,6 +19,8 @@ export const PUBLIC_TABLE_NAMES = [
   "companies",
   "placements",
   "status_log",
+  "requests",
+  "personality_questions",
 ] as const;
 
 export type PublicTableName = (typeof PUBLIC_TABLE_NAMES)[number];

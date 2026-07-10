@@ -12,12 +12,15 @@
     "dev:webapp": "npm run dev --workspace apps/webapp",
     "dev:admin": "npm run dev --workspace apps/admin",
     "test": "npm run test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.16.2",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.7.0",
