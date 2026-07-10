@@ -26,6 +26,15 @@ export async function findById(
   return (data as TalentRow | null) ?? null;
 }
 
+export async function listAll(client: TalantlyClient): Promise<TalentRow[]> {
+  const { data, error } = await client
+    .from("talents")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) fail("listAll", error.message, error.code);
+  return (data ?? []) as TalentRow[];
+}
+
 export async function findByUserId(
   client: TalantlyClient,
   userId: string,

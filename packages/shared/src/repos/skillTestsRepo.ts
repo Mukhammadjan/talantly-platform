@@ -21,6 +21,38 @@ export async function findByTalentId(
   return rows[0] ?? null;
 }
 
+export async function listAll(
+  client: TalantlyClient,
+): Promise<SkillTestRow[]> {
+  const { data, error } = await client
+    .from("skill_tests")
+    .select("*")
+    .order("passed_at", { ascending: false });
+
+  if (error) {
+    throw new Error(
+      `skillTestsRepo.listAll failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as SkillTestRow[];
+}
+
+export async function deleteByTalentId(
+  client: TalantlyClient,
+  talentId: string,
+): Promise<void> {
+  const { error } = await client
+    .from("skill_tests")
+    .delete()
+    .eq("talent_id", talentId);
+
+  if (error) {
+    throw new Error(
+      `skillTestsRepo.deleteByTalentId(${talentId}) failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+}
+
 export async function insert(
   client: TalantlyClient,
   values: SkillTestInsert,

@@ -6,3 +6,7 @@ export * as skillTestsRepo from "./skillTestsRepo.js";
 export * as interviewSlotsRepo from "./interviewSlotsRepo.js";
 export * as interviewsRepo from "./interviewsRepo.js";
 export * as cvProfilesRepo from "./cvProfilesRepo.js";
+export * as companiesRepo from "./companiesRepo.js";
+export * as requestsRepo from "./requestsRepo.js";
+export * as personalityQuestionsRepo from "./personalityQuestionsRepo.js";
+export * as placementsRepo from "./placementsRepo.js";

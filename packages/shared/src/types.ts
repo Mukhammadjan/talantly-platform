@@ -47,6 +47,27 @@ export type BotState = {
   updated_at?: IsoTimestamp;
 };
 
+export type TalentLevel = "intern" | "mutaxassis";
+
+export type WorkFormat = "ofis" | "masofaviy" | "aralash";
+
+export type Archetype =
+  | "yaratuvchi"
+  | "tahlilchi"
+  | "yetakchi"
+  | "aloqachi"
+  | "ijrochi"
+  | "kashfiyotchi";
+
+export interface PersonalityResult {
+  archetype?: Archetype;
+  tagline?: string;
+  strengths?: string[];
+  weaknesses?: string[];
+  scores?: Partial<Record<Archetype, number>>;
+  completed_at?: IsoTimestamp;
+}
+
 export interface TalentRow {
   id: Uuid;
   user_id: Uuid | null;
@@ -61,6 +82,14 @@ export interface TalentRow {
   bot_state: BotState;
   verified_at: IsoTimestamp | null;
   created_at: IsoTimestamp;
+  photo_url: string | null;
+  is_demo: boolean;
+  level: TalentLevel | null;
+  experience_years: number | null;
+  work_formats: WorkFormat[] | null;
+  skill_tags: string[] | null;
+  headline: string | null;
+  personality: PersonalityResult | null;
 }
 
 export interface TalentInsert {
@@ -77,6 +106,14 @@ export interface TalentInsert {
   bot_state?: BotState;
   verified_at?: IsoTimestamp | null;
   created_at?: IsoTimestamp;
+  photo_url?: string | null;
+  is_demo?: boolean;
+  level?: TalentLevel | null;
+  experience_years?: number | null;
+  work_formats?: WorkFormat[] | null;
+  skill_tags?: string[] | null;
+  headline?: string | null;
+  personality?: PersonalityResult | null;
 }
 
 export type PaymentStatus = "kutilmoqda" | "tasdiqlangan" | "rad";
@@ -215,6 +252,12 @@ export type CompanyStatus =
   | "joylashuv"
   | "tolov_olindi";
 
+export type CompanyKind = "kompaniya" | "tashkilot" | "startup" | "shaxsiy";
+
+export type NeededLevel = "intern" | "mutaxassis" | "ikkalasi";
+
+export type Urgency = "hoziroq" | "oy_ichida" | "korib_turibman";
+
 export interface CompanyRow {
   id: Uuid;
   name: string;
@@ -224,6 +267,16 @@ export interface CompanyRow {
   status: CompanyStatus;
   notes: string | null;
   created_at: IsoTimestamp;
+  logo_url: string | null;
+  is_demo: boolean;
+  description: string | null;
+  user_id: Uuid | null;
+  kind: CompanyKind | null;
+  city: string | null;
+  activity_type: string | null;
+  directions_needed: string[] | null;
+  needed_level: NeededLevel | null;
+  urgency: Urgency | null;
 }
 
 export interface CompanyInsert {
@@ -235,6 +288,63 @@ export interface CompanyInsert {
   status?: CompanyStatus;
   notes?: string | null;
   created_at?: IsoTimestamp;
+  logo_url?: string | null;
+  is_demo?: boolean;
+  description?: string | null;
+  user_id?: Uuid | null;
+  kind?: CompanyKind | null;
+  city?: string | null;
+  activity_type?: string | null;
+  directions_needed?: string[] | null;
+  needed_level?: NeededLevel | null;
+  urgency?: Urgency | null;
+}
+
+export type RequestKind = "kompaniya_sorovi" | "talant_qiziqishi";
+
+export type RequestStatus = "yangi" | "korildi" | "boglanildi" | "yopildi";
+
+export interface RequestRow {
+  id: Uuid;
+  kind: RequestKind;
+  company_id: Uuid | null;
+  talent_id: Uuid | null;
+  direction: string | null;
+  note: string | null;
+  status: RequestStatus;
+  created_at: IsoTimestamp;
+}
+
+export interface RequestInsert {
+  id?: Uuid;
+  kind: RequestKind;
+  company_id?: Uuid | null;
+  talent_id?: Uuid | null;
+  direction?: string | null;
+  note?: string | null;
+  status?: RequestStatus;
+  created_at?: IsoTimestamp;
+}
+
+export interface PersonalityOption {
+  label: string;
+  weights: Partial<Record<Archetype, number>>;
+}
+
+export interface PersonalityQuestionRow {
+  id: Uuid;
+  question: string;
+  options: PersonalityOption[];
+  is_active: boolean;
+  ord: number | null;
+}
+
+export interface PersonalityQuestionInsert {
+  id?: Uuid;
+  question: string;
+  options: PersonalityOption[];
+  is_active?: boolean;
+  ord?: number | null;
 }
 
 export type PlacementFeeStatus = "pending" | "paid";
@@ -264,7 +374,8 @@ export type StatusLogEntity =
   | "payment"
   | "interview"
   | "company"
-  | "placement";
+  | "placement"
+  | "request";
 
 export interface StatusLogRow {
   id: Uuid;
