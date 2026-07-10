@@ -1,0 +1,31 @@
+{
+  "name": "talantly",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Verified internship platform for Uzbekistan — Telegram bot + admin panel + Supabase.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:bot": "npm run dev --workspace apps/bot",
+    "dev:webapp": "npm run dev --workspace apps/webapp",
+    "dev:admin": "npm run dev --workspace apps/admin",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.7.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

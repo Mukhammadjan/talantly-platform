@@ -1,0 +1,8 @@
+export * as usersRepo from "./usersRepo.js";
+export * as talentsRepo from "./talentsRepo.js";
+export * as statusLogRepo from "./statusLogRepo.js";
+export * as testQuestionsRepo from "./testQuestionsRepo.js";
+export * as skillTestsRepo from "./skillTestsRepo.js";
+export * as interviewSlotsRepo from "./interviewSlotsRepo.js";
+export * as interviewsRepo from "./interviewsRepo.js";
+export * as cvProfilesRepo from "./cvProfilesRepo.js";

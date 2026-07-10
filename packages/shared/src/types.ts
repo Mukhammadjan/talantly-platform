@@ -1,0 +1,287 @@
+export type Uuid = string;
+export type IsoTimestamp = string;
+export type IsoDate = string;
+
+export type UserRole = "talent" | "moderator" | "admin";
+
+export interface UserRow {
+  id: Uuid;
+  tg_id: number | null;
+  auth_uid: Uuid | null;
+  phone: string | null;
+  role: UserRole;
+  created_at: IsoTimestamp;
+}
+
+export interface UserInsert {
+  id?: Uuid;
+  tg_id?: number | null;
+  auth_uid?: Uuid | null;
+  phone?: string | null;
+  role?: UserRole;
+  created_at?: IsoTimestamp;
+}
+
+export type Direction =
+  | "dasturlash"
+  | "dizayn"
+  | "marketing"
+  | "sotuv"
+  | "data"
+  | "boshqa";
+
+export type TalentStatus =
+  | "yangi"
+  | "malumot_toldirilgan"
+  | "tolov_kutilmoqda"
+  | "tolov_tasdiqlangan"
+  | "cv_tayyor"
+  | "test_otgan"
+  | "suhbat_belgilangan"
+  | "tekshirilgan"
+  | "rad_etilgan";
+
+export type BotState = {
+  step?: string;
+  data?: Record<string, unknown>;
+  updated_at?: IsoTimestamp;
+};
+
+export interface TalentRow {
+  id: Uuid;
+  user_id: Uuid | null;
+  full_name: string | null;
+  birth_year: number | null;
+  city: string | null;
+  direction: Direction | null;
+  education: string | null;
+  free_text: string | null;
+  portfolio_url: string | null;
+  status: TalentStatus;
+  bot_state: BotState;
+  verified_at: IsoTimestamp | null;
+  created_at: IsoTimestamp;
+}
+
+export interface TalentInsert {
+  id?: Uuid;
+  user_id?: Uuid | null;
+  full_name?: string | null;
+  birth_year?: number | null;
+  city?: string | null;
+  direction?: Direction | null;
+  education?: string | null;
+  free_text?: string | null;
+  portfolio_url?: string | null;
+  status?: TalentStatus;
+  bot_state?: BotState;
+  verified_at?: IsoTimestamp | null;
+  created_at?: IsoTimestamp;
+}
+
+export type PaymentStatus = "kutilmoqda" | "tasdiqlangan" | "rad";
+
+export interface PaymentRow {
+  id: Uuid;
+  talent_id: Uuid | null;
+  amount: number;
+  screenshot_path: string | null;
+  status: PaymentStatus;
+  confirmed_by: Uuid | null;
+  confirmed_at: IsoTimestamp | null;
+  created_at: IsoTimestamp;
+}
+
+export interface PaymentInsert {
+  id?: Uuid;
+  talent_id?: Uuid | null;
+  amount?: number;
+  screenshot_path?: string | null;
+  status?: PaymentStatus;
+  confirmed_by?: Uuid | null;
+  confirmed_at?: IsoTimestamp | null;
+  created_at?: IsoTimestamp;
+}
+
+export interface CvExperienceItem {
+  title: string;
+  org: string;
+  period: string;
+  bullets: string[];
+}
+
+export interface CvProfileRow {
+  id: Uuid;
+  talent_id: Uuid | null;
+  summary: string | null;
+  skills: string[] | null;
+  experience: CvExperienceItem[] | null;
+  ai_verdict: string | null;
+  pdf_path: string | null;
+  generated_at: IsoTimestamp | null;
+}
+
+export interface CvProfileInsert {
+  id?: Uuid;
+  talent_id?: Uuid | null;
+  summary?: string | null;
+  skills?: string[] | null;
+  experience?: CvExperienceItem[] | null;
+  ai_verdict?: string | null;
+  pdf_path?: string | null;
+  generated_at?: IsoTimestamp | null;
+}
+
+export interface SkillTestRow {
+  id: Uuid;
+  talent_id: Uuid | null;
+  direction: Direction | null;
+  score: number | null;
+  answers: Record<string, unknown> | null;
+  passed_at: IsoTimestamp | null;
+}
+
+export interface SkillTestInsert {
+  id?: Uuid;
+  talent_id?: Uuid | null;
+  direction?: Direction | null;
+  score?: number | null;
+  answers?: Record<string, unknown> | null;
+  passed_at?: IsoTimestamp | null;
+}
+
+export interface TestQuestionRow {
+  id: Uuid;
+  direction: Direction;
+  question: string;
+  options: string[];
+  correct_index: number;
+  is_active: boolean;
+}
+
+export interface TestQuestionInsert {
+  id?: Uuid;
+  direction: Direction;
+  question: string;
+  options: string[];
+  correct_index: number;
+  is_active?: boolean;
+}
+
+export interface InterviewSlotRow {
+  id: Uuid;
+  starts_at: IsoTimestamp;
+  is_taken: boolean;
+  created_by: Uuid | null;
+}
+
+export interface InterviewSlotInsert {
+  id?: Uuid;
+  starts_at: IsoTimestamp;
+  is_taken?: boolean;
+  created_by?: Uuid | null;
+}
+
+export type InterviewDecision = "approved" | "rejected";
+
+export interface InterviewRow {
+  id: Uuid;
+  talent_id: Uuid | null;
+  moderator_id: Uuid | null;
+  scheduled_at: IsoTimestamp | null;
+  rating: number | null;
+  notes: string | null;
+  decision: InterviewDecision | null;
+  decided_at: IsoTimestamp | null;
+  created_at: IsoTimestamp;
+}
+
+export interface InterviewInsert {
+  id?: Uuid;
+  talent_id?: Uuid | null;
+  moderator_id?: Uuid | null;
+  scheduled_at?: IsoTimestamp | null;
+  rating?: number | null;
+  notes?: string | null;
+  decision?: InterviewDecision | null;
+  decided_at?: IsoTimestamp | null;
+  created_at?: IsoTimestamp;
+}
+
+export type CompanyStatus =
+  | "yangi"
+  | "boglanildi"
+  | "nomzod_yuborildi"
+  | "joylashuv"
+  | "tolov_olindi";
+
+export interface CompanyRow {
+  id: Uuid;
+  name: string;
+  contact_name: string | null;
+  phone_tg: string | null;
+  direction_needed: string | null;
+  status: CompanyStatus;
+  notes: string | null;
+  created_at: IsoTimestamp;
+}
+
+export interface CompanyInsert {
+  id?: Uuid;
+  name: string;
+  contact_name?: string | null;
+  phone_tg?: string | null;
+  direction_needed?: string | null;
+  status?: CompanyStatus;
+  notes?: string | null;
+  created_at?: IsoTimestamp;
+}
+
+export type PlacementFeeStatus = "pending" | "paid";
+
+export interface PlacementRow {
+  id: Uuid;
+  company_id: Uuid | null;
+  talent_id: Uuid | null;
+  placed_at: IsoDate | null;
+  trial_ends_at: IsoDate | null;
+  fee_amount: number | null;
+  fee_status: PlacementFeeStatus;
+}
+
+export interface PlacementInsert {
+  id?: Uuid;
+  company_id?: Uuid | null;
+  talent_id?: Uuid | null;
+  placed_at?: IsoDate | null;
+  trial_ends_at?: IsoDate | null;
+  fee_amount?: number | null;
+  fee_status?: PlacementFeeStatus;
+}
+
+export type StatusLogEntity =
+  | "talent"
+  | "payment"
+  | "interview"
+  | "company"
+  | "placement";
+
+export interface StatusLogRow {
+  id: Uuid;
+  entity: StatusLogEntity | string;
+  entity_id: Uuid;
+  old_status: string | null;
+  new_status: string | null;
+  changed_by: string | null;
+  created_at: IsoTimestamp;
+}
+
+export interface StatusLogInsert {
+  id?: Uuid;
+  entity: StatusLogEntity | string;
+  entity_id: Uuid;
+  old_status?: string | null;
+  new_status?: string | null;
+  changed_by?: string | null;
+  created_at?: IsoTimestamp;
+}

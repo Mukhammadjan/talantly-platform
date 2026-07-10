@@ -1,0 +1,25 @@
+{
+  "name": "@talantly/bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "verify:schema": "tsx src/scripts/verifySchema.ts",
+    "test:user-upsert": "tsx src/scripts/testUserUpsert.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "~2.45.4",
+    "@talantly/shared": "*",
+    "dotenv": "^16.4.5",
+    "grammy": "^1.30.0",
+    "playwright": "^1.61.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2"
+  }
+}
