@@ -1,5 +1,7 @@
 # talantly — Claude Code operating instructions
 
+Always follow docs/PRODUCT-BIBLE.md as the product source of truth.
+
 ## Product
 
 talantly.uz is a **verified internship platform for Uzbekistan**. It connects
