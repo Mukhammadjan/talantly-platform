@@ -5,7 +5,10 @@ export async function upsertByTgId(
   client: TalantlyClient,
   tgId: number,
 ): Promise<UserRow> {
-  const values: UserInsert = { tg_id: tgId, role: "talent" };
+  // role intentionally omitted: the DB default ('talent') applies on insert,
+  // and an update must never demote an existing admin/moderator back to
+  // talent (this clobbered the founder's admin role on every bot /start).
+  const values: UserInsert = { tg_id: tgId };
   const { data, error } = await client
     .from("users")
     .upsert(values, { onConflict: "tg_id" })
