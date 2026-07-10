@@ -9,7 +9,8 @@ import {
   type TalentStatus,
   type UserRow,
 } from "@talantly/shared";
-import type { TalentSnapshot } from "../apiTypes";
+import { ARCHETYPE_META } from "@talantly/shared";
+import type { PersonalitySummary, TalentSnapshot } from "../apiTypes";
 import { serverEnv } from "./env";
 import type { SessionPayload } from "./jwt";
 
@@ -31,10 +32,31 @@ export function readRegisterStep(talent: TalentRow): number {
   const data = talent.bot_state?.data;
   if (!data || typeof data !== "object") return 0;
   const raw = (data as Record<string, unknown>)["registerStep"];
-  if (typeof raw === "number" && Number.isInteger(raw) && raw >= 0 && raw <= 8) {
+  if (
+    typeof raw === "number" &&
+    Number.isInteger(raw) &&
+    raw >= 0 &&
+    raw <= 13
+  ) {
     return raw;
   }
   return 0;
+}
+
+export function personalitySummary(
+  talent: TalentRow,
+): PersonalitySummary | null {
+  const p = talent.personality;
+  const code = p?.archetype_code ?? p?.archetype;
+  if (!p || !code) return null;
+  const meta = ARCHETYPE_META[code];
+  return {
+    archetypeCode: code,
+    archetypeLabel: p.archetype_label ?? meta.label,
+    tagline: p.tagline ?? meta.tagline,
+    traits: p.traits ?? meta.traits,
+    consistent: p.consistent ?? true,
+  };
 }
 
 export async function buildSnapshot(
@@ -69,6 +91,7 @@ export async function buildSnapshot(
   }
 
   return {
+    preferredMode: user.preferred_mode,
     status: talent.status,
     fullName: talent.full_name,
     birthYear: talent.birth_year,
@@ -85,6 +108,12 @@ export async function buildSnapshot(
     rejectedAt,
     cvAvailable,
     paymentEnabled: serverEnv.paymentEnabled,
+    level: talent.level,
+    experienceYears: talent.experience_years,
+    workFormats: talent.work_formats ?? [],
+    skillTags: talent.skill_tags ?? [],
+    headline: talent.headline,
+    personality: personalitySummary(talent),
   };
 }
 

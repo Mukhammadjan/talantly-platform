@@ -4,6 +4,8 @@ export type IsoDate = string;
 
 export type UserRole = "talent" | "moderator" | "admin";
 
+export type PreferredMode = "talant" | "izlovchi";
+
 export interface UserRow {
   id: Uuid;
   tg_id: number | null;
@@ -11,6 +13,8 @@ export interface UserRow {
   phone: string | null;
   role: UserRole;
   created_at: IsoTimestamp;
+  tg_username: string | null;
+  preferred_mode: PreferredMode | null;
 }
 
 export interface UserInsert {
@@ -20,6 +24,8 @@ export interface UserInsert {
   phone?: string | null;
   role?: UserRole;
   created_at?: IsoTimestamp;
+  tg_username?: string | null;
+  preferred_mode?: PreferredMode | null;
 }
 
 export type Direction =
@@ -61,10 +67,14 @@ export type Archetype =
 
 export interface PersonalityResult {
   archetype?: Archetype;
+  archetype_code?: Archetype;
+  archetype_label?: string;
   tagline?: string;
+  traits?: string[];
   strengths?: string[];
   weaknesses?: string[];
   scores?: Partial<Record<Archetype, number>>;
+  consistent?: boolean;
   completed_at?: IsoTimestamp;
 }
 

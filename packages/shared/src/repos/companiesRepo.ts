@@ -17,6 +17,21 @@ export async function listAll(client: TalantlyClient): Promise<CompanyRow[]> {
   return (data ?? []) as CompanyRow[];
 }
 
+export async function findByUserId(
+  client: TalantlyClient,
+  userId: string,
+): Promise<CompanyRow | null> {
+  const { data, error } = await client
+    .from("companies")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) fail(`findByUserId(${userId})`, error.message, error.code);
+  const rows = (data ?? []) as CompanyRow[];
+  return rows[0] ?? null;
+}
+
 export async function findById(
   client: TalantlyClient,
   id: string,

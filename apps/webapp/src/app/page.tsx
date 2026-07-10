@@ -26,7 +26,15 @@ export default function EntryPage(): JSX.Element {
     authenticate(attempt > 0)
       .then(({ snapshot }) => {
         if (cancelled) return;
-        router.replace(snapshot.status === "yangi" ? "/register" : "/profile");
+        if (!snapshot.preferredMode) {
+          router.replace("/rol");
+        } else if (snapshot.preferredMode === "izlovchi") {
+          router.replace("/izlovchi");
+        } else {
+          router.replace(
+            snapshot.status === "yangi" ? "/register" : "/profile",
+          );
+        }
       })
       .catch(() => {
         if (!cancelled) setState("error");

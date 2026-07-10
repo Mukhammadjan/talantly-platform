@@ -3,16 +3,23 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  ARCHETYPE_META,
   CV_PRICE_UZS,
   DIRECTION_LABELS_UZ,
+  LEVEL_LABELS_UZ,
+  NEEDED_LEVEL_LABELS_UZ,
+  URGENCY_LABELS_UZ,
+  WORK_FORMAT_LABELS_UZ,
+  type Archetype,
   type TalentStatus,
 } from "@talantly/shared";
 import { Card } from "@/components/Card";
+import { ModeSwitch } from "@/components/ModeSwitch";
 import { PillButton } from "@/components/PillButton";
 import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
 import { apiFetch, isInsideTelegram } from "@/lib/api";
-import type { TalentSnapshot } from "@/lib/apiTypes";
+import type { MatchesResponse, TalentSnapshot } from "@/lib/apiTypes";
 import { addDaysIso, formatDateTimeUz, formatDateUz } from "@/lib/format";
 import { getWebApp, haptic, initTelegramUi, openExternalLink } from "@/lib/telegram";
 
@@ -28,15 +35,6 @@ const STATUS_RANK: Record<TalentStatus, number> = {
   rad_etilgan: 7,
 };
 
-const TIMELINE: { label: string; doneAt: number; payment?: boolean }[] = [
-  { label: "Ro'yxatdan o'tish", doneAt: 1 },
-  { label: "To'lov", doneAt: 3, payment: true },
-  { label: "AI CV", doneAt: 4 },
-  { label: "Skill test", doneAt: 5 },
-  { label: "Suhbat", doneAt: 6 },
-  { label: "Tekshirilgan", doneAt: 7 },
-];
-
 interface PaymentInfo {
   cardNumber: string | null;
   cardOwner: string | null;
@@ -51,40 +49,37 @@ function formatPrice(price: number): string {
   return `${price.toLocaleString("ru-RU").replace(/,/g, " ")} so'm`;
 }
 
-function Timeline({
-  status,
-  paymentEnabled,
-}: {
-  status: TalentStatus;
-  paymentEnabled: boolean;
-}): JSX.Element {
-  const rank = STATUS_RANK[status];
-  const rejected = status === "rad_etilgan";
-  const steps = paymentEnabled
-    ? TIMELINE
-    : TIMELINE.filter((item) => !item.payment);
+function Timeline({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
+  const rank = STATUS_RANK[snapshot.status];
+  const rejected = snapshot.status === "rad_etilgan";
+  const steps: { label: string; done: boolean }[] = [
+    { label: "Ro'yxatdan o'tish", done: rank >= 1 },
+    ...(snapshot.paymentEnabled
+      ? [{ label: "To'lov", done: rank >= 3 }]
+      : []),
+    // Legacy talents (cv_tayyor and beyond) skipped the character test.
+    { label: "Xarakter testi", done: Boolean(snapshot.personality) || rank >= 4 },
+    { label: "Skill test", done: rank >= 5 },
+    { label: "Suhbat", done: rank >= 6 },
+    { label: "Tekshirilgan", done: snapshot.status === "tekshirilgan" },
+  ];
+  const currentIndex = rejected ? -1 : steps.findIndex((s) => !s.done);
   return (
     <Card>
       <p className="label-caps">Tekshiruv yo&apos;li</p>
       <div className="mt-4 space-y-0">
         {steps.map((item, index) => {
-          const done = !rejected && rank >= item.doneAt;
-          const isCurrent =
-            !rejected &&
-            !done &&
-            (index === 0 || rank >= (steps[index - 1]?.doneAt ?? 0));
+          const isCurrent = index === currentIndex;
           const isLast = index === steps.length - 1;
           return (
             <div key={item.label} className="flex gap-3">
               <div className="flex flex-col items-center">
-                {done ? (
+                {item.done ? (
                   <Seal size={24} />
                 ) : (
                   <span
                     className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
-                      isCurrent
-                        ? "border-orange soft-pulse"
-                        : "border-line"
+                      isCurrent ? "border-orange soft-pulse" : "border-line"
                     }`}
                   >
                     <span
@@ -96,14 +91,14 @@ function Timeline({
                 )}
                 {!isLast && (
                   <span
-                    className={`w-0.5 flex-1 ${done ? "bg-green" : "bg-line"}`}
+                    className={`w-0.5 flex-1 ${item.done ? "bg-green" : "bg-line"}`}
                     style={{ minHeight: 18 }}
                   />
                 )}
               </div>
               <p
                 className={`pb-4 pt-0.5 text-[14px] ${
-                  done
+                  item.done
                     ? "font-semibold text-ink"
                     : isCurrent
                       ? "font-semibold text-orange"
@@ -251,21 +246,45 @@ function ActionCard({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
 
   switch (snapshot.status) {
     case "malumot_toldirilgan":
-      if (!snapshot.paymentEnabled) {
+      if (snapshot.paymentEnabled) {
+        return <PaymentCard />;
+      }
+      if (!snapshot.personality) {
         return (
-          <Card className="soft-pulse">
-            <p className="label-caps">AI ishlamoqda</p>
-            <h2 className="mt-2 text-[17px] font-bold">
-              CV tayyorlanmoqda... ✨
-            </h2>
+          <Card>
+            <p className="label-caps">Keyingi qadam</p>
+            <h2 className="mt-2 text-[17px] font-bold">Xarakter testi 🧭</h2>
             <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
-              AI sizning ma&apos;lumotlaringizdan professional CV yaratmoqda.
-              Tayyor bo&apos;lgach botda yuboramiz.
+              15 ta qisqa savol — to&apos;g&apos;ri javob yo&apos;q. Bu test
+              kompaniyalarga sizning ish uslubingizni tushunishga yordam
+              beradi.
             </p>
+            <PillButton
+              className="mt-4"
+              onClick={() => router.push("/xarakter")}
+            >
+              Xarakter testini boshlash
+            </PillButton>
           </Card>
         );
       }
-      return <PaymentCard />;
+      return (
+        <Card>
+          <p className="label-caps">Keyingi qadam</p>
+          <h2 className="mt-2 text-[17px] font-bold">
+            Skill test sizni kutmoqda
+          </h2>
+          <p className="mt-2 text-[13px] leading-relaxed text-ink-soft">
+            Endi{" "}
+            {snapshot.direction ? DIRECTION_LABELS_UZ[snapshot.direction] : ""}{" "}
+            yo&apos;nalishi bo&apos;yicha 10 savollik skill testdan
+            o&apos;ting.
+          </p>
+          <PillButton className="mt-4" onClick={() => router.push("/test")}>
+            Skill testni boshlash
+          </PillButton>
+        </Card>
+      );
 
     case "tolov_kutilmoqda":
       return (
@@ -318,7 +337,7 @@ function ActionCard({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
         <Card>
           <p className="label-caps">Keyingi qadam</p>
           <div className="mt-2 flex items-center gap-3">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green/10 text-[18px] font-bold text-green-deep">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-tint text-[18px] font-bold text-green-deep">
               {snapshot.score ?? "—"}
             </span>
             <div>
@@ -363,6 +382,7 @@ function ActionCard({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
             Tabriklaymiz! Endi profilingiz ishonchli kompaniyalarga tavsiya
             qilinadi. Mos taklif chiqsa, sizga botda xabar beramiz.
           </p>
+          {snapshot.cvAvailable && <CvButton />}
         </Card>
       );
 
@@ -399,6 +419,125 @@ function ActionCard({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
         </Card>
       );
   }
+}
+
+function MatchesSection({
+  snapshot,
+}: {
+  snapshot: TalentSnapshot;
+}): JSX.Element {
+  const [data, setData] = useState<MatchesResponse | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const verified = snapshot.status === "tekshirilgan";
+
+  useEffect(() => {
+    apiFetch<MatchesResponse>("/api/matches")
+      .then((res) => {
+        setData(res);
+        setSent(res.interestSent);
+      })
+      .catch(() => setFailed(true));
+  }, []);
+
+  const sendInterest = async (): Promise<void> => {
+    if (sending || sent) return;
+    setSending(true);
+    try {
+      await apiFetch<{ sent: boolean }>("/api/interest", { method: "POST" });
+      haptic("success");
+      setSent(true);
+    } catch {
+      haptic("error");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (failed) return <></>;
+
+  if (!data) {
+    return (
+      <Card>
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="mt-3 h-16 w-full" />
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <p className="label-caps">Sizga mos so&apos;rovlar</p>
+      {data.matches.length === 0 ? (
+        <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">
+          Hozircha mos so&apos;rovlar yo&apos;q. Yangi so&apos;rov chiqsa, shu
+          yerda ko&apos;rasiz.
+        </p>
+      ) : (
+        <div className="mt-3 space-y-3">
+          {data.matches.map((match) => (
+            <div
+              key={match.id}
+              className="rounded-input border border-line bg-cream p-4"
+            >
+              <p className="text-[14px] font-bold">
+                {match.activityType ?? "Kompaniya"}
+                {match.city ? ` · ${match.city}` : ""}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {match.neededLevel && (
+                  <span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+                    {NEEDED_LEVEL_LABELS_UZ[match.neededLevel]}
+                  </span>
+                )}
+                {match.urgency && (
+                  <span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+                    {URGENCY_LABELS_UZ[match.urgency]}
+                  </span>
+                )}
+                {match.directions.map((d) => (
+                  <span
+                    key={d}
+                    className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft"
+                  >
+                    {d in DIRECTION_LABELS_UZ
+                      ? DIRECTION_LABELS_UZ[d as keyof typeof DIRECTION_LABELS_UZ]
+                      : d}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4">
+        {sent ? (
+          <p className="rounded-input bg-green-tint p-4 text-center text-[13px] font-semibold text-green-deep">
+            So&apos;rovingiz yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
+          </p>
+        ) : verified ? (
+          <PillButton
+            variant="green"
+            loading={sending}
+            onClick={() => void sendInterest()}
+          >
+            Men tayyorman 🙌
+          </PillButton>
+        ) : (
+          <>
+            <PillButton disabled onClick={() => undefined}>
+              Men tayyorman 🔒
+            </PillButton>
+            <p className="mt-2 text-center text-[12px] text-ink-soft">
+              Suhbatdan o&apos;ting — shu so&apos;rovlarga taklif qilinasiz.
+            </p>
+          </>
+        )}
+      </div>
+    </Card>
+  );
 }
 
 export default function ProfilePage(): JSX.Element {
@@ -459,11 +598,15 @@ export default function ProfilePage(): JSX.Element {
   const initial = (snapshot.fullName ?? "T").trim().charAt(0).toUpperCase();
   const subtitleParts = [
     snapshot.direction ? DIRECTION_LABELS_UZ[snapshot.direction] : null,
+    snapshot.level ? LEVEL_LABELS_UZ[snapshot.level] : null,
     snapshot.city,
   ].filter(Boolean);
 
   return (
-    <main className="px-5 pb-10 pt-8">
+    <main className="px-5 pb-10 pt-6">
+      <div className="mb-4 flex justify-end">
+        <ModeSwitch />
+      </div>
       <div className="flex items-center gap-4">
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-orange text-[20px] font-bold text-white shadow-soft">
           {initial}
@@ -478,16 +621,22 @@ export default function ProfilePage(): JSX.Element {
         </div>
         {snapshot.status === "tekshirilgan" && <Seal size={28} />}
       </div>
+      {snapshot.headline && (
+        <p className="mt-3 text-[14px] font-medium italic text-ink-soft">
+          &quot;{snapshot.headline}&quot;
+        </p>
+      )}
 
       <div className="mt-6">
         <ActionCard snapshot={snapshot} />
       </div>
 
       <div className="mt-4">
-        <Timeline
-          status={snapshot.status}
-          paymentEnabled={snapshot.paymentEnabled}
-        />
+        <MatchesSection snapshot={snapshot} />
+      </div>
+
+      <div className="mt-4">
+        <Timeline snapshot={snapshot} />
       </div>
 
       <div className="mt-4">
@@ -520,6 +669,10 @@ function ProfileDetails({
 }: {
   snapshot: TalentSnapshot;
 }): JSX.Element {
+  const personality = snapshot.personality;
+  const emoji = personality
+    ? (ARCHETYPE_META[personality.archetypeCode as Archetype]?.emoji ?? "✨")
+    : null;
   return (
     <Card>
       <h2 className="text-[15px] font-bold">Ma&apos;lumotlaringiz</h2>
@@ -536,10 +689,45 @@ function ProfileDetails({
             snapshot.direction ? DIRECTION_LABELS_UZ[snapshot.direction] : null
           }
         />
+        <DetailRow
+          label="Daraja"
+          value={snapshot.level ? LEVEL_LABELS_UZ[snapshot.level] : null}
+        />
+        <DetailRow
+          label="Ish formati"
+          value={
+            snapshot.workFormats.length > 0
+              ? snapshot.workFormats
+                  .map((f) => WORK_FORMAT_LABELS_UZ[f])
+                  .join(", ")
+              : null
+          }
+        />
+        <DetailRow
+          label="Xarakter"
+          value={
+            personality ? `${emoji} ${personality.archetypeLabel}` : null
+          }
+        />
         <DetailRow label="Ta'lim" value={snapshot.education} />
         <DetailRow label="Telefon" value={snapshot.phone} />
         <DetailRow label="Portfolio" value={snapshot.portfolioUrl} />
       </div>
+      {snapshot.skillTags.length > 0 && (
+        <div className="mt-4">
+          <p className="label-caps">Ko&apos;nikmalar</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {snapshot.skillTags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-line bg-cream px-3 py-1 text-[12px] font-semibold text-ink"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       {snapshot.freeText && (
         <div className="mt-4">
           <p className="label-caps">Siz haqingizda</p>

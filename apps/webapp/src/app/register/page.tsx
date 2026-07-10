@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Direction } from "@talantly/shared";
+import { SKILL_TAG_BANK } from "@talantly/shared";
+import type { Direction, TalentLevel, WorkFormat } from "@talantly/shared";
 import { PillButton } from "@/components/PillButton";
 import { ProgressBar } from "@/components/ProgressBar";
 import { Seal } from "@/components/Seal";
@@ -14,7 +15,12 @@ import {
   BIRTH_YEAR_MIN,
   CITIES,
   DIRECTIONS,
+  EXPERIENCE_STEP,
+  EXPERIENCE_YEARS_MAX,
+  LEVELS,
+  MAX_SKILL_TAGS,
   TOTAL_STEPS,
+  WORK_FORMATS,
 } from "@/lib/registration";
 import { haptic, initTelegramUi } from "@/lib/telegram";
 
@@ -23,6 +29,12 @@ interface WizardValues {
   birthYear: number | null;
   city: string;
   direction: Direction | null;
+  skillTags: string[];
+  level: TalentLevel | null;
+  experienceYears: number | null;
+  experienceWhere: string;
+  workFormats: WorkFormat[];
+  headline: string;
   education: string;
   phoneDigits: string;
   freeText: string;
@@ -34,10 +46,15 @@ const STEP_TITLES: Record<number, string> = {
   2: "Qaysi yilda tug'ilgansiz?",
   3: "Qaysi shaharda yashaysiz?",
   4: "Qaysi yo'nalishda o'smoqchisiz?",
-  5: "Ta'limingiz haqida ayting",
-  6: "Telefon raqamingiz?",
-  7: "O'zingiz haqingizda erkin yozing",
-  8: "Portfolio yoki ish namunalari",
+  5: "Qaysi ko'nikmalarni bilasiz?",
+  6: "Darajangiz qanday?",
+  7: "Ish tajribangiz haqida",
+  8: "Qanday formatda ishlamoqchisiz?",
+  9: "O'zingizni bir jumlada ta'riflang",
+  10: "Ta'limingiz haqida ayting",
+  11: "Telefon raqamingiz?",
+  12: "O'zingiz haqingizda erkin yozing",
+  13: "Portfolio yoki ish namunalari",
 };
 
 const STEP_HELPERS: Record<number, string> = {
@@ -45,10 +62,15 @@ const STEP_HELPERS: Record<number, string> = {
   2: "Ro'yxatdan tanlang.",
   3: "Hozir yashab turgan shahringiz.",
   4: "Keyin skill test ham shu yo'nalishda bo'ladi.",
-  5: "Masalan: TATU, dasturiy injiniring, 3-kurs.",
-  6: "Moderator siz bilan shu raqam orqali bog'lanadi.",
-  7: "Tajribangiz, loyihalaringiz haqida erkin yozing.",
-  8: "Havola bo'lsa qoldiring — bu ixtiyoriy qadam.",
+  5: `1 tadan ${MAX_SKILL_TAGS} tagacha tanlang.`,
+  6: "Bu kompaniyalarga mos darajani tanlashga yordam beradi.",
+  7: "Necha yil va qayerda ishlagansiz?",
+  8: "Bir nechtasini tanlashingiz mumkin.",
+  9: "Bu jumla profilingizda ko'rinadi.",
+  10: "Masalan: TATU, dasturiy injiniring, 3-kurs.",
+  11: "Moderator siz bilan shu raqam orqali bog'lanadi.",
+  12: "Tajribangiz, loyihalaringiz haqida erkin yozing.",
+  13: "Havola bo'lsa qoldiring — bu ixtiyoriy qadam.",
 };
 
 function formatPhone(digits: string): string {
@@ -67,6 +89,12 @@ function valuesFromSnapshot(snapshot: TalentSnapshot): WizardValues {
     birthYear: snapshot.birthYear,
     city: snapshot.city ?? "",
     direction: snapshot.direction,
+    skillTags: snapshot.skillTags,
+    level: snapshot.level,
+    experienceYears: snapshot.experienceYears,
+    experienceWhere: "",
+    workFormats: snapshot.workFormats,
+    headline: snapshot.headline ?? "",
     education: snapshot.education ?? "",
     phoneDigits: snapshot.phone?.replace(/^\+998/, "") ?? "",
     freeText: snapshot.freeText ?? "",
@@ -77,6 +105,11 @@ function valuesFromSnapshot(snapshot: TalentSnapshot): WizardValues {
 const YEARS: number[] = [];
 for (let year = BIRTH_YEAR_MAX; year >= BIRTH_YEAR_MIN; year -= 1) {
   YEARS.push(year);
+}
+
+const EXPERIENCE_YEAR_OPTIONS: number[] = [];
+for (let y = 1; y <= EXPERIENCE_YEARS_MAX; y += 1) {
+  EXPERIENCE_YEAR_OPTIONS.push(y);
 }
 
 const CONFETTI_COLORS = ["#F26430", "#FF8A3D", "#2FB86B", "#F0C24B"];
@@ -177,7 +210,9 @@ export default function RegisterPage(): JSX.Element {
     haptic("light");
     setAnimBack(true);
     setError(null);
-    setStep(step - 1);
+    const skipExperience =
+      step === EXPERIENCE_STEP + 1 && values.level !== "mutaxassis";
+    setStep(step - (skipExperience ? 2 : 1));
   };
 
   const stepValue = (target: number): unknown => {
@@ -191,12 +226,25 @@ export default function RegisterPage(): JSX.Element {
       case 4:
         return values.direction;
       case 5:
-        return values.education.trim();
+        return values.skillTags;
       case 6:
-        return `+998${values.phoneDigits}`;
+        return values.level;
       case 7:
-        return values.freeText.trim();
+        return {
+          years: values.experienceYears,
+          where: values.experienceWhere.trim(),
+        };
       case 8:
+        return values.workFormats;
+      case 9:
+        return values.headline.trim();
+      case 10:
+        return values.education.trim();
+      case 11:
+        return `+998${values.phoneDigits}`;
+      case 12:
+        return values.freeText.trim();
+      case 13:
         return values.portfolioUrl.trim() === ""
           ? null
           : values.portfolioUrl.trim();
@@ -218,18 +266,37 @@ export default function RegisterPage(): JSX.Element {
       case 4:
         return values.direction ? null : "Yo'nalishni tanlang.";
       case 5:
+        return values.skillTags.length >= 1
+          ? null
+          : "Kamida bitta ko'nikma tanlang.";
+      case 6:
+        return values.level ? null : "Darajangizni tanlang.";
+      case 7:
+        if (!values.experienceYears) return "Tajriba yillarini tanlang.";
+        return values.experienceWhere.trim().length >= 2
+          ? null
+          : "Qayerda ishlaganingizni qisqacha yozing.";
+      case 8:
+        return values.workFormats.length >= 1
+          ? null
+          : "Kamida bitta formatni tanlang.";
+      case 9:
+        return values.headline.trim().length >= 5
+          ? null
+          : "Qisqa jumla yozing (kamida 5 harf).";
+      case 10:
         return values.education.trim().length >= 2
           ? null
           : "Ta'limingiz haqida qisqacha yozing.";
-      case 6:
+      case 11:
         return values.phoneDigits.length === 9
           ? null
           : "Telefon raqamni to'liq kiriting.";
-      case 7:
+      case 12:
         return values.freeText.trim().length >= 10
           ? null
           : "Kamida bir-ikki jumla yozing — bu CV uchun juda muhim.";
-      case 8:
+      case 13:
         return null;
       default:
         return "Noto'g'ri qadam.";
@@ -256,7 +323,9 @@ export default function RegisterPage(): JSX.Element {
       haptic("light");
       if (step < TOTAL_STEPS) {
         setAnimBack(false);
-        setStep(step + 1);
+        // The server decides the next step (it skips the experience screen
+        // for interns).
+        setStep(snapshot.registerStep > step ? snapshot.registerStep : step + 1);
       } else {
         const finish = await apiFetch<{ snapshot: TalentSnapshot }>(
           "/api/register/finish",
@@ -265,7 +334,7 @@ export default function RegisterPage(): JSX.Element {
         nameRef.current = finish.snapshot.fullName ?? "";
         haptic("success");
         setCelebrating(true);
-        window.setTimeout(() => router.replace("/profile"), 3000);
+        window.setTimeout(() => router.replace("/xarakter"), 3000);
       }
     } catch (err) {
       setError(
@@ -287,14 +356,14 @@ export default function RegisterPage(): JSX.Element {
           Ajoyib{firstName ? `, ${firstName}` : ""}!
         </h1>
         <p className="mt-3 text-center text-[14px] leading-relaxed text-ink-soft">
-          Ma&apos;lumotlaringiz qabul qilindi. Endi navbat AI CV va
-          tekshiruvda — profilingizda davom etamiz.
+          Ma&apos;lumotlaringiz qabul qilindi. Endi tekshiruv boshlanadi —
+          birinchi qadam: qisqa xarakter testi.
         </p>
         <PillButton
           className="mt-8"
-          onClick={() => router.replace("/profile")}
+          onClick={() => router.replace("/xarakter")}
         >
-          Profilga o&apos;tish
+          Xarakter testini boshlash
         </PillButton>
       </main>
     );
@@ -314,7 +383,7 @@ export default function RegisterPage(): JSX.Element {
             Kompaniyalar tekshirilgan talantlarga ishonadi.
           </p>
           <div className="mt-8 flex items-center gap-2">
-            {Array.from({ length: TOTAL_STEPS }, (_, i) => (
+            {Array.from({ length: 8 }, (_, i) => (
               <span
                 key={i}
                 className={`h-1.5 rounded-full transition-all ${
@@ -323,7 +392,7 @@ export default function RegisterPage(): JSX.Element {
               />
             ))}
           </div>
-          <p className="label-caps mt-3">8 ta qisqa savol · 2 daqiqa</p>
+          <p className="label-caps mt-3">13 ta qisqa savol · 3 daqiqa</p>
         </div>
         <PillButton onClick={() => setStep(1)}>Boshlash</PillButton>
       </main>
@@ -331,6 +400,29 @@ export default function RegisterPage(): JSX.Element {
   }
 
   const canContinue = clientValidate(step) === null;
+  const tagBank = values.direction ? SKILL_TAG_BANK[values.direction] : [];
+
+  const toggleTag = (tag: string): void => {
+    haptic("light");
+    if (values.skillTags.includes(tag)) {
+      update({ skillTags: values.skillTags.filter((t) => t !== tag) });
+      return;
+    }
+    if (values.skillTags.length >= MAX_SKILL_TAGS) {
+      setError(`Ko'pi bilan ${MAX_SKILL_TAGS} ta tanlash mumkin.`);
+      return;
+    }
+    update({ skillTags: [...values.skillTags, tag] });
+  };
+
+  const toggleFormat = (format: WorkFormat): void => {
+    haptic("light");
+    update({
+      workFormats: values.workFormats.includes(format)
+        ? values.workFormats.filter((f) => f !== format)
+        : [...values.workFormats, format],
+    });
+  };
 
   return (
     <main className="flex min-h-screen flex-col px-5 pb-8 pt-5">
@@ -435,11 +527,17 @@ export default function RegisterPage(): JSX.Element {
                     type="button"
                     onClick={() => {
                       haptic("light");
-                      update({ direction: direction.value });
+                      // Direction change invalidates previously chosen tags.
+                      update({
+                        direction: direction.value,
+                        ...(values.direction !== direction.value
+                          ? { skillTags: [] }
+                          : {}),
+                      });
                     }}
                     className={`flex flex-col items-start gap-2 rounded-card border p-4 text-left transition-all active:scale-[0.97] ${
                       selected
-                        ? "border-orange bg-orange/5 shadow-soft"
+                        ? "border-orange bg-orange-tint shadow-soft"
                         : "border-line bg-surface"
                     }`}
                   >
@@ -454,6 +552,149 @@ export default function RegisterPage(): JSX.Element {
           )}
 
           {step === 5 && (
+            <div>
+              <div className="flex flex-wrap gap-2.5">
+                {tagBank.map((tag) => {
+                  const selected = values.skillTags.includes(tag);
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => toggleTag(tag)}
+                      className={`rounded-full border px-4 py-2.5 text-[13px] font-semibold transition-all active:scale-[0.96] ${
+                        selected
+                          ? "border-orange bg-orange text-white shadow-soft"
+                          : "border-line bg-surface text-ink"
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-4 text-[12px] text-ink-soft">
+                Tanlandi: {values.skillTags.length}/{MAX_SKILL_TAGS}
+              </p>
+            </div>
+          )}
+
+          {step === 6 && (
+            <div className="space-y-3">
+              {LEVELS.map((level) => {
+                const selected = values.level === level.value;
+                return (
+                  <button
+                    key={level.value}
+                    type="button"
+                    onClick={() => {
+                      haptic("light");
+                      update({ level: level.value });
+                    }}
+                    className={`flex w-full items-center gap-4 rounded-card border p-4 text-left transition-all active:scale-[0.98] ${
+                      selected
+                        ? "border-orange bg-orange-tint shadow-soft"
+                        : "border-line bg-surface"
+                    }`}
+                  >
+                    <span className="text-3xl">{level.icon}</span>
+                    <span>
+                      <span className="block text-[15px] font-bold">
+                        {level.label}
+                      </span>
+                      <span className="mt-0.5 block text-[13px] text-ink-soft">
+                        {level.hint}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {step === 7 && (
+            <div className="space-y-4">
+              <select
+                className="input-base appearance-none"
+                value={values.experienceYears ?? ""}
+                onChange={(e) =>
+                  update({
+                    experienceYears: e.target.value
+                      ? Number(e.target.value)
+                      : null,
+                  })
+                }
+              >
+                <option value="" disabled>
+                  Necha yil tajribangiz bor?
+                </option>
+                {EXPERIENCE_YEAR_OPTIONS.map((y) => (
+                  <option key={y} value={y}>
+                    {y} yil
+                  </option>
+                ))}
+              </select>
+              <input
+                className="input-base"
+                type="text"
+                value={values.experienceWhere}
+                placeholder="Qayerda ishlagansiz? Masalan: IT Park, frilanser"
+                onChange={(e) => update({ experienceWhere: e.target.value })}
+              />
+            </div>
+          )}
+
+          {step === 8 && (
+            <div className="space-y-3">
+              {WORK_FORMATS.map((format) => {
+                const selected = values.workFormats.includes(format.value);
+                return (
+                  <button
+                    key={format.value}
+                    type="button"
+                    onClick={() => toggleFormat(format.value)}
+                    className={`flex w-full items-center gap-4 rounded-card border p-4 text-left transition-all active:scale-[0.98] ${
+                      selected
+                        ? "border-orange bg-orange-tint shadow-soft"
+                        : "border-line bg-surface"
+                    }`}
+                  >
+                    <span className="text-2xl">{format.icon}</span>
+                    <span className="text-[15px] font-semibold">
+                      {format.label}
+                    </span>
+                    <span
+                      className={`ml-auto flex h-6 w-6 items-center justify-center rounded-full border text-[12px] font-bold ${
+                        selected
+                          ? "border-orange bg-orange text-white"
+                          : "border-line bg-cream text-transparent"
+                      }`}
+                    >
+                      ✓
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {step === 9 && (
+            <div>
+              <input
+                className="input-base"
+                type="text"
+                autoFocus
+                maxLength={80}
+                value={values.headline}
+                placeholder="Masalan: Frontend'ga oshiq, React o'rganyapman"
+                onChange={(e) => update({ headline: e.target.value })}
+              />
+              <p className="mt-3 text-right text-[12px] text-ink-soft">
+                {values.headline.trim().length}/80
+              </p>
+            </div>
+          )}
+
+          {step === 10 && (
             <input
               className="input-base"
               type="text"
@@ -464,7 +705,7 @@ export default function RegisterPage(): JSX.Element {
             />
           )}
 
-          {step === 6 && (
+          {step === 11 && (
             <div className="flex items-center gap-2">
               <span className="rounded-input border border-line bg-surface px-4 py-3.5 text-[15px] font-semibold">
                 +998
@@ -485,7 +726,7 @@ export default function RegisterPage(): JSX.Element {
             </div>
           )}
 
-          {step === 7 && (
+          {step === 12 && (
             <textarea
               className="input-base min-h-[160px] resize-none"
               autoFocus
@@ -495,7 +736,7 @@ export default function RegisterPage(): JSX.Element {
             />
           )}
 
-          {step === 8 && (
+          {step === 13 && (
             <input
               className="input-base"
               type="url"

@@ -112,8 +112,13 @@ export default function TestPage(): JSX.Element {
         router.replace("/booking");
         return;
       }
-      if (snapshot.status !== "cv_tayyor") {
-        router.replace("/profile");
+      const eligible =
+        (snapshot.status === "malumot_toldirilgan" && snapshot.personality) ||
+        snapshot.status === "cv_tayyor";
+      if (!eligible) {
+        router.replace(
+          snapshot.status === "malumot_toldirilgan" ? "/xarakter" : "/profile",
+        );
         return;
       }
       const res = await apiFetch<TestStartResponse>("/api/test/start", {

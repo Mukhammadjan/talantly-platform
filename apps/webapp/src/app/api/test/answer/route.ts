@@ -43,8 +43,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!context) return unauthorized();
     const { user, talent } = context;
 
-    if (talent.status !== "cv_tayyor") {
-      return conflict("Test faqat CV tayyor bo'lgach ochiladi.");
+    // New flow: character test first. Legacy talents (cv_tayyor) skip it.
+    const eligible =
+      (talent.status === "malumot_toldirilgan" && talent.personality) ||
+      talent.status === "cv_tayyor";
+    if (!eligible) {
+      return conflict("Avval xarakter testini yakunlang.");
     }
     const state = readTestState(talent);
     if (!state) {

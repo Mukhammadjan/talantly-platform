@@ -15,6 +15,7 @@
   --ink-faint: rgba(107, 98, 91, 0.55);
   --line: #eae2d8;
   --orange-tint: rgba(242, 100, 48, 0.06);
+  --green-tint: rgba(47, 184, 107, 0.1);
 }
 
 html,
@@ -40,6 +41,15 @@ body {
   .input-base {
     @apply w-full rounded-input border border-line bg-surface px-4 py-3.5 text-[15px] text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-orange;
   }
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes step-in {

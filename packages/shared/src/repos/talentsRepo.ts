@@ -26,6 +26,18 @@ export async function findById(
   return (data as TalentRow | null) ?? null;
 }
 
+export async function listVerified(
+  client: TalantlyClient,
+): Promise<TalentRow[]> {
+  const { data, error } = await client
+    .from("talents")
+    .select("*")
+    .eq("status", "tekshirilgan")
+    .order("verified_at", { ascending: false, nullsFirst: false });
+  if (error) fail("listVerified", error.message, error.code);
+  return (data ?? []) as TalentRow[];
+}
+
 export async function listAll(client: TalantlyClient): Promise<TalentRow[]> {
   const { data, error } = await client
     .from("talents")

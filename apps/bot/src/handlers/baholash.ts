@@ -1,7 +1,9 @@
 import { InlineKeyboard } from "grammy";
 import type { CallbackQueryContext, CommandContext, Context } from "grammy";
+import { generateCv } from "@talantly/shared";
 import type { InterviewRow, TalentRow, UserRow } from "@talantly/shared";
 import { config } from "../config.js";
+import * as cvProfilesRepo from "../db/cvProfilesRepo.js";
 import * as interviewsRepo from "../db/interviewsRepo.js";
 import * as skillTestsRepo from "../db/skillTestsRepo.js";
 import * as talentsRepo from "../db/talentsRepo.js";
@@ -186,6 +188,29 @@ async function applyDecision(
     await talentsRepo.setStatus(talent, "tekshirilgan", moderator.id, {
       verified_at: new Date().toISOString(),
     });
+    // Verification-first flow: the CV is the reward for passing verification.
+    // The pdfWorker picks up the row (pdf_path null) and delivers the PDF.
+    const existingCv = await cvProfilesRepo.findByTalentId(talent.id);
+    if (!existingCv) {
+      const cv = generateCv({
+        fullName: talent.full_name ?? "",
+        birthYear: talent.birth_year ?? 0,
+        city: talent.city ?? "",
+        direction: talent.direction ?? "boshqa",
+        education: talent.education ?? "",
+        freeText: talent.free_text ?? "",
+        portfolioUrl: talent.portfolio_url,
+      });
+      await cvProfilesRepo.upsertByTalentId({
+        talent_id: talent.id,
+        summary: cv.summary,
+        skills: cv.skills,
+        experience: cv.experience,
+        ai_verdict: cv.aiVerdict,
+        pdf_path: null,
+        generated_at: new Date().toISOString(),
+      });
+    }
   } else {
     await talentsRepo.setStatus(talent, "rad_etilgan", moderator.id);
   }

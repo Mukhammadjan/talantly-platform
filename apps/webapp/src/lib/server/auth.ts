@@ -27,6 +27,10 @@ export function conflict(message: string): NextResponse {
   return NextResponse.json({ error: message }, { status: 409 });
 }
 
+export function notFound(message: string): NextResponse {
+  return NextResponse.json({ error: message }, { status: 404 });
+}
+
 export function serverError(): NextResponse {
   return NextResponse.json(
     { error: "Texnik xatolik yuz berdi. Birozdan so'ng qayta urinib ko'ring." },

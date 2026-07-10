@@ -207,6 +207,8 @@ export function verifiedCongrats(fullName: string | null): string {
     `🎉 ${name}!\n\n` +
     "Siz tekshiruvning barcha bosqichlaridan muvaffaqiyatli o'tdingiz va " +
     "yashil \"Tekshirilgan\" ✅ belgisini qo'lga kiritdingiz!\n\n" +
+    "Sovg'a sifatida AI professional CV'ingizni tayyorlayapti — " +
+    "bir necha daqiqada shu yerga yuboramiz.\n\n" +
     "Endi profilingiz ishonchli kompaniyalarga tavsiya etiladi. Mos " +
     "amaliyot topilishi bilan siz bilan bog'lanamiz. Omad! 🍀"
   );
@@ -232,14 +234,21 @@ export function interviewReminder(scheduledAt: string): string {
   );
 }
 
-export function cvReadyMessage(fullName: string | null): string {
+export function cvReadyMessage(
+  fullName: string | null,
+  verified = false,
+): string {
   const name = fullName ? `${fullName}, tabriklaymiz` : "Tabriklaymiz";
+  const nextStep = verified
+    ? "Bu — tekshiruvdan o'tganingiz uchun sovg'amiz. Endi profilingiz " +
+      "ishonchli kompaniyalarga tavsiya etiladi! 🏆"
+    : "Keyingi qadam — yo'nalishingiz bo'yicha qisqa skill test. " +
+      "Profilingizni ochib, testni boshlang! 🚀";
   return (
     `🎉 ${name}! Professional CV'ingiz tayyor.\n\n` +
     "AI sizning ma'lumotlaringizni tahlil qilib, kuchli tomonlaringizni " +
     "ajratib berdi — CV faylini yuqorida ko'rishingiz mumkin.\n\n" +
-    "Keyingi qadam — yo'nalishingiz bo'yicha qisqa skill test. " +
-    "Profilingizni ochib, testni boshlang! 🚀"
+    nextStep
   );
 }
 

@@ -43,6 +43,26 @@ export async function findLatestByTalentId(
   return rows[0] ?? null;
 }
 
+export async function listApprovedByTalentIds(
+  client: TalantlyClient,
+  talentIds: string[],
+): Promise<InterviewRow[]> {
+  if (talentIds.length === 0) return [];
+  const { data, error } = await client
+    .from("interviews")
+    .select("*")
+    .in("talent_id", talentIds)
+    .eq("decision", "approved")
+    .order("decided_at", { ascending: false });
+
+  if (error) {
+    throw new Error(
+      `interviewsRepo.listApprovedByTalentIds failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as InterviewRow[];
+}
+
 export async function findUndecided(
   client: TalantlyClient,
 ): Promise<InterviewRow[]> {

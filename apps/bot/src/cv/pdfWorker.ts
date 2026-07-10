@@ -99,7 +99,10 @@ async function processRow(bot: Bot, row: CvProfileRow): Promise<void> {
       user.tg_id,
       new InputFile(pdf, pdfFileName(talent.full_name)),
       {
-        caption: cvReadyMessage(talent.full_name),
+        caption: cvReadyMessage(
+          talent.full_name,
+          talent.status === "tekshirilgan",
+        ),
         ...(keyboard ? { reply_markup: keyboard } : {}),
       },
     );

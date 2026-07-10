@@ -1,4 +1,4 @@
-import { cvProfilesRepo, generateCv, talentsRepo } from "@talantly/shared";
+import { talentsRepo } from "@talantly/shared";
 import { NextResponse } from "next/server";
 import {
   badRequest,
@@ -7,7 +7,6 @@ import {
   serverError,
   unauthorized,
 } from "@/lib/server/auth";
-import { serverEnv } from "@/lib/server/env";
 import { buildSnapshot, loadSessionContext } from "@/lib/server/snapshot";
 import { getSupabase } from "@/lib/server/supabase";
 
@@ -35,6 +34,10 @@ export async function POST(request: Request): Promise<NextResponse> {
       !talent.direction ||
       !talent.education ||
       !talent.free_text ||
+      !talent.level ||
+      !talent.headline ||
+      (talent.skill_tags ?? []).length === 0 ||
+      (talent.work_formats ?? []).length === 0 ||
       !user.phone;
     if (missing) {
       return badRequest(
@@ -42,44 +45,16 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    // setStatus also writes the mandatory status_log row (guardrail #8).
-    let updated = await talentsRepo.setStatus(
+    // Verification-first flow: the CV is generated ONLY after the moderator
+    // marks the talent 'tekshirilgan' (see the bot's approval handler). No CV
+    // may exist before verification.
+    const updated = await talentsRepo.setStatus(
       client,
       talent,
       "malumot_toldirilgan",
       user.id,
       { bot_state: {} },
     );
-
-    // Demo mode (PAYMENT_ENABLED=false): skip the manual payment step and
-    // start CV generation immediately. The CvJson is stored here; the bot
-    // process renders the PDF and advances the status to cv_tayyor.
-    if (!serverEnv.paymentEnabled) {
-      const cv = generateCv({
-        fullName: updated.full_name ?? "",
-        birthYear: updated.birth_year ?? 0,
-        city: updated.city ?? "",
-        direction: updated.direction ?? "boshqa",
-        education: updated.education ?? "",
-        freeText: updated.free_text ?? "",
-        portfolioUrl: updated.portfolio_url,
-      });
-      await cvProfilesRepo.upsertByTalentId(client, {
-        talent_id: updated.id,
-        summary: cv.summary,
-        skills: cv.skills,
-        experience: cv.experience,
-        ai_verdict: cv.aiVerdict,
-        pdf_path: null,
-        generated_at: new Date().toISOString(),
-      });
-      updated = await talentsRepo.setStatus(
-        client,
-        updated,
-        "tolov_tasdiqlangan",
-        user.id,
-      );
-    }
 
     const snapshot = await buildSnapshot(client, user, updated);
     return NextResponse.json({ snapshot });

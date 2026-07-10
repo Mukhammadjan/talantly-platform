@@ -37,6 +37,52 @@ export async function findById(
   return (data as RequestRow | null) ?? null;
 }
 
+/** Latest still-open (yangi/korildi) self-interest request of a talent. */
+export async function findOpenInterestByTalentId(
+  client: TalantlyClient,
+  talentId: string,
+): Promise<RequestRow | null> {
+  const { data, error } = await client
+    .from("requests")
+    .select("*")
+    .eq("kind", "talant_qiziqishi")
+    .eq("talent_id", talentId)
+    .in("status", ["yangi", "korildi"])
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) {
+    fail(`findOpenInterestByTalentId(${talentId})`, error.message, error.code);
+  }
+  const rows = (data ?? []) as RequestRow[];
+  return rows[0] ?? null;
+}
+
+/** Latest still-open (yangi/korildi) request of a company for a talent. */
+export async function findOpenCompanyRequest(
+  client: TalantlyClient,
+  companyId: string,
+  talentId: string,
+): Promise<RequestRow | null> {
+  const { data, error } = await client
+    .from("requests")
+    .select("*")
+    .eq("kind", "kompaniya_sorovi")
+    .eq("company_id", companyId)
+    .eq("talent_id", talentId)
+    .in("status", ["yangi", "korildi"])
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) {
+    fail(
+      `findOpenCompanyRequest(${companyId}, ${talentId})`,
+      error.message,
+      error.code,
+    );
+  }
+  const rows = (data ?? []) as RequestRow[];
+  return rows[0] ?? null;
+}
+
 export async function insert(
   client: TalantlyClient,
   values: RequestInsert,

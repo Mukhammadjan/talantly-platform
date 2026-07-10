@@ -25,7 +25,13 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!valid) return unauthorized();
 
     const client = getSupabase();
-    const user = await usersRepo.upsertByTgId(client, valid.user.id);
+    let user = await usersRepo.upsertByTgId(client, valid.user.id);
+    const username = valid.user.username ?? null;
+    if (username && user.tg_username !== username) {
+      user = await usersRepo.updateFields(client, user.id, {
+        tg_username: username,
+      });
+    }
     let talent = await talentsRepo.findByUserId(client, user.id);
     if (!talent) {
       talent = await talentsRepo.createForUser(client, user.id);

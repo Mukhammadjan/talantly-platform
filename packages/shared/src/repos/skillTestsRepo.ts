@@ -21,6 +21,25 @@ export async function findByTalentId(
   return rows[0] ?? null;
 }
 
+export async function listByTalentIds(
+  client: TalantlyClient,
+  talentIds: string[],
+): Promise<SkillTestRow[]> {
+  if (talentIds.length === 0) return [];
+  const { data, error } = await client
+    .from("skill_tests")
+    .select("*")
+    .in("talent_id", talentIds)
+    .order("passed_at", { ascending: false });
+
+  if (error) {
+    throw new Error(
+      `skillTestsRepo.listByTalentIds failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data ?? []) as SkillTestRow[];
+}
+
 export async function listAll(
   client: TalantlyClient,
 ): Promise<SkillTestRow[]> {

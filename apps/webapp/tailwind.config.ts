@@ -16,6 +16,7 @@ const config: Config = {
         green: {
           DEFAULT: "var(--green)",
           deep: "var(--green-deep)",
+          tint: "var(--green-tint)",
         },
         ink: {
           DEFAULT: "var(--ink)",
