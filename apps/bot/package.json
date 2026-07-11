@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node --import tsx src/index.ts",
     "typecheck": "tsc --noEmit",
     "verify:schema": "tsx src/scripts/verifySchema.ts",
     "test:user-upsert": "tsx src/scripts/testUserUpsert.ts"
@@ -17,9 +16,8 @@
     "@talantly/shared": "*",
     "dotenv": "^16.4.5",
     "grammy": "^1.30.0",
-    "playwright": "^1.61.1"
-  },
-  "devDependencies": {
+    "pino": "^9.5.0",
+    "playwright": "^1.61.1",
     "tsx": "^4.16.2"
   }
 }

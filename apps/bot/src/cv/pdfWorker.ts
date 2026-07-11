@@ -6,6 +6,7 @@ import { getSupabase } from "../db/client.js";
 import * as cvProfilesRepo from "../db/cvProfilesRepo.js";
 import * as talentsRepo from "../db/talentsRepo.js";
 import * as usersRepo from "../db/usersRepo.js";
+import { logger } from "../logger.js";
 import { profileKeyboard } from "../keyboards.js";
 import { cvReadyMessage } from "../text.js";
 
@@ -47,12 +48,12 @@ function pdfFileName(fullName: string | null): string {
 
 async function processRow(bot: Bot, row: CvProfileRow): Promise<void> {
   if (!row.talent_id) {
-    console.warn(`cv_profiles ${row.id} has no talent_id, skipping`);
+    logger.warn(`cv_profiles ${row.id} has no talent_id, skipping`);
     return;
   }
   const talent = await talentsRepo.findById(row.talent_id);
   if (!talent) {
-    console.warn(`cv_profiles ${row.id}: talent ${row.talent_id} not found`);
+    logger.warn(`cv_profiles ${row.id}: talent ${row.talent_id} not found`);
     return;
   }
   const user = talent.user_id ? await usersRepo.findById(talent.user_id) : null;
@@ -107,10 +108,10 @@ async function processRow(bot: Bot, row: CvProfileRow): Promise<void> {
       },
     );
   }
-  console.log(`CV PDF ready for talent ${talent.id} (${storagePath})`);
+  logger.info(`CV PDF ready for talent ${talent.id} (${storagePath})`);
 }
 
-export function startCvPdfWorker(bot: Bot): void {
+export function startCvPdfWorker(bot: Bot): () => void {
   let running = false;
 
   const tick = async (): Promise<void> => {
@@ -122,19 +123,22 @@ export function startCvPdfWorker(bot: Bot): void {
         try {
           await processRow(bot, row);
         } catch (err) {
-          console.error(`CV PDF processing failed for ${row.id}:`, err);
+          logger.error({ err }, `CV PDF processing failed for ${row.id}`);
         }
       }
     } catch (err) {
-      console.error("CV PDF worker tick failed:", err);
+      logger.error({ err }, "CV PDF worker tick failed");
     } finally {
       running = false;
     }
   };
 
-  setInterval(() => void tick(), POLL_INTERVAL_MS);
+  const timer = setInterval(() => void tick(), POLL_INTERVAL_MS);
   void tick();
-  console.log("CV PDF worker started.");
+  logger.info(
+    `CV PDF worker started (cron every ${POLL_INTERVAL_MS / 1000}s).`,
+  );
+  return () => clearInterval(timer);
 }
 
 export async function stopCvPdfBrowser(): Promise<void> {

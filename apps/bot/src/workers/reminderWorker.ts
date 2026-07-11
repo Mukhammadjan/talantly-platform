@@ -2,13 +2,14 @@ import type { Bot } from "grammy";
 import * as interviewsRepo from "../db/interviewsRepo.js";
 import * as talentsRepo from "../db/talentsRepo.js";
 import * as usersRepo from "../db/usersRepo.js";
+import { logger } from "../logger.js";
 import { interviewReminder } from "../text.js";
 
 const POLL_INTERVAL_MS = 60_000;
 const WINDOW_FROM_MIN = 55;
 const WINDOW_TO_MIN = 65;
 
-export function startReminderWorker(bot: Bot): void {
+export function startReminderWorker(bot: Bot): () => void {
   let running = false;
 
   const tick = async (): Promise<void> => {
@@ -48,24 +49,27 @@ export function startReminderWorker(bot: Bot): void {
             ...state,
             data: { ...data, reminderSentFor: interview.id },
           });
-          console.log(
+          logger.info(
             `Interview reminder sent for talent ${talent.id} (interview ${interview.id})`,
           );
         } catch (err) {
-          console.error(
-            `Reminder failed for interview ${interview.id}:`,
-            err,
+          logger.error(
+            { err },
+            `Reminder failed for interview ${interview.id}`,
           );
         }
       }
     } catch (err) {
-      console.error("Reminder worker tick failed:", err);
+      logger.error({ err }, "Reminder worker tick failed");
     } finally {
       running = false;
     }
   };
 
-  setInterval(() => void tick(), POLL_INTERVAL_MS);
+  const timer = setInterval(() => void tick(), POLL_INTERVAL_MS);
   void tick();
-  console.log("Interview reminder worker started.");
+  logger.info(
+    `Interview reminder worker started (cron every ${POLL_INTERVAL_MS / 1000}s).`,
+  );
+  return () => clearInterval(timer);
 }

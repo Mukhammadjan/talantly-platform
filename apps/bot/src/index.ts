@@ -9,6 +9,7 @@ import {
 import { handleProfil } from "./handlers/profil.js";
 import { handleStart } from "./handlers/start.js";
 import { handleYordam } from "./handlers/yordam.js";
+import { logger } from "./logger.js";
 import { GENERIC_ERROR } from "./text.js";
 import { ensureUpcomingSlots } from "./workers/ensureSlots.js";
 import { startReminderWorker } from "./workers/reminderWorker.js";
@@ -20,11 +21,11 @@ function safe(handler: CommandHandler): CommandHandler {
     try {
       await handler(ctx);
     } catch (err) {
-      console.error("Handler error:", err);
+      logger.error({ err }, "Handler error");
       try {
         await ctx.reply(GENERIC_ERROR);
       } catch (replyErr) {
-        console.error("Failed to send error reply:", replyErr);
+        logger.error({ err: replyErr }, "Failed to send error reply");
       }
     }
   };
@@ -42,7 +43,7 @@ async function main(): Promise<void> {
     try {
       await handleBaholashCallback(ctx);
     } catch (err) {
-      console.error("baholash callback error:", err);
+      logger.error({ err }, "baholash callback error");
     }
   });
 
@@ -50,12 +51,12 @@ async function main(): Promise<void> {
     try {
       await handleBaholashText(ctx);
     } catch (err) {
-      console.error("baholash text error:", err);
+      logger.error({ err }, "baholash text error");
     }
   });
 
   bot.catch((err) => {
-    console.error("Bot error:", err);
+    logger.error({ err }, "Bot error");
   });
 
   await bot.api.setMyCommands([
@@ -75,29 +76,36 @@ async function main(): Promise<void> {
     );
   }
 
-  const stop = (): void => {
-    console.log("Stopping bot...");
-    void stopCvPdfBrowser();
-    void bot.stop();
-  };
-  process.once("SIGINT", stop);
-  process.once("SIGTERM", stop);
-
-  startCvPdfWorker(bot);
-  startReminderWorker(bot);
+  const stopCvPdfWorker = startCvPdfWorker(bot);
+  const stopReminderWorker = startReminderWorker(bot);
   ensureUpcomingSlots().catch((err) => {
-    console.error("ensureUpcomingSlots failed:", err);
+    logger.error({ err }, "ensureUpcomingSlots failed");
   });
 
-  console.log("Starting bot (long polling)...");
+  let stopping = false;
+  const stop = (signal: string): void => {
+    if (stopping) return;
+    stopping = true;
+    logger.info({ signal }, "Shutting down bot...");
+    stopCvPdfWorker();
+    stopReminderWorker();
+    void stopCvPdfBrowser()
+      .catch((err) => logger.error({ err }, "Browser close failed"))
+      .then(() => bot.stop());
+  };
+  process.once("SIGINT", () => stop("SIGINT"));
+  process.once("SIGTERM", () => stop("SIGTERM"));
+
+  logger.info("Starting bot (long polling)...");
   await bot.start({
     onStart: (info) => {
-      console.log(`Bot @${info.username} is running.`);
+      logger.info(`Bot @${info.username} is running.`);
     },
   });
+  logger.info("Bot stopped. Bye.");
 }
 
 main().catch((err: unknown) => {
-  console.error("Fatal:", err);
+  logger.fatal({ err }, "Fatal");
   process.exit(1);
 });
