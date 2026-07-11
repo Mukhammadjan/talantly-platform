@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Onest, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const grotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+// Self-hosted variable fonts (next/font/local) — avoids a build-time network
+// fetch to Google Fonts, which is unreliable in the Vercel build environment.
+const grotesk = localFont({
+  src: "../fonts/SpaceGrotesk.ttf",
+  weight: "400 700",
   variable: "--font-grotesk",
   display: "swap",
 });
 
-const onest = Onest({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const onest = localFont({
+  src: "../fonts/Onest.ttf",
+  weight: "400 700",
   variable: "--font-onest",
   display: "swap",
 });

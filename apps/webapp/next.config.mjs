@@ -18,6 +18,12 @@ const nextConfig = {
       ...config.resolve.extensionAlias,
       ".js": [".ts", ".tsx", ".js"],
     };
+    // Resolve the "@/" alias explicitly so it does not depend on tsconfig-paths
+    // detection, which is unreliable in Vercel's monorepo build environment.
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    };
     return config;
   },
 };
