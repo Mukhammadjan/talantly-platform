@@ -113,7 +113,12 @@ for (let y = 1; y <= EXPERIENCE_YEARS_MAX; y += 1) {
   EXPERIENCE_YEAR_OPTIONS.push(y);
 }
 
-const CONFETTI_COLORS = ["#F26430", "#FF8A3D", "#23B26A", "#F0C24B"];
+const CONFETTI_COLORS = [
+  "var(--orange)",
+  "var(--orange-light)",
+  "var(--green-seal)",
+  "var(--gold)",
+];
 
 function Confetti(): JSX.Element {
   const pieces = useMemo(
@@ -122,7 +127,7 @@ function Confetti(): JSX.Element {
         left: `${(i * 37) % 100}%`,
         delay: `${((i * 13) % 9) / 10}s`,
         duration: `${2.2 + ((i * 7) % 10) / 10}s`,
-        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length] ?? "#F26430",
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length] ?? "var(--orange)",
       })),
     [],
   );

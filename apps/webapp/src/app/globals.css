@@ -19,6 +19,9 @@
   --green-seal: #23b26a;
   --green-soft: #eaf7f0;
 
+  /* Decorative accent — celebration confetti only, NOT part of the UI palette. */
+  --gold: #f0c24b;
+
   /* Back-compat aliases — some inline styles still read these names. */
   --ink: var(--text);
   --ink-soft: var(--muted);
