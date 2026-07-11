@@ -1,5 +1,6 @@
 import type { InterviewSlotInsert } from "@talantly/shared";
 import * as interviewSlotsRepo from "../db/interviewSlotsRepo.js";
+import { logger } from "../logger.js";
 
 const MIN_OPEN_SLOTS = 12;
 const DAYS_AHEAD = 7;
@@ -14,7 +15,7 @@ export async function ensureUpcomingSlots(): Promise<void> {
     (slot) => new Date(slot.starts_at).getTime() <= horizon,
   );
   if (openInWindow.length >= MIN_OPEN_SLOTS) {
-    console.log(
+    logger.info(
       `Interview slots OK: ${openInWindow.length} open in next ${DAYS_AHEAD} days.`,
     );
     return;
@@ -53,7 +54,7 @@ export async function ensureUpcomingSlots(): Promise<void> {
 
   if (toInsert.length > 0) {
     const inserted = await interviewSlotsRepo.insertMany(toInsert);
-    console.log(
+    logger.info(
       `Inserted ${inserted.length} interview slots (now ${openInWindow.length + inserted.length} open in window).`,
     );
   }
