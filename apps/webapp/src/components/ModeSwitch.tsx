@@ -16,7 +16,7 @@ export function ModeSwitch({
         haptic("light");
         router.push("/rol");
       }}
-      className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-[12px] font-semibold text-ink-soft transition-all duration-150 active:scale-[0.97] active:bg-cream ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-[12px] font-semibold text-ink-soft transition-all duration-150 active:scale-[0.97] active:bg-surface-2 ${className}`}
     >
       <span aria-hidden>⇄</span>
       Rolni almashtirish

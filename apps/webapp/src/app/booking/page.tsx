@@ -139,7 +139,7 @@ export default function BookingPage(): JSX.Element {
         <h1 className="mt-6 text-xl font-bold">Suhbat belgilandi!</h1>
         <Card className="mt-6 w-full">
           <p className="label-caps">Suhbat vaqti</p>
-          <p className="mt-2 text-[17px] font-bold">
+          <p className="num mt-2 text-[17px] font-bold">
             {formatDateTimeUz(phase.scheduledAt)}
           </p>
           <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">
@@ -196,7 +196,7 @@ export default function BookingPage(): JSX.Element {
                         haptic();
                         setPhase({ ...phase, selected: slot.id });
                       }}
-                      className={`rounded-full border px-5 py-2.5 text-[14px] font-semibold transition-all active:scale-[0.96] ${
+                      className={`num rounded-full border px-5 py-2.5 text-[14px] font-semibold transition-all active:scale-[0.96] ${
                         isSelected
                           ? "border-orange bg-orange text-white shadow-soft"
                           : "border-line bg-surface text-ink"
@@ -213,10 +213,10 @@ export default function BookingPage(): JSX.Element {
       )}
 
       {selectedSlot && (
-        <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-cream px-5 pb-6 pt-4">
+        <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pb-6 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
           <p className="mb-3 text-center text-[13px] text-ink-soft">
             Tanlangan vaqt:{" "}
-            <span className="font-semibold text-ink">
+            <span className="num font-semibold text-ink">
               {formatDateTimeUz(selectedSlot.startsAt)}
             </span>
           </p>

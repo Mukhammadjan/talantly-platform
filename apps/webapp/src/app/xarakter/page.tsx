@@ -47,7 +47,7 @@ function ResultScreen({
 }): JSX.Element {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
-      <div className="seal-pop flex h-24 w-24 items-center justify-center rounded-full bg-orange-tint text-5xl">
+      <div className="seal-pop flex h-24 w-24 items-center justify-center rounded-full bg-orange-soft text-5xl">
         {archetypeEmoji(result.archetypeCode)}
       </div>
       <span className="label-caps mt-6 text-orange">Sizning xarakteringiz</span>
@@ -59,7 +59,7 @@ function ResultScreen({
         {result.traits.map((trait) => (
           <span
             key={trait}
-            className="rounded-full border border-line bg-surface px-3 py-1.5 text-[12px] font-semibold text-ink"
+            className="rounded-chip border border-line bg-surface px-3 py-1.5 text-[12px] font-semibold text-ink"
           >
             {trait}
           </span>
@@ -248,7 +248,7 @@ export default function XarakterPage(): JSX.Element {
     <main className="px-5 pb-10 pt-8">
       <div className="flex items-center justify-between">
         <span className="label-caps">Xarakter testi</span>
-        <span className="text-[13px] font-semibold text-ink-soft">
+        <span className="num text-[13px] font-semibold text-ink-soft">
           Savol {current}/{total}
         </span>
       </div>
@@ -272,7 +272,7 @@ export default function XarakterPage(): JSX.Element {
                 onClick={() => void answer(i)}
                 className={`w-full rounded-card border p-4 text-left text-[14px] leading-snug transition-all active:scale-[0.98] disabled:opacity-60 ${
                   isSelected
-                    ? "border-orange bg-orange-tint font-semibold"
+                    ? "border-orange bg-orange-soft font-semibold"
                     : "border-line bg-surface"
                 }`}
               >

@@ -3,19 +3,31 @@
 @tailwind utilities;
 
 :root {
-  --cream: #fbf6f0;
+  /* --- talantly design system (light + grotesk) --- */
+  --bg: #f5f5f7;
   --surface: #ffffff;
+  --surface2: #f1f1f4;
+  --border: #e7e7eb;
+  --border-2: #efeff2;
+  --text: #17171b;
+  --muted: #6c6c76;
+  --dim: #9b9ba5;
   --orange: #f26430;
-  --orange-deep: #f0530a;
+  --orange-deep: #e5551f;
+  --orange-soft: #fff1eb;
+  --green: #1f9e58;
+  --green-seal: #23b26a;
+  --green-soft: #eaf7f0;
+
+  /* Back-compat aliases — some inline styles still read these names. */
+  --ink: var(--text);
+  --ink-soft: var(--muted);
+  --ink-faint: var(--dim);
+  --line: var(--border);
   --orange-light: #ff8a3d;
-  --green: #2fb86b;
-  --green-deep: #1f9e58;
-  --ink: #191512;
-  --ink-soft: #6b625b;
-  --ink-faint: rgba(107, 98, 91, 0.55);
-  --line: #eae2d8;
+  --green-deep: var(--green);
   --orange-tint: rgba(242, 100, 48, 0.06);
-  --green-tint: rgba(47, 184, 107, 0.1);
+  --green-tint: rgba(31, 158, 88, 0.1);
 }
 
 html,
@@ -24,14 +36,28 @@ body {
 }
 
 body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-onest), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+}
+
+/* Space Grotesk drives structural type: headings, numbers, buttons, names,
+   archetype labels. Body copy stays on Onest via the body rule above. */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-grotesk), var(--font-onest), sans-serif;
+}
+
+/* Tabular figures for scores, prices, counters. */
+.num {
+  font-family: var(--font-grotesk), sans-serif;
+  font-feature-settings: "tnum" 1;
 }
 
 @layer components {
@@ -108,9 +134,9 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    #f3ece3 25%,
-    #faf5ee 50%,
-    #f3ece3 75%
+    #ececef 25%,
+    #f6f6f8 50%,
+    #ececef 75%
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.4s ease-in-out infinite;

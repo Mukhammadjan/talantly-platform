@@ -81,9 +81,10 @@ function ScoreDial({ score }: { score: number }): JSX.Element {
         x={70}
         y={66}
         textAnchor="middle"
-        fontSize={30}
+        fontSize={32}
         fontWeight={700}
-        fill="var(--ink)"
+        fill="var(--text)"
+        style={{ fontFamily: "var(--font-grotesk)" }}
       >
         {score}
       </text>
@@ -270,7 +271,7 @@ export default function TestPage(): JSX.Element {
     <main className="px-5 pb-10 pt-8">
       <div className="flex items-center justify-between">
         <span className="label-caps">Skill test</span>
-        <span className="text-[13px] font-semibold text-ink-soft">
+        <span className="num text-[13px] font-semibold text-ink-soft">
           Savol {current}/{total}
         </span>
       </div>
@@ -294,15 +295,15 @@ export default function TestPage(): JSX.Element {
                 onClick={() => void answer(i)}
                 className={`flex w-full items-center gap-3 rounded-card border p-4 text-left text-[14px] leading-snug transition-all active:scale-[0.98] disabled:opacity-60 ${
                   isSelected
-                    ? "border-orange bg-orange-tint font-semibold"
+                    ? "border-orange bg-orange-soft font-semibold"
                     : "border-line bg-surface"
                 }`}
               >
                 <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${
+                  className={`font-display flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${
                     isSelected
                       ? "bg-orange text-white"
-                      : "bg-cream text-ink-soft"
+                      : "bg-surface-2 text-ink-soft"
                   }`}
                 >
                   {OPTION_LETTERS[i] ?? i + 1}

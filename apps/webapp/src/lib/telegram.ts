@@ -36,7 +36,7 @@ export function getWebApp(): TelegramWebApp | null {
   return window.Telegram?.WebApp ?? null;
 }
 
-const BRAND_CREAM = "#FBF6F0";
+const BRAND_BG = "#F5F5F7";
 
 /** Signals readiness and harmonizes chrome colors with the brand background. */
 export function initTelegramUi(): TelegramWebApp | null {
@@ -45,8 +45,8 @@ export function initTelegramUi(): TelegramWebApp | null {
   webApp.ready();
   webApp.expand();
   try {
-    webApp.setBackgroundColor(BRAND_CREAM);
-    webApp.setHeaderColor(BRAND_CREAM);
+    webApp.setBackgroundColor(BRAND_BG);
+    webApp.setHeaderColor(BRAND_BG);
   } catch {
     // Older Telegram clients do not support color overrides — brand CSS still applies.
   }
