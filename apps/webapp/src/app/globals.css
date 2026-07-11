@@ -31,6 +31,12 @@
   --green-deep: var(--green);
   --orange-tint: rgba(242, 100, 48, 0.06);
   --green-tint: rgba(31, 158, 88, 0.1);
+
+  /* Telegram safe-area insets (set from JS in fullscreen; ~0 in compact mode). */
+  --tg-safe-top: 0px;
+  --tg-safe-bottom: 0px;
+  --tg-content-top: 0px;
+  --tg-content-bottom: 0px;
 }
 
 html,
@@ -61,6 +67,17 @@ h3,
 .num {
   font-family: var(--font-grotesk), sans-serif;
   font-feature-settings: "tnum" 1;
+}
+
+/* App shell pads clear of Telegram's status bar + floating controls in
+   fullscreen; collapses to no extra padding in compact mode (insets ~0). */
+.app-shell {
+  padding-top: calc(var(--tg-safe-top) + var(--tg-content-top));
+}
+
+/* Utility for fixed bottom bars to clear the home indicator in fullscreen. */
+.safe-bottom {
+  padding-bottom: calc(1.5rem + var(--tg-safe-bottom) + var(--tg-content-bottom));
 }
 
 @layer components {

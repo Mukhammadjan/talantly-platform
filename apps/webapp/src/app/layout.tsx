@@ -47,7 +47,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="mx-auto min-h-screen w-full max-w-app">{children}</div>
+        <div className="app-shell mx-auto min-h-screen w-full max-w-app">
+          {children}
+        </div>
       </body>
     </html>
   );

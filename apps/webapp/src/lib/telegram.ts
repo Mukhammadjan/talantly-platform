@@ -21,6 +21,16 @@ export interface TelegramWebApp {
     impactOccurred: (style: "light" | "medium" | "heavy") => void;
     notificationOccurred: (type: "error" | "success" | "warning") => void;
   };
+  onEvent?: (event: string, handler: () => void) => void;
+  safeAreaInset?: SafeAreaInset;
+  contentSafeAreaInset?: SafeAreaInset;
+}
+
+interface SafeAreaInset {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 }
 
 declare global {
@@ -54,7 +64,31 @@ export function initTelegramUi(): TelegramWebApp | null {
   const root = document.documentElement;
   if (theme.text_color) root.style.setProperty("--tg-text", theme.text_color);
   if (theme.hint_color) root.style.setProperty("--tg-hint", theme.hint_color);
+
+  // Fullscreen Mini Apps (opened without Telegram's header) run under the
+  // status bar and the floating close/menu controls. Mirror Telegram's safe
+  // area + content safe area into CSS vars so the shell can pad clear of them.
+  // In compact mode these insets are ~0, so that layout is unchanged.
+  applySafeArea(webApp);
+  if (!safeAreaSubscribed && webApp.onEvent) {
+    webApp.onEvent("safeAreaChanged", () => applySafeArea(webApp));
+    webApp.onEvent("contentSafeAreaChanged", () => applySafeArea(webApp));
+    safeAreaSubscribed = true;
+  }
   return webApp;
+}
+
+let safeAreaSubscribed = false;
+
+function applySafeArea(webApp: TelegramWebApp): void {
+  const root = document.documentElement;
+  const set = (name: string, value: number | undefined): void => {
+    root.style.setProperty(name, `${Math.max(0, value ?? 0)}px`);
+  };
+  set("--tg-safe-top", webApp.safeAreaInset?.top);
+  set("--tg-safe-bottom", webApp.safeAreaInset?.bottom);
+  set("--tg-content-top", webApp.contentSafeAreaInset?.top);
+  set("--tg-content-bottom", webApp.contentSafeAreaInset?.bottom);
 }
 
 export function openExternalLink(url: string): void {

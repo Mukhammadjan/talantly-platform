@@ -342,7 +342,7 @@ export default function TalentDetailPage({
         </p>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pb-6 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
+      <div className="safe-bottom fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
         {sent ? (
           <p className="rounded-input bg-green-soft p-4 text-center text-[14px] font-semibold text-green-deep">
             So&apos;rov yuborildi ✓ 24 soat ichida bog&apos;lanamiz.

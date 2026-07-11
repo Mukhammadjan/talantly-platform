@@ -213,7 +213,7 @@ export default function BookingPage(): JSX.Element {
       )}
 
       {selectedSlot && (
-        <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pb-6 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
+        <div className="safe-bottom fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
           <p className="mb-3 text-center text-[13px] text-ink-soft">
             Tanlangan vaqt:{" "}
             <span className="num font-semibold text-ink">
