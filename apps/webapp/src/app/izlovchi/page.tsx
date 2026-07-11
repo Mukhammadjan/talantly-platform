@@ -24,6 +24,7 @@ import { PillButton } from "@/components/PillButton";
 import { ProgressBar } from "@/components/ProgressBar";
 import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
+import { Mark } from "@/components/Wordmark";
 import { ApiError, apiFetch, authenticate, isInsideTelegram } from "@/lib/api";
 import type {
   CompanySnapshot,
@@ -84,10 +85,10 @@ function OptionCard({
     <button
       type="button"
       onClick={onSelect}
-      className="flex w-full items-center gap-3 rounded-card border border-line bg-surface p-4 text-left shadow-soft transition-all duration-150 active:scale-[0.98] active:border-orange active:bg-orange-tint"
+      className="flex w-full items-center gap-3 rounded-card border border-line bg-surface p-4 text-left shadow-soft transition-all duration-150 active:scale-[0.98] active:border-orange active:bg-orange-soft"
     >
       <span
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cream text-[22px]"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface-2 text-[22px]"
         aria-hidden
       >
         {icon}
@@ -198,7 +199,7 @@ function Onboarding({
         <div className="flex-1">
           <ProgressBar value={(step - 1) / ONBOARDING_STEPS} />
         </div>
-        <span className="shrink-0 text-[12px] font-semibold text-ink-soft">
+        <span className="num shrink-0 text-[12px] font-semibold text-ink-soft">
           {step}/{ONBOARDING_STEPS}
         </span>
       </div>
@@ -242,7 +243,7 @@ function Onboarding({
                   }}
                   className={`rounded-full border px-4 py-2 text-[13px] font-semibold transition-all active:scale-95 ${
                     values.city === city
-                      ? "border-orange bg-orange-tint text-orange-deep"
+                      ? "border-orange bg-orange-soft text-orange-deep"
                       : "border-line bg-surface text-ink-soft"
                   }`}
                 >
@@ -380,7 +381,7 @@ function FilterChip({
       }}
       className={`rounded-full border px-3.5 py-1.5 text-[12px] font-semibold transition-all active:scale-95 ${
         active
-          ? "border-orange bg-orange-tint text-orange-deep"
+          ? "border-orange bg-orange-soft text-orange-deep"
           : "border-line bg-surface text-ink-soft"
       }`}
     >
@@ -518,7 +519,7 @@ function TalentCard({
           </p>
         </div>
         {talent.level && (
-          <span className="shrink-0 rounded-full bg-cream px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+          <span className="shrink-0 rounded-chip bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
             {talent.level === "intern" ? "🌱" : "💼"}{" "}
             {LEVEL_LABELS_UZ[talent.level]}
           </span>
@@ -534,20 +535,20 @@ function TalentCard({
       {(archetype || talent.skillTags.length > 0) && (
         <div className="mt-2.5 flex flex-wrap gap-1.5">
           {archetype && (
-            <span className="rounded-full bg-orange-tint px-2.5 py-1 text-[11px] font-semibold text-orange-deep">
+            <span className="rounded-chip bg-orange-soft px-2.5 py-1 text-[11px] font-semibold text-orange-deep">
               {archetype.emoji} {talent.archetypeLabel ?? archetype.label}
             </span>
           )}
           {talent.skillTags.slice(0, 3).map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-line bg-cream px-2.5 py-1 text-[11px] font-semibold text-ink-soft"
+              className="rounded-chip border border-line bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-ink-soft"
             >
               {tag}
             </span>
           ))}
           {extraTags > 0 && (
-            <span className="rounded-full border border-line bg-cream px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+            <span className="rounded-full border border-line bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
               +{extraTags}
             </span>
           )}
@@ -556,7 +557,7 @@ function TalentCard({
 
       <div className="mt-3 flex items-center gap-2 border-t border-line pt-3">
         {talent.score !== null && (
-          <span className="rounded-full bg-green-tint px-2.5 py-1 text-[12px] font-bold text-green-deep">
+          <span className="num rounded-chip bg-green-soft px-2.5 py-1 text-[12px] font-bold text-green">
             {talent.score} ball
           </span>
         )}
@@ -612,15 +613,16 @@ function Feed({
   }, [talents, filters, tab, company]);
 
   return (
-    <main className="px-5 pb-10 pt-6">
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <p className="label-caps">Izlovchi</p>
-          <h1 className="truncate text-[19px] font-bold tracking-tight text-ink">
-            {company.name}
-          </h1>
-        </div>
+    <main className="px-5 pb-10 pt-5">
+      <div className="mb-4 flex items-center justify-between">
+        <Mark size={26} />
         <ModeSwitch className="shrink-0" />
+      </div>
+      <div className="min-w-0">
+        <p className="label-caps">Izlovchi</p>
+        <h1 className="truncate text-[19px] font-bold tracking-tight text-ink">
+          {company.name}
+        </h1>
       </div>
 
       <div className="scrollbar-none -mx-5 mt-5 flex gap-2 overflow-x-auto px-5">
@@ -632,7 +634,7 @@ function Feed({
               haptic("light");
               setTab(item.value);
             }}
-            className={`shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-all active:scale-95 ${
+            className={`font-display shrink-0 rounded-full px-4 py-2 text-[13px] font-semibold transition-all active:scale-95 ${
               tab === item.value
                 ? "bg-orange text-white shadow-soft"
                 : "border border-line bg-surface text-ink-soft"
@@ -649,7 +651,7 @@ function Feed({
           }}
           className={`shrink-0 rounded-full border px-4 py-2 text-[13px] font-semibold transition-all active:scale-95 ${
             filtersOpen || activeFilterCount > 0
-              ? "border-orange bg-orange-tint text-orange-deep"
+              ? "border-orange bg-orange-soft text-orange-deep"
               : "border-line bg-surface text-ink-soft"
           }`}
         >

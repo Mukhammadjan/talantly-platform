@@ -13,7 +13,7 @@ export function Seal({
       className={className}
       aria-hidden="true"
     >
-      <circle cx="32" cy="32" r="30" fill="var(--green)" />
+      <circle cx="32" cy="32" r="30" fill="var(--green-seal)" />
       <circle
         cx="32"
         cy="32"

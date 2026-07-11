@@ -43,7 +43,7 @@ function ScoreDial({ score }: { score: number }): JSX.Element {
         />
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[20px] font-bold leading-none text-green-deep">
+        <span className="num text-[20px] font-bold leading-none text-green-deep">
           {score}
         </span>
         <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-wide text-ink-soft">
@@ -220,7 +220,7 @@ export default function TalentDetailPage({
         {talent.score !== null ? (
           <ScoreDial score={talent.score} />
         ) : (
-          <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-cream text-[13px] font-semibold text-ink-soft">
+          <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-surface-2 text-[13px] font-semibold text-ink-soft">
             —
           </span>
         )}
@@ -250,7 +250,7 @@ export default function TalentDetailPage({
           <p className="label-caps">Xarakter</p>
           <div className="mt-2 flex items-center gap-3">
             <span
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-tint text-[24px]"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-soft text-[24px]"
               aria-hidden
             >
               {archetype.emoji}
@@ -267,7 +267,7 @@ export default function TalentDetailPage({
               {talent.traits.map((trait) => (
                 <span
                   key={trait}
-                  className="rounded-full bg-orange-tint px-3 py-1 text-[12px] font-semibold text-orange-deep"
+                  className="rounded-chip bg-orange-soft px-3 py-1 text-[12px] font-semibold text-orange-deep"
                 >
                   {trait}
                 </span>
@@ -286,7 +286,7 @@ export default function TalentDetailPage({
             </p>
           )}
           {talent.aiVerdict && (
-            <p className="mt-3 rounded-input bg-green-tint p-3.5 text-[13px] font-medium leading-relaxed text-green-deep">
+            <p className="mt-3 rounded-input bg-green-soft p-3.5 text-[13px] font-medium leading-relaxed text-green-deep">
               {talent.aiVerdict}
             </p>
           )}
@@ -300,7 +300,7 @@ export default function TalentDetailPage({
             {skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-full border border-line bg-cream px-3 py-1 text-[12px] font-semibold text-ink"
+                className="rounded-chip border border-line bg-surface-2 px-3 py-1 text-[12px] font-semibold text-ink"
               >
                 {skill}
               </span>
@@ -342,9 +342,9 @@ export default function TalentDetailPage({
         </p>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-cream px-5 pb-6 pt-4">
+      <div className="fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pb-6 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
         {sent ? (
-          <p className="rounded-input bg-green-tint p-4 text-center text-[14px] font-semibold text-green-deep">
+          <p className="rounded-input bg-green-soft p-4 text-center text-[14px] font-semibold text-green-deep">
             So&apos;rov yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
           </p>
         ) : (

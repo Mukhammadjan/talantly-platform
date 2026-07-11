@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PillButton } from "@/components/PillButton";
-import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
+import { Wordmark } from "@/components/Wordmark";
 import { authenticate, isInsideTelegram } from "@/lib/api";
 import { initTelegramUi } from "@/lib/telegram";
 
@@ -46,11 +46,8 @@ export default function EntryPage(): JSX.Element {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16">
-      <Seal size={72} className="seal-pop" />
-      <h1 className="mt-5 text-2xl font-bold tracking-tight">
-        talantly<span className="text-orange">.</span>
-      </h1>
-      <p className="label-caps mt-2">Tekshirilgan talantlar</p>
+      <Wordmark height={44} className="seal-pop" />
+      <p className="label-caps mt-4">Tekshirilgan talantlar</p>
 
       {state === "loading" && (
         <div className="mt-10 w-full space-y-3">

@@ -8,6 +8,7 @@ import { PillButton } from "@/components/PillButton";
 import { ProgressBar } from "@/components/ProgressBar";
 import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
+import { Wordmark } from "@/components/Wordmark";
 import { ApiError, apiFetch, authenticate, isInsideTelegram } from "@/lib/api";
 import type { TalentSnapshot } from "@/lib/apiTypes";
 import {
@@ -112,7 +113,12 @@ for (let y = 1; y <= EXPERIENCE_YEARS_MAX; y += 1) {
   EXPERIENCE_YEAR_OPTIONS.push(y);
 }
 
-const CONFETTI_COLORS = ["#F26430", "#FF8A3D", "#2FB86B", "#F0C24B"];
+const CONFETTI_COLORS = [
+  "var(--orange)",
+  "var(--orange-light)",
+  "var(--green-seal)",
+  "var(--gold)",
+];
 
 function Confetti(): JSX.Element {
   const pieces = useMemo(
@@ -121,7 +127,7 @@ function Confetti(): JSX.Element {
         left: `${(i * 37) % 100}%`,
         delay: `${((i * 13) % 9) / 10}s`,
         duration: `${2.2 + ((i * 7) % 10) / 10}s`,
-        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length] ?? "#F26430",
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length] ?? "var(--orange)",
       })),
     [],
   );
@@ -373,11 +379,8 @@ export default function RegisterPage(): JSX.Element {
     return (
       <main className="flex min-h-screen flex-col px-6 pb-8 pt-16">
         <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <Seal size={80} className="seal-pop" />
-          <h1 className="mt-6 text-2xl font-bold tracking-tight">
-            talantly<span className="text-orange">.</span>
-          </h1>
-          <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
+          <Wordmark height={42} className="seal-pop" />
+          <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
             Iqtidoringizni tekshiramiz va tasdiqlaymiz.
             <br />
             Kompaniyalar tekshirilgan talantlarga ishonadi.
@@ -445,7 +448,7 @@ export default function RegisterPage(): JSX.Element {
           </svg>
         </button>
         <ProgressBar value={step / TOTAL_STEPS} />
-        <span className="label-caps shrink-0">
+        <span className="label-caps num shrink-0">
           {step}/{TOTAL_STEPS}
         </span>
       </div>
@@ -537,7 +540,7 @@ export default function RegisterPage(): JSX.Element {
                     }}
                     className={`flex flex-col items-start gap-2 rounded-card border p-4 text-left transition-all active:scale-[0.97] ${
                       selected
-                        ? "border-orange bg-orange-tint shadow-soft"
+                        ? "border-orange bg-orange-soft shadow-soft"
                         : "border-line bg-surface"
                     }`}
                   >
@@ -592,13 +595,13 @@ export default function RegisterPage(): JSX.Element {
                     }}
                     className={`flex w-full items-center gap-4 rounded-card border p-4 text-left transition-all active:scale-[0.98] ${
                       selected
-                        ? "border-orange bg-orange-tint shadow-soft"
+                        ? "border-orange bg-orange-soft shadow-soft"
                         : "border-line bg-surface"
                     }`}
                   >
                     <span className="text-3xl">{level.icon}</span>
                     <span>
-                      <span className="block text-[15px] font-bold">
+                      <span className="font-display block text-[15px] font-bold">
                         {level.label}
                       </span>
                       <span className="mt-0.5 block text-[13px] text-ink-soft">
@@ -654,7 +657,7 @@ export default function RegisterPage(): JSX.Element {
                     onClick={() => toggleFormat(format.value)}
                     className={`flex w-full items-center gap-4 rounded-card border p-4 text-left transition-all active:scale-[0.98] ${
                       selected
-                        ? "border-orange bg-orange-tint shadow-soft"
+                        ? "border-orange bg-orange-soft shadow-soft"
                         : "border-line bg-surface"
                     }`}
                   >
@@ -666,7 +669,7 @@ export default function RegisterPage(): JSX.Element {
                       className={`ml-auto flex h-6 w-6 items-center justify-center rounded-full border text-[12px] font-bold ${
                         selected
                           ? "border-orange bg-orange text-white"
-                          : "border-line bg-cream text-transparent"
+                          : "border-line bg-surface-2 text-transparent"
                       }`}
                     >
                       ✓
@@ -707,11 +710,11 @@ export default function RegisterPage(): JSX.Element {
 
           {step === 11 && (
             <div className="flex items-center gap-2">
-              <span className="rounded-input border border-line bg-surface px-4 py-3.5 text-[15px] font-semibold">
+              <span className="num rounded-input border border-line bg-surface px-4 py-3.5 text-[15px] font-semibold">
                 +998
               </span>
               <input
-                className="input-base"
+                className="input-base num"
                 type="tel"
                 inputMode="numeric"
                 autoFocus

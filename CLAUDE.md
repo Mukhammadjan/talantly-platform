@@ -59,15 +59,29 @@ Zuhratosh Tursunboyeva (Co-Founder). Admin contact: `+998 99-030-73-22`.
 
 The founder is a UX/UI designer; **sloppy UI is a FAIL**.
 
-- **Tokens:** background cream `#FBF6F0`; surface white; primary orange
-  `#F26430` (deep `#F0530A`, light `#FF8A3D`); verified green `#2FB86B` (deep
-  `#1F9E58`); ink `#191512`; soft ink `#6B625B`; line `#EAE2D8`.
-- **Radii:** cards 20px, buttons pill (999px), inputs 14px.
-- **Typography:** system font stack is fine, but hierarchy must be strict (one
-  H per screen, 13–15px body, 11px uppercase-tracked labels).
-- **Shadows:** soft only — `0 18px 40px -22px rgba(120,70,30,.25)`.
-- **Brand mark:** green check seal — a circle with a white check, used for
-  "Tekshirilgan".
+Design direction (approved): **LIGHT + grotesk**. Cream and serif are RETIRED —
+never reintroduce them. Tokens live as CSS vars in
+`apps/webapp/src/app/globals.css` and Tailwind aliases in
+`apps/webapp/tailwind.config.ts`.
+
+- **Tokens:** background `#F5F5F7`; surface white `#FFFFFF`; surface-2 `#F1F1F4`
+  (inset chips/avatars); border `#E7E7EB`, border-2 `#EFEFF2`; text `#17171B`,
+  muted `#6C6C76`, dim `#9B9BA5`; primary orange `#F26430` (deep `#E5551F`, soft
+  `#FFF1EB`); verified green `#1F9E58` (seal `#23B26A`, soft `#EAF7F0`). Green is
+  ONLY for verified/status; orange is brand/action. NO cream, NO raw hex in
+  markup — use the tokens.
+- **Radii:** cards 18px, role cards 22px, inputs/options 15px, pills/buttons
+  15px+ (fully rounded for CTAs), chips 8–10px.
+- **Typography:** Space Grotesk (headings, numbers, buttons, names, archetype
+  labels) + Onest (body). Loaded via `next/font` in `layout.tsx` as
+  `--font-grotesk` / `--font-onest`; use `font-display` / the `.num` class for
+  grotesk. Strict hierarchy: one H per screen, 13–15px body, 11px
+  uppercase-tracked labels.
+- **Shadows:** soft only — `0 18px 40px -22px rgba(23,23,27,.22)`.
+- **Brand:** founder-supplied SVGs in `apps/webapp/public/assets/brand/`
+  (`talantly-wordmark-dark/light.svg`, `talantly-mark.svg`) via the `Wordmark` /
+  `Mark` components — NEVER redraw the logo. Green check seal (`Seal`) = circle +
+  white check, used only for "Tekshirilgan".
 - Mini App must also read Telegram theme params for background harmony but
   keep brand accents.
 - Every screen: generous whitespace, one primary action, obvious progress.

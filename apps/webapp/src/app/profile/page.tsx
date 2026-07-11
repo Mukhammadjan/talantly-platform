@@ -18,6 +18,7 @@ import { ModeSwitch } from "@/components/ModeSwitch";
 import { PillButton } from "@/components/PillButton";
 import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
+import { Mark } from "@/components/Wordmark";
 import { apiFetch, isInsideTelegram } from "@/lib/api";
 import type { MatchesResponse, TalentSnapshot } from "@/lib/apiTypes";
 import { addDaysIso, formatDateTimeUz, formatDateUz } from "@/lib/format";
@@ -172,8 +173,8 @@ function PaymentCard(): JSX.Element {
 
       {info.cardNumber ? (
         <>
-          <div className="mt-4 rounded-input border border-line bg-cream p-4">
-            <p className="text-[17px] font-bold tracking-wider">
+          <div className="mt-4 rounded-input border border-line bg-surface-2 p-4">
+            <p className="num text-[17px] font-bold tracking-wider">
               {formatCard(info.cardNumber)}
             </p>
             {info.cardOwner && (
@@ -196,7 +197,7 @@ function PaymentCard(): JSX.Element {
           </p>
         </>
       ) : (
-        <p className="mt-4 rounded-input border border-line bg-cream p-4 text-[13px] leading-relaxed text-ink-soft">
+        <p className="mt-4 rounded-input border border-line bg-surface-2 p-4 text-[13px] leading-relaxed text-ink-soft">
           To&apos;lov rekvizitlari vaqtincha mavjud emas. Iltimos, botdagi
           /yordam bo&apos;limi orqali admin bilan bog&apos;laning.
         </p>
@@ -337,7 +338,7 @@ function ActionCard({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
         <Card>
           <p className="label-caps">Keyingi qadam</p>
           <div className="mt-2 flex items-center gap-3">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-tint text-[18px] font-bold text-green-deep">
+            <span className="num flex h-14 w-14 items-center justify-center rounded-full bg-green-soft text-[18px] font-bold text-green">
               {snapshot.score ?? "—"}
             </span>
             <div>
@@ -479,7 +480,7 @@ function MatchesSection({
           {data.matches.map((match) => (
             <div
               key={match.id}
-              className="rounded-input border border-line bg-cream p-4"
+              className="rounded-input border border-line bg-surface-2 p-4"
             >
               <p className="text-[14px] font-bold">
                 {match.activityType ?? "Kompaniya"}
@@ -487,19 +488,19 @@ function MatchesSection({
               </p>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {match.neededLevel && (
-                  <span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+                  <span className="rounded-chip bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
                     {NEEDED_LEVEL_LABELS_UZ[match.neededLevel]}
                   </span>
                 )}
                 {match.urgency && (
-                  <span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+                  <span className="rounded-chip bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
                     {URGENCY_LABELS_UZ[match.urgency]}
                   </span>
                 )}
                 {match.directions.map((d) => (
                   <span
                     key={d}
-                    className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft"
+                    className="rounded-chip bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink-soft"
                   >
                     {d in DIRECTION_LABELS_UZ
                       ? DIRECTION_LABELS_UZ[d as keyof typeof DIRECTION_LABELS_UZ]
@@ -514,7 +515,7 @@ function MatchesSection({
 
       <div className="mt-4">
         {sent ? (
-          <p className="rounded-input bg-green-tint p-4 text-center text-[13px] font-semibold text-green-deep">
+          <p className="rounded-input bg-green-soft p-4 text-center text-[13px] font-semibold text-green">
             So&apos;rovingiz yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
           </p>
         ) : verified ? (
@@ -603,16 +604,17 @@ export default function ProfilePage(): JSX.Element {
   ].filter(Boolean);
 
   return (
-    <main className="px-5 pb-10 pt-6">
-      <div className="mb-4 flex justify-end">
+    <main className="px-5 pb-10 pt-5">
+      <div className="mb-5 flex items-center justify-between">
+        <Mark size={26} />
         <ModeSwitch />
       </div>
       <div className="flex items-center gap-4">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-orange text-[20px] font-bold text-white shadow-soft">
+        <span className="font-display flex h-14 w-14 items-center justify-center rounded-full bg-orange text-[20px] font-bold text-white shadow-soft">
           {initial}
         </span>
         <div className="min-w-0">
-          <h1 className="truncate text-[19px] font-bold">
+          <h1 className="truncate text-[19px] font-bold tracking-tight">
             {snapshot.fullName ?? "Talant"}
           </h1>
           <p className="text-[13px] text-ink-soft">
@@ -720,7 +722,7 @@ function ProfileDetails({
             {snapshot.skillTags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-line bg-cream px-3 py-1 text-[12px] font-semibold text-ink"
+                className="rounded-chip border border-line bg-surface-2 px-3 py-1 text-[12px] font-semibold text-ink"
               >
                 {tag}
               </span>

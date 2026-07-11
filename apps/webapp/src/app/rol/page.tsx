@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Seal } from "@/components/Seal";
 import { Skeleton } from "@/components/Skeleton";
+import { Wordmark } from "@/components/Wordmark";
 import { apiFetch, authenticate, isInsideTelegram } from "@/lib/api";
 import type { TalentSnapshot } from "@/lib/apiTypes";
 import type { PreferredMode } from "@talantly/shared";
@@ -31,19 +31,21 @@ function RoleCard({
       type="button"
       onClick={onSelect}
       disabled={disabled}
-      className={`w-full rounded-card border p-5 text-left shadow-soft transition-all duration-150 active:scale-[0.98] disabled:opacity-60 ${
-        selected ? "border-orange bg-orange-tint" : "border-line bg-surface"
+      className={`w-full rounded-role border p-5 text-left shadow-soft transition-all duration-150 active:scale-[0.98] disabled:opacity-60 ${
+        selected ? "border-orange bg-orange-soft" : "border-line bg-surface"
       }`}
     >
       <div className="flex items-center gap-4">
         <span
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-cream text-[28px]"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-surface-2 text-[28px]"
           aria-hidden
         >
           {emoji}
         </span>
         <span className="min-w-0">
-          <span className="block text-[17px] font-bold text-ink">{title}</span>
+          <span className="font-display block text-[17px] font-bold text-ink">
+            {title}
+          </span>
           <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
             {text}
           </span>
@@ -111,8 +113,8 @@ export default function RolePage(): JSX.Element {
   return (
     <main className="flex min-h-screen flex-col px-5 pb-10 pt-12">
       <div className="flex flex-col items-center">
-        <Seal size={56} className="seal-pop" />
-        <h1 className="mt-4 text-[22px] font-bold tracking-tight text-ink">
+        <Wordmark height={38} className="seal-pop" />
+        <h1 className="mt-6 text-[22px] font-bold tracking-tight text-ink">
           Xush kelibsiz!
         </h1>
         <p className="mt-1 text-center text-[14px] text-ink-soft">
@@ -142,8 +144,8 @@ export default function RolePage(): JSX.Element {
           </>
         ) : (
           <>
-            <Skeleton className="h-[104px] w-full rounded-card" />
-            <Skeleton className="h-[104px] w-full rounded-card" />
+            <Skeleton className="h-[104px] w-full rounded-role" />
+            <Skeleton className="h-[104px] w-full rounded-role" />
           </>
         )}
       </div>
