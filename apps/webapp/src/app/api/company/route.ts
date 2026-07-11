@@ -9,7 +9,6 @@ import {
 import { NextResponse } from "next/server";
 import {
   badRequest,
-  conflict,
   requireSession,
   serverError,
   unauthorized,
@@ -87,19 +86,30 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const client = getSupabase();
-    const existing = await companiesRepo.findByUserId(client, session.userId);
-    if (existing) {
-      return conflict("Siz allaqachon ro'yxatdan o'tgansiz.");
-    }
-
-    const company = await companiesRepo.insert(client, {
+    const fields = {
       name,
-      user_id: session.userId,
       kind: kind as CompanyKind,
       city,
       activity_type: activityType,
       needed_level: neededLevel as NeededLevel,
       urgency: urgency as Urgency,
+    };
+
+    // Idempotent: if the user already has a company row, update it instead of
+    // failing — a retry or re-opened onboarding must never dead-end.
+    const existing = await companiesRepo.findByUserId(client, session.userId);
+    if (existing) {
+      const updated = await companiesRepo.updateFields(
+        client,
+        existing.id,
+        fields,
+      );
+      return NextResponse.json({ company: toCompanySnapshot(updated) });
+    }
+
+    const company = await companiesRepo.insert(client, {
+      ...fields,
+      user_id: session.userId,
     });
     await statusLogRepo.insert(client, {
       entity: "company",
