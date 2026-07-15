@@ -69,12 +69,14 @@ body {
   overflow: hidden;
 }
 
-/* Scroll shu yerda; nav va sticky CTA .app ichida absolute. */
+/* Scroll shu yerda; nav va sticky CTA .app ichida absolute.
+   Telegram native header (Close/⋮) tagida turadi — safe-area + doimiy
+   minimal nafas (--s-5) qo'shamiz, kontent tepaga tiqilib qolmasin. */
 .screen {
   flex: 1 1 auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-top: var(--tg-top);
+  padding-top: calc(var(--tg-top) + var(--s-5));
   padding-left: var(--gutter);
   padding-right: var(--gutter);
   padding-bottom: calc(96px + var(--tg-bottom));

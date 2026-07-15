@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 
-// HugeIcons uslubida — stroke rounded, 1.5px, currentColor. fill YO'Q.
+// HugeIcons uslubi — stroke rounded 1.5px, 24 grid, izchil vizual og'irlik.
 export type IconName =
   | "back"
   | "close"
   | "search"
   | "filter"
   | "chevron"
+  | "arrow"
   | "check"
   | "user"
   | "users"
@@ -30,41 +31,43 @@ export type IconName =
   | "sparkle"
   | "phone"
   | "download"
-  | "info";
+  | "info"
+  | "swap";
 
 const PATHS: Record<IconName, ReactNode> = {
-  back: <path d="M15 5l-7 7 7 7" />,
-  close: <path d="M6 6l12 12M18 6L6 18" />,
+  back: <path d="M14.5 5.5 8 12l6.5 6.5" />,
+  close: <path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5" />,
   search: (
     <>
-      <circle cx="11" cy="11" r="7" />
-      <path d="M20 20l-3.5-3.5" />
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="M20 20l-3.8-3.8" />
     </>
   ),
-  filter: <path d="M4 6h16M7 12h10M10 18h4" />,
-  chevron: <path d="M9 5l7 7-7 7" />,
-  check: <path d="M5 12.5l4.5 4.5L19 7" />,
+  filter: <path d="M5 6.5h14M8 12h8M11 17.5h2" />,
+  chevron: <path d="M9.5 6 15.5 12l-6 6" />,
+  arrow: <path d="M5 12h13m0 0-5.5-5.5M18 12l-5.5 5.5" />,
+  check: <path d="M5.5 12.5 10 17 18.5 7.5" />,
   user: (
     <>
       <circle cx="12" cy="8" r="4" />
-      <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+      <path d="M5 20a7 7 0 0 1 14 0" />
     </>
   ),
   users: (
     <>
       <circle cx="9" cy="8" r="3.5" />
-      <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
-      <path d="M16 5.5a3.5 3.5 0 0 1 0 6.8M17 19a5.5 5.5 0 0 0-2.5-4.6" />
+      <path d="M3.5 19.5a5.5 5.5 0 0 1 11 0" />
+      <path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6M17.5 19.5a5.5 5.5 0 0 0-2-4.3" />
     </>
   ),
   briefcase: (
     <>
-      <rect x="3" y="7.5" width="18" height="12" rx="2.5" />
-      <path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5M3 12.5h18" />
+      <rect x="3" y="7.5" width="18" height="12.5" rx="2.5" />
+      <path d="M8.5 7.5V6.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1M3 13.5h18M10.5 13.5h3" />
     </>
   ),
   star: (
-    <path d="M12 4.5l2.35 4.76 5.25.77-3.8 3.7.9 5.23L12 16.68 7.3 18.96l.9-5.23-3.8-3.7 5.25-.77z" />
+    <path d="M12 4.5l2.35 4.76 5.25.77-3.8 3.7.9 5.23L12 16.68l-4.7 2.28.9-5.23-3.8-3.7 5.25-.77z" />
   ),
   pin: (
     <>
@@ -72,27 +75,30 @@ const PATHS: Record<IconName, ReactNode> = {
       <circle cx="12" cy="11" r="2.5" />
     </>
   ),
-  bookmark: <path d="M6 4.5h12v15l-6-3.8-6 3.8z" />,
+  bookmark: <path d="M6.5 4.5h11a1 1 0 0 1 1 1v14l-6.5-4-6.5 4v-14a1 1 0 0 1 1-1z" />,
   lock: (
     <>
-      <rect x="5" y="10.5" width="14" height="9.5" rx="2.5" />
-      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+      <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.5" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2" />
     </>
   ),
-  send: <path d="M20 4L3.5 11l6.5 2.2M20 4l-6 16-3.5-6.8M20 4L10 13.2" />,
+  send: <path d="M20.5 3.5 3 10.2l6.5 2.3 2.3 6.5z M20.5 3.5 9.5 12.5" />,
   chat: (
-    <path d="M20 12a7.5 7.5 0 0 1-10.6 6.8L4 20l1.2-4.1A7.5 7.5 0 1 1 20 12z" />
+    <>
+      <path d="M20 11.5a7.5 7.5 0 0 1-10.9 6.7L4.5 19.5l1.3-4.4A7.5 7.5 0 1 1 20 11.5z" />
+      <path d="M9 11.5h.01M12 11.5h.01M15 11.5h.01" />
+    </>
   ),
   bell: (
     <>
-      <path d="M6 9a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 13 6 9z" />
-      <path d="M10 18a2 2 0 0 0 4 0" />
+      <path d="M6.5 10a5.5 5.5 0 0 1 11 0c0 3.5 1.3 4.8 1.3 4.8H5.2S6.5 13.5 6.5 10z" />
+      <path d="M10 18.5a2 2 0 0 0 4 0" />
     </>
   ),
   map: (
     <>
-      <path d="M9 4.5L4 6.5v13l5-2 6 2 5-2v-13l-5 2-6-2z" />
-      <path d="M9 4.5v13M15 6.5v13" />
+      <path d="M9 4.5 4.5 6.3v13.2l4.5-1.8 6 1.8 4.5-1.8V4.5l-4.5 1.8z" />
+      <path d="M9 4.5v13.2M15 6.3v13.2" />
     </>
   ),
   board: (
@@ -103,46 +109,51 @@ const PATHS: Record<IconName, ReactNode> = {
   ),
   grid: (
     <>
-      <rect x="4" y="4" width="7" height="7" rx="2" />
-      <rect x="13" y="4" width="7" height="7" rx="2" />
-      <rect x="4" y="13" width="7" height="7" rx="2" />
-      <rect x="13" y="13" width="7" height="7" rx="2" />
+      <rect x="4" y="4" width="6.5" height="6.5" rx="2" />
+      <rect x="13.5" y="4" width="6.5" height="6.5" rx="2" />
+      <rect x="4" y="13.5" width="6.5" height="6.5" rx="2" />
+      <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2" />
     </>
   ),
-  home: <path d="M4 11l8-6.5 8 6.5M6 9.5V20h12V9.5" />,
+  home: (
+    <path d="M3.5 10.5 12 4l8.5 6.5M5.5 9.3V19a1 1 0 0 0 1 1H10v-4.5a2 2 0 0 1 4 0V20h3.5a1 1 0 0 0 1-1V9.3" />
+  ),
   doc: (
     <>
-      <path d="M6 3.5h7l5 5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" />
-      <path d="M13 3.5V9h5M8.5 13h7M8.5 16.5h7" />
+      <path d="M6.5 3.5h6.5l4.5 4.5V19.5a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" />
+      <path d="M13 3.5V8.5h4.5M8.5 13h7M8.5 16.5h4.5" />
     </>
   ),
-  plus: <path d="M12 5v14M5 12h14" />,
+  plus: <path d="M12 5.5v13M5.5 12h13" />,
   calendar: (
     <>
       <rect x="4" y="5.5" width="16" height="15" rx="2.5" />
       <path d="M4 10h16M8 3.5v4M16 3.5v4" />
     </>
   ),
-  edit: <path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.5V20z" />,
+  edit: (
+    <path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2 4 20zM14.5 8 16.8 10.3" />
+  ),
   camera: (
     <>
-      <path d="M4 8.5h3l1.5-2h7L17 8.5h3a1 1 0 0 1 1 1V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z" />
+      <path d="M4 8.5h3l1.5-2h7l1.5 2h3a1 1 0 0 1 1 1V18.5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1z" />
       <circle cx="12" cy="13.5" r="3.2" />
     </>
   ),
   sparkle: (
-    <path d="M12 4l1.6 4.4L18 10l-4.4 1.6L12 16l-1.6-4.4L6 10l4.4-1.6z" />
+    <path d="M12 4l1.5 4.2 4.2 1.5-4.2 1.5L12 15.4l-1.5-4.2L6.3 9.7l4.2-1.5zM18.5 15l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z" />
   ),
   phone: (
     <path d="M6 4.5h3l1.5 4-2 1.5a10 10 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5C11 19.5 4.5 13 4.4 6.1A1.5 1.5 0 0 1 6 4.5z" />
   ),
-  download: <path d="M12 4v10m0 0l-4-4m4 4l4-4M5 19h14" />,
+  download: <path d="M12 4v10m0 0-4-4m4 4 4-4M5 18.5h14" />,
   info: (
     <>
       <circle cx="12" cy="12" r="8.5" />
-      <path d="M12 11v5M12 8h.01" />
+      <path d="M12 11.2v5M12 8h.01" />
     </>
   ),
+  swap: <path d="M7 8h11m0 0-3-3m3 3-3 3M17 16H6m0 0 3-3m-3 3 3 3" />,
 };
 
 export function Icon({

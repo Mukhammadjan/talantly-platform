@@ -9,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   full?: boolean;
   loading?: boolean;
   icon?: ReactNode;
+  iconRight?: ReactNode;
 }
 
 /** 56px balandlik, r14. Bitta ekranda faqat bitta primary (orange). */
@@ -17,6 +18,7 @@ export function Button({
   full = false,
   loading = false,
   icon,
+  iconRight,
   children,
   className = "",
   disabled,
@@ -39,6 +41,7 @@ export function Button({
         icon
       )}
       <span className={styles.label}>{children}</span>
+      {!loading ? iconRight : null}
     </button>
   );
 }

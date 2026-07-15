@@ -1,0 +1,74 @@
+.wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Orange hero — auth/onboarding (tokens.css §6). */
+.hero {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--tg-top) + var(--s-8)) var(--gutter) var(--s-8);
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--t-action) 0%, var(--t-action-press) 100%);
+}
+
+.mark {
+  width: 96px;
+  height: 96px;
+  filter: brightness(0) invert(1);
+  opacity: 0.96;
+}
+
+.body {
+  flex-shrink: 0;
+  background: var(--t-white);
+  border-top-left-radius: var(--r-xl);
+  border-top-right-radius: var(--r-xl);
+  margin-top: calc(-1 * var(--r-xl));
+  padding: var(--s-8) var(--gutter) calc(var(--s-8) + var(--tg-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-display-l);
+  line-height: var(--lh-display-l);
+  letter-spacing: var(--ls-display-l);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  margin: var(--s-3) 0 var(--s-8);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.cta {
+  width: 100%;
+  height: var(--h-btn);
+  border-radius: var(--r-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-bold);
+  transition: background var(--d-fast) var(--e-out),
+    transform var(--d-fast) var(--e-out);
+}
+
+.cta:active {
+  background: var(--t-action-press);
+  transform: scale(0.985);
+}

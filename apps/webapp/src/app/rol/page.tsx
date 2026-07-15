@@ -1,75 +1,100 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { Icon } from "@/lib/icons";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/Button";
+import { Icon, type IconName } from "@/lib/icons";
 import { haptic, initTelegram } from "@/lib/telegram";
+import { useBackButton } from "@/lib/useBackButton";
 import styles from "./rol.module.css";
+
+interface RoleOption {
+  id: "talant" | "izlovchi";
+  href: string;
+  icon: IconName;
+  title: string;
+  text: string;
+}
+
+const ROLES: RoleOption[] = [
+  {
+    id: "talant",
+    href: "/talant",
+    icon: "user",
+    title: "Men talantman",
+    text: "Tekshiruvdan o'ting, tasdiqlangan profil oling va takliflar oling",
+  },
+  {
+    id: "izlovchi",
+    href: "/izlovchi",
+    icon: "briefcase",
+    title: "Ish beruvchiman",
+    text: "Tekshirilgan nomzodlarni toping va tez bog'laning",
+  },
+];
 
 export default function RolPage(): JSX.Element {
   const router = useRouter();
+  const [sel, setSel] = useState<RoleOption["id"] | null>(null);
 
   useEffect(() => {
-    // Auth/onboarding ekrani — orange hero.
-    initTelegram({ header: "accent" });
+    initTelegram();
   }, []);
+  useBackButton(() => router.push("/welcome"));
 
-  const go = (path: string): void => {
-    haptic("light");
-    router.push(path);
-  };
+  const chosen = ROLES.find((r) => r.id === sel) ?? null;
 
   return (
     <main className={styles.wrap}>
-      <div className={styles.hero}>
-        <img
-          src="/assets/brand/talantly-wordmark-light.svg"
-          alt="Talantly"
-          className={styles.logo}
-        />
-        <h1 className={styles.title}>Xush kelibsiz</h1>
-        <p className={styles.sub}>Talantly&apos;da kim sifatida davom etasiz?</p>
+      <div className={styles.head}>
+        <h1 className={styles.h}>Qanday davom etasiz?</h1>
+        <p className={styles.sub}>
+          Rolingizni tanlang — tajriba shunga moslashadi.
+        </p>
       </div>
 
       <div className={styles.cards}>
-        <button
-          type="button"
-          className={styles.role}
-          onClick={() => go("/talant")}
-        >
-          <span className={styles.emoji} aria-hidden="true">
-            🎓
-          </span>
-          <span className={styles.texts}>
-            <span className={styles.rtitle}>Men talantman</span>
-            <span className={styles.rtext}>
-              Tekshiruvdan o&apos;tib, tasdiqlangan profil oling
-            </span>
-          </span>
-          <Icon name="chevron" size={20} className={styles.chev} />
-        </button>
-
-        <button
-          type="button"
-          className={styles.role}
-          onClick={() => go("/izlovchi")}
-        >
-          <span className={styles.emoji} aria-hidden="true">
-            🔍
-          </span>
-          <span className={styles.texts}>
-            <span className={styles.rtitle}>Ish beruvchiman</span>
-            <span className={styles.rtext}>
-              Tekshirilgan nomzodlarni toping va bog&apos;laning
-            </span>
-          </span>
-          <Icon name="chevron" size={20} className={styles.chev} />
-        </button>
+        {ROLES.map((r) => {
+          const on = sel === r.id;
+          return (
+            <button
+              key={r.id}
+              type="button"
+              className={`${styles.card} ${on ? styles.on : ""}`}
+              aria-pressed={on}
+              onClick={() => {
+                haptic("light");
+                setSel(r.id);
+              }}
+            >
+              <span className={`${styles.tile} ${on ? styles.tileOn : ""}`}>
+                <Icon name={r.icon} size={24} />
+              </span>
+              <span className={styles.texts}>
+                <span className={styles.ctitle}>{r.title}</span>
+                <span className={styles.ctext}>{r.text}</span>
+              </span>
+              <span className={`${styles.radio} ${on ? styles.radioOn : ""}`}>
+                {on ? <Icon name="check" size={14} /> : null}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      <p className={styles.foot}>
-        Rolni keyinchalik istalgan vaqtda almashtirishingiz mumkin.
-      </p>
+      <div className={styles.cta}>
+        <Button
+          full
+          disabled={!chosen}
+          iconRight={<Icon name="arrow" size={20} />}
+          onClick={() => chosen && router.push(chosen.href)}
+        >
+          Davom etish
+        </Button>
+        <p className={styles.terms}>
+          Rolni keyinchalik istalgan vaqtda almashtirishingiz mumkin.
+        </p>
+      </div>
     </main>
   );
 }

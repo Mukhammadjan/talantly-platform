@@ -17,7 +17,7 @@ export default function SplashPage(): JSX.Element {
       setOutside(true);
       return;
     }
-    const t = setTimeout(() => router.replace("/rol"), 900);
+    const t = setTimeout(() => router.replace("/welcome"), 1000);
     return () => clearTimeout(t);
   }, [router]);
 
