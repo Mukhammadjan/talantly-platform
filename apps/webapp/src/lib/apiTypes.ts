@@ -43,12 +43,33 @@ export interface TalentSnapshot {
   skillTags: string[];
   headline: string | null;
   personality: PersonalitySummary | null;
+  salaryFrom: number | null;
+  salaryCurrency: string;
 }
 
 export interface AuthResponse {
   token: string;
   snapshot: TalentSnapshot;
 }
+
+/** Fields a talent may edit on their own profile (Mini App). */
+export interface ProfileEditPayload {
+  fullName: string;
+  city: string;
+  direction: Direction;
+  level: TalentLevel;
+  experienceYears: number | null;
+  skillTags: string[];
+  workFormats: WorkFormat[];
+  headline: string | null;
+  freeText: string | null;
+  portfolioUrl: string | null;
+  salaryFrom: number | null;
+  salaryCurrency: string;
+}
+
+export const SALARY_CURRENCIES = ["UZS", "USD"] as const;
+export type SalaryCurrency = (typeof SALARY_CURRENCIES)[number];
 
 export interface TestQuestionPublic {
   id: string;

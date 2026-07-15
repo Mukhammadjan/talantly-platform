@@ -50,6 +50,12 @@ function formatPrice(price: number): string {
   return `${price.toLocaleString("ru-RU").replace(/,/g, " ")} so'm`;
 }
 
+function formatSalary(from: number | null, currency: string): string | null {
+  if (from == null) return null;
+  const num = from.toLocaleString("ru-RU").replace(/,/g, " ");
+  return currency === "USD" ? `$${num}` : `${num} so'm`;
+}
+
 function Timeline({ snapshot }: { snapshot: TalentSnapshot }): JSX.Element {
   const rank = STATUS_RANK[snapshot.status];
   const rejected = snapshot.status === "rad_etilgan";
@@ -671,13 +677,26 @@ function ProfileDetails({
 }: {
   snapshot: TalentSnapshot;
 }): JSX.Element {
+  const router = useRouter();
   const personality = snapshot.personality;
   const emoji = personality
     ? (ARCHETYPE_META[personality.archetypeCode as Archetype]?.emoji ?? "✨")
     : null;
   return (
     <Card>
-      <h2 className="text-[15px] font-bold">Ma&apos;lumotlaringiz</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-[15px] font-bold">Ma&apos;lumotlaringiz</h2>
+        <button
+          type="button"
+          onClick={() => {
+            haptic("light");
+            router.push("/profile/tahrir");
+          }}
+          className="shrink-0 rounded-full border border-orange px-3.5 py-1.5 text-[12px] font-semibold text-orange-deep transition-all active:scale-95"
+        >
+          Tahrirlash
+        </button>
+      </div>
       <div className="mt-3">
         <DetailRow label="Ism" value={snapshot.fullName} />
         <DetailRow
@@ -712,6 +731,10 @@ function ProfileDetails({
           }
         />
         <DetailRow label="Ta'lim" value={snapshot.education} />
+        <DetailRow
+          label="Kutilayotgan maosh"
+          value={formatSalary(snapshot.salaryFrom, snapshot.salaryCurrency)}
+        />
         <DetailRow label="Telefon" value={snapshot.phone} />
         <DetailRow label="Portfolio" value={snapshot.portfolioUrl} />
       </div>

@@ -100,6 +100,9 @@ export interface TalentRow {
   skill_tags: string[] | null;
   headline: string | null;
   personality: PersonalityResult | null;
+  /** Expected monthly salary the talent asks for; currency defaults to UZS. */
+  salary_from: number | null;
+  salary_currency: string;
 }
 
 export interface TalentInsert {
@@ -124,6 +127,8 @@ export interface TalentInsert {
   skill_tags?: string[] | null;
   headline?: string | null;
   personality?: PersonalityResult | null;
+  salary_from?: number | null;
+  salary_currency?: string;
 }
 
 export type PaymentStatus = "kutilmoqda" | "tasdiqlangan" | "rad";

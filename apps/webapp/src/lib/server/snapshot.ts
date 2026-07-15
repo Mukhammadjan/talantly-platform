@@ -114,6 +114,8 @@ export async function buildSnapshot(
     skillTags: talent.skill_tags ?? [],
     headline: talent.headline,
     personality: personalitySummary(talent),
+    salaryFrom: talent.salary_from,
+    salaryCurrency: talent.salary_currency,
   };
 }
 
