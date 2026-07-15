@@ -8,11 +8,14 @@ function fail(op: string, message: string, code?: string): never {
   );
 }
 
-export async function listAll(client: TalantlyClient): Promise<CompanyRow[]> {
-  const { data, error } = await client
-    .from("companies")
-    .select("*")
-    .order("created_at", { ascending: false });
+export async function listAll(
+  client: TalantlyClient,
+  opts: { includeDemo?: boolean } = {},
+): Promise<CompanyRow[]> {
+  let query = client.from("companies").select("*");
+  // Demo companies stay in the DB but are hidden when the flag is off.
+  if (opts.includeDemo === false) query = query.eq("is_demo", false);
+  const { data, error } = await query.order("created_at", { ascending: false });
   if (error) fail("listAll", error.message, error.code);
   return (data ?? []) as CompanyRow[];
 }

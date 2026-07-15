@@ -107,7 +107,7 @@ export default function TalentDetailPage({
   }, [router, params.id]);
 
   const sendRequest = async (): Promise<void> => {
-    if (sending || sent || !talent) return;
+    if (sending || sent || !talent || talent.isDemo) return;
     setSending(true);
     setRequestError(null);
     try {
@@ -203,6 +203,11 @@ export default function TalentDetailPage({
           <h1 className="flex items-center gap-2 text-[20px] font-bold tracking-tight">
             <span className="truncate">{talent.displayName}</span>
             <Seal size={22} className="shrink-0" />
+            {talent.isDemo && (
+              <span className="shrink-0 rounded-chip bg-surface-2 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-faint">
+                Demo
+              </span>
+            )}
           </h1>
           <p className="text-[13px] text-ink-soft">
             {subtitleParts.join(" · ")}
@@ -343,7 +348,11 @@ export default function TalentDetailPage({
       </div>
 
       <div className="safe-bottom fixed inset-x-0 bottom-0 mx-auto max-w-app border-t border-line bg-surface px-5 pt-4 shadow-[0_-10px_30px_-20px_rgba(23,23,27,0.35)]">
-        {sent ? (
+        {talent.isDemo ? (
+          <p className="rounded-input bg-surface-2 p-4 text-center text-[13px] font-medium text-ink-soft">
+            Bu demo profil — unga so&apos;rov yuborib bo&apos;lmaydi.
+          </p>
+        ) : sent ? (
           <p className="rounded-input bg-green-soft p-4 text-center text-[14px] font-semibold text-green-deep">
             So&apos;rov yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
           </p>

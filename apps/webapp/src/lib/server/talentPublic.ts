@@ -52,6 +52,7 @@ export function toCard(
     score,
     rating,
     verifiedAt: talent.verified_at,
+    isDemo: talent.is_demo,
   };
 }
 

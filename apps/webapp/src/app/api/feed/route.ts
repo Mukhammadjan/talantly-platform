@@ -2,6 +2,7 @@ import { companiesRepo, talentsRepo } from "@talantly/shared";
 import { NextResponse } from "next/server";
 import type { FeedResponse } from "@/lib/apiTypes";
 import { requireSession, serverError, unauthorized } from "@/lib/server/auth";
+import { showDemoData } from "@/lib/server/settings";
 import { getSupabase } from "@/lib/server/supabase";
 import {
   loadScoresAndRatings,
@@ -18,9 +19,10 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (!session) return unauthorized();
 
     const client = getSupabase();
+    const includeDemo = await showDemoData(client);
     const [company, verified] = await Promise.all([
       companiesRepo.findByUserId(client, session.userId),
-      talentsRepo.listVerified(client),
+      talentsRepo.listVerified(client, { includeDemo }),
     ]);
     const { scores, ratings } = await loadScoresAndRatings(
       client,

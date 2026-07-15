@@ -12,6 +12,7 @@ import {
   serverError,
   unauthorized,
 } from "@/lib/server/auth";
+import { showDemoData } from "@/lib/server/settings";
 import { getSupabase } from "@/lib/server/supabase";
 import { loadScoresAndRatings, toCard } from "@/lib/server/talentPublic";
 
@@ -30,6 +31,10 @@ export async function GET(
     const talent = await talentsRepo.findById(client, params.id);
     // Only verified talents are visible to guests.
     if (!talent || talent.status !== "tekshirilgan") {
+      return notFound("Nomzod topilmadi.");
+    }
+    // Hidden demo profiles must not be reachable by direct link/deep link.
+    if (talent.is_demo && !(await showDemoData(client))) {
       return notFound("Nomzod topilmadi.");
     }
 

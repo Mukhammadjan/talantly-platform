@@ -40,6 +40,10 @@ export async function POST(request: Request): Promise<NextResponse> {
     if (!talent || talent.status !== "tekshirilgan") {
       return notFound("Nomzod topilmadi.");
     }
+    // Demo profiles are look-only — no requests/chat can be opened against them.
+    if (talent.is_demo) {
+      return conflict("Bu demo profil — unga so'rov yuborib bo'lmaydi.");
+    }
 
     const open = await requestsRepo.findOpenCompanyRequest(
       client,

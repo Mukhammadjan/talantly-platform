@@ -134,6 +134,7 @@ export interface TalentCardPublic {
   score: number | null;
   rating: number | null;
   verifiedAt: string | null;
+  isDemo: boolean;
 }
 
 export interface FeedResponse {

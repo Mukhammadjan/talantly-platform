@@ -15,6 +15,8 @@ import type {
   PlacementRow,
   RequestInsert,
   RequestRow,
+  SettingInsert,
+  SettingRow,
   SkillTestInsert,
   SkillTestRow,
   StatusLogInsert,
@@ -49,6 +51,7 @@ export type Database = {
       placements: TableDef<PlacementRow, PlacementInsert>;
       status_log: TableDef<StatusLogRow, StatusLogInsert>;
       requests: TableDef<RequestRow, RequestInsert>;
+      settings: TableDef<SettingRow, SettingInsert>;
       personality_questions: TableDef<
         PersonalityQuestionRow,
         PersonalityQuestionInsert

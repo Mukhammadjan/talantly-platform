@@ -7,6 +7,7 @@ import {
 import { NextResponse } from "next/server";
 import type { MatchPublic, MatchesResponse } from "@/lib/apiTypes";
 import { requireSession, serverError, unauthorized } from "@/lib/server/auth";
+import { showDemoData } from "@/lib/server/settings";
 import { loadSessionContext } from "@/lib/server/snapshot";
 import { getSupabase } from "@/lib/server/supabase";
 
@@ -49,7 +50,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (!context) return unauthorized();
     const { talent } = context;
 
-    const companies = await companiesRepo.listAll(client);
+    const includeDemo = await showDemoData(client);
+    const companies = await companiesRepo.listAll(client, { includeDemo });
     const matched = companies.filter((c) => matchesTalent(c, talent));
     // Same-city requests first, then most recent.
     matched.sort((a, b) => {

@@ -406,3 +406,14 @@ export interface StatusLogInsert {
   changed_by?: string | null;
   created_at?: IsoTimestamp;
 }
+
+/** Key/value config table — both columns are TEXT (parse numbers/bools). */
+export interface SettingRow {
+  key: string;
+  value: string;
+}
+
+export interface SettingInsert {
+  key: string;
+  value: string;
+}

@@ -28,12 +28,18 @@ export async function findById(
 
 export async function listVerified(
   client: TalantlyClient,
+  opts: { includeDemo?: boolean } = {},
 ): Promise<TalentRow[]> {
-  const { data, error } = await client
+  let query = client
     .from("talents")
     .select("*")
-    .eq("status", "tekshirilgan")
-    .order("verified_at", { ascending: false, nullsFirst: false });
+    .eq("status", "tekshirilgan");
+  // Demo talents stay in the DB but are hidden when the flag is off.
+  if (opts.includeDemo === false) query = query.eq("is_demo", false);
+  const { data, error } = await query.order("verified_at", {
+    ascending: false,
+    nullsFirst: false,
+  });
   if (error) fail("listVerified", error.message, error.code);
   return (data ?? []) as TalentRow[];
 }

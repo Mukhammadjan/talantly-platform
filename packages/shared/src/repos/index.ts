@@ -10,3 +10,4 @@ export * as companiesRepo from "./companiesRepo.js";
 export * as requestsRepo from "./requestsRepo.js";
 export * as personalityQuestionsRepo from "./personalityQuestionsRepo.js";
 export * as placementsRepo from "./placementsRepo.js";
+export * as settingsRepo from "./settingsRepo.js";

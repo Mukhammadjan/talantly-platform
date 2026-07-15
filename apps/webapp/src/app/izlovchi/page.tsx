@@ -518,6 +518,11 @@ function TalentCard({
               .join(" · ")}
           </p>
         </div>
+        {talent.isDemo && (
+          <span className="shrink-0 rounded-chip bg-surface-2 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-ink-faint">
+            Demo
+          </span>
+        )}
         {talent.level && (
           <span className="shrink-0 rounded-chip bg-surface-2 px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
             {talent.level === "intern" ? "🌱" : "💼"}{" "}
