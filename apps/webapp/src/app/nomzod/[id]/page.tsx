@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { Sheet } from "@/components/Sheet";
 import { Icon } from "@/lib/icons";
 import { api } from "@/lib/api";
+import { SENT_VACANCIES } from "@/mock/data";
 import { DIRECTION_LABELS, LEVEL_LABELS, formatSalary } from "@/lib/labels";
 import { haptic, initTelegram } from "@/lib/telegram";
 import type { Candidate } from "@/lib/types";
@@ -28,6 +29,9 @@ export default function NomzodDetailPage(): JSX.Element {
   const [plan, setPlan] = useState<"bir" | "obuna">("bir");
   const [sent, setSent] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [offer, setOffer] = useState(false);
+  const [pickVac, setPickVac] = useState(SENT_VACANCIES[0]?.id ?? "");
+  const [offerSent, setOfferSent] = useState(false);
 
   const copyCard = async (): Promise<void> => {
     try {
@@ -140,9 +144,25 @@ export default function NomzodDetailPage(): JSX.Element {
             So&apos;rov yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
           </p>
         ) : (
-          <Button full icon={<Icon name="send" size={20} />} onClick={() => setPay(true)}>
-            Nomzodni so&apos;rash
-          </Button>
+          <div className={styles.ctaCol}>
+            <Button full icon={<Icon name="send" size={20} />} onClick={() => setPay(true)}>
+              Nomzodni so&apos;rash
+            </Button>
+            {offerSent ? (
+              <p className={styles.offerDone}>
+                <Icon name="check" size={16} /> Taklif yuborildi
+              </p>
+            ) : (
+              <Button
+                full
+                variant="secondary"
+                icon={<Icon name="briefcase" size={20} />}
+                onClick={() => setOffer(true)}
+              >
+                Vakansiyaga taklif qilish
+              </Button>
+            )}
+          </div>
         )}
       </div>
 
@@ -187,6 +207,46 @@ export default function NomzodDetailPage(): JSX.Element {
           }}
         >
           Skrinshotni yubordim
+        </Button>
+      </Sheet>
+
+      <Sheet open={offer} onClose={() => setOffer(false)} title="Vakansiyani tanlang">
+        <div className={styles.offerList}>
+          {SENT_VACANCIES.map((v) => {
+            const on = pickVac === v.id;
+            return (
+              <button
+                key={v.id}
+                type="button"
+                className={`${styles.offerRow} ${on ? styles.offerOn : ""}`}
+                onClick={() => {
+                  haptic("light");
+                  setPickVac(v.id);
+                }}
+              >
+                <span className={`${styles.radio} ${on ? styles.radioOn : ""}`}>
+                  {on ? <Icon name="check" size={12} /> : null}
+                </span>
+                <span className={styles.offerTexts}>
+                  <span className={styles.offerTitle}>{v.title}</span>
+                  <span className={styles.offerSalary}>
+                    {formatSalary(v.salaryFrom).replace(" so'm", "")} –{" "}
+                    {formatSalary(v.salaryTo)}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <Button
+          full
+          onClick={() => {
+            haptic("success");
+            setOffer(false);
+            setOfferSent(true);
+          }}
+        >
+          Taklif yuborish
         </Button>
       </Sheet>
     </main>

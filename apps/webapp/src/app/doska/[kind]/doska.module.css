@@ -140,6 +140,19 @@
   color: var(--t-on-action);
 }
 
+.wide {
+  flex: none;
+  width: 100%;
+  height: 52px;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
 /* ---- Holat bannerlari ---- */
 .banner {
   display: flex;

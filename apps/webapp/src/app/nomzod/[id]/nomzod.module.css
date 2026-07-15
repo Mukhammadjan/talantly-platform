@@ -250,3 +250,86 @@
   line-height: var(--lh-caption);
   color: var(--t-ink-2);
 }
+
+/* ---- CTA: ikki tugma ustma-ust ---- */
+.ctaCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.offerDone {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  height: 48px;
+  border-radius: var(--r-md);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- Vakansiya tanlash sheet ---- */
+.offerList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+.offerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: left;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  border: 1.5px solid transparent;
+  transition: border-color var(--d-fast) var(--e-out),
+    background var(--d-fast) var(--e-out);
+}
+
+.offerOn {
+  background: var(--t-action-soft);
+  border-color: var(--t-action);
+}
+
+.radio {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-full);
+  border: 2px solid var(--t-line-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t-white);
+}
+
+.radioOn {
+  border-color: var(--t-action);
+  background: var(--t-action);
+}
+
+.offerTexts {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.offerTitle {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.offerSalary {
+  font-size: var(--fs-caption);
+  color: var(--t-action-ink);
+  font-weight: var(--fw-medium);
+}

@@ -3,7 +3,9 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
+import { Chip } from "@/components/Chip";
 import { EmptyState } from "@/components/EmptyState";
+import { Sheet } from "@/components/Sheet";
 import { Icon } from "@/lib/icons";
 import { formatSalary } from "@/lib/labels";
 import { SENT_VACANCIES } from "@/mock/data";
@@ -66,6 +68,10 @@ export default function DoskaKindPage(): JSX.Element {
   const router = useRouter();
   const [decided, setDecided] = useState<Record<string, "accepted" | "declined">>({});
   const [unsaved, setUnsaved] = useState<Record<string, boolean>>({});
+  const [acked, setAcked] = useState<Record<string, boolean>>({});
+  const [timeFor, setTimeFor] = useState<string | null>(null);
+  const [chosenTime, setChosenTime] = useState<Record<string, string>>({});
+  const [slot, setSlot] = useState("18-iyul · 10:00");
 
   useEffect(() => {
     initTelegram();
@@ -221,15 +227,41 @@ export default function DoskaKindPage(): JSX.Element {
                 {state === "agreed" && (
                   <div className={`${styles.banner} ${styles.bGreen}`}>
                     <span>Nomzod ushbu suhbatga rozi bo&apos;ldi</span>
-                    <button type="button" className={`${styles.bbtn} ${styles.bbtnGreen}`}>Yaxshi</button>
+                    {!acked[key] && (
+                      <button
+                        type="button"
+                        className={`${styles.bbtn} ${styles.bbtnGreen}`}
+                        onClick={() => {
+                          haptic("light");
+                          setAcked((a) => ({ ...a, [key]: true }));
+                        }}
+                      >
+                        Yaxshi
+                      </button>
+                    )}
                   </div>
                 )}
-                {state === "negotiate" && (
-                  <div className={`${styles.banner} ${styles.bGreen}`}>
-                    <span>Vaqtni kelishish</span>
-                    <button type="button" className={`${styles.bbtn} ${styles.bbtnGreen}`}>Vaqt belgilash</button>
-                  </div>
-                )}
+                {state === "negotiate" &&
+                  (chosenTime[key] ? (
+                    <div className={`${styles.banner} ${styles.bGreen}`}>
+                      <span>Vaqt belgilandi · {chosenTime[key]}</span>
+                    </div>
+                  ) : (
+                    <div className={`${styles.banner} ${styles.bGreen}`}>
+                      <span>Vaqtni kelishish</span>
+                      <button
+                        type="button"
+                        className={`${styles.bbtn} ${styles.bbtnGreen}`}
+                        onClick={() => {
+                          haptic("light");
+                          setSlot("18-iyul · 10:00");
+                          setTimeFor(key);
+                        }}
+                      >
+                        Vaqt belgilash
+                      </button>
+                    </div>
+                  ))}
                 {state === "sent" && (
                   <div className={`${styles.banner} ${styles.bGray}`}>
                     <span>Suhbat taklifi yuborildi</span>
@@ -282,6 +314,31 @@ export default function DoskaKindPage(): JSX.Element {
       {kind === "arizalar" && ARIZALAR.length === 0 && (
         <EmptyState icon={<Icon name="doc" size={24} />} title="Hozircha ariza yo'q" />
       )}
+
+      <Sheet
+        open={timeFor !== null}
+        onClose={() => setTimeFor(null)}
+        title="Suhbat vaqtini belgilang"
+      >
+        <div className={styles.slots}>
+          {["17-iyul · 14:00", "18-iyul · 10:00", "18-iyul · 16:00", "19-iyul · 11:00"].map(
+            (s) => (
+              <Chip key={s} label={s} active={slot === s} onClick={() => setSlot(s)} />
+            ),
+          )}
+        </div>
+        <button
+          type="button"
+          className={`${styles.btn} ${styles.accept} ${styles.wide}`}
+          onClick={() => {
+            haptic("success");
+            if (timeFor) setChosenTime((t) => ({ ...t, [timeFor]: slot }));
+            setTimeFor(null);
+          }}
+        >
+          Tasdiqlash
+        </button>
+      </Sheet>
     </main>
   );
 }
