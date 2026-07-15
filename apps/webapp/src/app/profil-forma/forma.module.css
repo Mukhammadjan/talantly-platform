@@ -1,0 +1,88 @@
+.wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--tg-top);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--gutter) 0;
+}
+
+.count {
+  flex-shrink: 0;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--s-6) var(--gutter) var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.h {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.field,
+.chipField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.flabel {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.textarea {
+  border-radius: var(--r-sm);
+  padding: var(--s-3) var(--s-4);
+  background: var(--t-white);
+  color: var(--t-ink-1);
+  font-family: inherit;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  box-shadow: inset 0 0 0 1px var(--t-line-strong);
+  resize: none;
+}
+
+.textarea::placeholder {
+  color: var(--t-ink-2);
+}
+
+.textarea:focus {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.cta {
+  padding: var(--s-3) var(--gutter) calc(16px + var(--tg-bottom));
+  background: var(--t-bg);
+  box-shadow: 0 -1px 0 var(--t-line);
+}

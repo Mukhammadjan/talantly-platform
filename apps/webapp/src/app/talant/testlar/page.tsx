@@ -33,7 +33,7 @@ export default function TestlarPage(): JSX.Element {
     <main className="screen">
       <h1 className={styles.h}>Testlar</h1>
 
-      <Card className={styles.test} onClick={() => router.push("/talant/shaxsiyat")}>
+      <Card className={styles.test} onClick={() => router.push("/shaxsiyat")}>
         <IconTile tone="action">
           <Icon name="sparkle" size={22} />
         </IconTile>
@@ -50,7 +50,7 @@ export default function TestlarPage(): JSX.Element {
         )}
       </Card>
 
-      <Card className={styles.test} onClick={() => router.push("/talant/konikma")}>
+      <Card className={styles.test} onClick={() => router.push("/konikma")}>
         <IconTile tone="action">
           <Icon name="doc" size={22} />
         </IconTile>
