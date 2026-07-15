@@ -6,35 +6,35 @@
   font-weight: var(--fw-bold);
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-}
-
+.list,
 .cards {
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
 }
 
-.row {
+/* ---- Karta ---- */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+}
+
+/* Bosiladigan sarlavha (avatar + ism + rol) */
+.head {
   display: flex;
   align-items: center;
   gap: var(--s-3);
   text-align: left;
-  padding: var(--s-3);
-  background: var(--t-white);
-  border-radius: var(--r-lg);
-  box-shadow: var(--sh-raise);
-  transition: transform var(--d-fast) var(--e-out);
 }
 
-.row:active {
-  transform: scale(0.99);
-}
-
-.texts {
+.htext {
   min-width: 0;
   flex: 1 1 auto;
   display: flex;
@@ -42,13 +42,176 @@
   gap: 2px;
 }
 
-.name {
-  font-size: var(--fs-body);
-  font-weight: var(--fw-semibold);
+.hname {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
   color: var(--t-ink-1);
 }
 
-.sub {
+.hrole {
   font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--t-action-ink);
+}
+
+/* ---- Maosh qatori ---- */
+.money {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.salary {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.globe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-full);
+  background: var(--t-verified-soft);
+  color: var(--t-verified);
+}
+
+.date {
+  padding: 5px var(--s-3);
+  border-radius: var(--r-sm);
+  background: var(--t-fill);
   color: var(--t-ink-2);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+}
+
+.loc {
+  margin-top: -4px;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+/* ---- Suhbat vaqti ---- */
+.when {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--t-ink-2);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+}
+
+/* ---- Amal tugmalari ---- */
+.actions {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.btn {
+  flex: 1 1 0;
+  height: 46px;
+  border-radius: var(--r-md);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  transition: transform var(--d-fast) var(--e-out),
+    background var(--d-fast) var(--e-out);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.reject {
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}
+
+.accept {
+  background: var(--t-action);
+  color: var(--t-on-action);
+}
+
+/* ---- Holat bannerlari ---- */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  line-height: 1.35;
+}
+
+.bGreen {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.bGray {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.bRed {
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+}
+
+.bbtn {
+  flex: 0 0 auto;
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.bbtnGreen {
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+/* ---- Taklif status pill ---- */
+.pill {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  padding: 4px var(--s-3);
+  border-radius: var(--r-full);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+}
+
+.pGreen {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.pOrange {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.pGray {
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}
+
+.openLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
 }
