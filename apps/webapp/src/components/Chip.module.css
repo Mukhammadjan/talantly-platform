@@ -1,0 +1,25 @@
+.chip {
+  height: var(--h-chip);
+  border-radius: var(--r-full);
+  padding: 0 var(--s-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  white-space: nowrap;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  background: var(--t-white);
+  box-shadow: inset 0 0 0 1px var(--t-line);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.chip:active {
+  transform: scale(0.97);
+}
+
+.active {
+  color: var(--t-action-ink);
+  background: var(--t-action-soft);
+  box-shadow: inset 0 0 0 1px var(--t-action);
+}

@@ -1,0 +1,70 @@
+.btn {
+  height: var(--h-btn);
+  border-radius: var(--r-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-5);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  transition: background var(--d-fast) var(--e-out),
+    transform var(--d-fast) var(--e-out);
+}
+
+.btn:disabled {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+  pointer-events: none;
+}
+
+.full {
+  width: 100%;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.primary {
+  background: var(--t-action);
+  color: var(--t-on-action);
+}
+.primary:active {
+  background: var(--t-action-press);
+  transform: scale(0.985);
+}
+
+.secondary {
+  background: var(--t-white);
+  color: var(--t-ink-1);
+  box-shadow: inset 0 0 0 1px var(--t-line);
+}
+.secondary:active {
+  background: var(--t-bg);
+}
+
+.ghost {
+  background: var(--t-fill);
+  color: var(--t-ink-1);
+}
+.ghost:active {
+  background: var(--t-line);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-full);
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  opacity: 0.9;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

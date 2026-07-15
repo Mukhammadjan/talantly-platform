@@ -1,0 +1,17 @@
+.card {
+  display: block;
+  width: 100%;
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  padding: var(--s-4);
+}
+
+.tappable {
+  text-align: left;
+  transition: transform var(--d-fast) var(--e-out);
+}
+
+.tappable:active {
+  transform: scale(0.99);
+}

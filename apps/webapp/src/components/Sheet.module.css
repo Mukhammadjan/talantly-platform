@@ -1,0 +1,51 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(23, 23, 27, 0.4);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade var(--d-base) var(--e-out);
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  background: var(--t-white);
+  border-top-left-radius: var(--r-xl);
+  border-top-right-radius: var(--r-xl);
+  box-shadow: var(--sh-sheet);
+  padding: var(--s-3) var(--gutter)
+    calc(var(--s-6) + var(--tg-bottom));
+  animation: rise var(--d-base) var(--e-out);
+}
+
+.grabber {
+  display: block;
+  width: 40px;
+  height: 4px;
+  border-radius: var(--r-full);
+  background: var(--t-line);
+  margin: 0 auto var(--s-4);
+}
+
+.title {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(100%);
+  }
+}

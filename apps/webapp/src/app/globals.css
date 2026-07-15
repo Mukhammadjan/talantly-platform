@@ -57,7 +57,8 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Ilova qobig'i — balandlik 100vh EMAS, --tg-vh (viewportStableHeight). */
+/* Ilova qobig'i — balandlik viewport birligiga emas, --tg-vh
+   (Telegram viewportStableHeight) ga bog'lanadi. */
 .app {
   height: var(--tg-vh);
   max-width: 480px;

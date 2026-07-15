@@ -1,0 +1,21 @@
+.photo {
+  border-radius: var(--r-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.tile {
+  flex-shrink: 0;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--fw-semibold);
+  /* Gradient — dizayn tizimidagi yagona ruxsat etilgan gradient. */
+  background: linear-gradient(135deg, #ffd9a8, #f7a05c);
+  color: #7a3c10;
+}
+
+.blurred {
+  filter: blur(6px);
+}

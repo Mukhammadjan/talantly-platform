@@ -1,0 +1,22 @@
+.tile {
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neutral {
+  background: var(--t-bg);
+  color: var(--t-ink-1);
+}
+
+.action {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.verified {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
