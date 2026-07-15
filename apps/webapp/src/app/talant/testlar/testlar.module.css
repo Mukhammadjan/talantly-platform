@@ -1,0 +1,38 @@
+.h {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.test {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+
+.texts {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ttitle {
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.ttext {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.chev {
+  flex-shrink: 0;
+  color: var(--t-ink-3);
+}

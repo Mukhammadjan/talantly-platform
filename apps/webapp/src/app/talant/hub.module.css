@@ -1,0 +1,150 @@
+.hello {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.name {
+  margin: 2px 0 var(--s-5);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.skcard {
+  margin-top: var(--s-4);
+}
+
+.kicker {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-micro);
+  line-height: var(--lh-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+}
+
+.step {
+  margin-bottom: var(--s-4);
+}
+
+.stitle {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.stext {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+/* Tekshiruv yo'li — vertikal timeline */
+.steps {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: var(--s-3);
+  align-items: stretch;
+}
+
+.dotCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--t-white);
+  color: var(--t-on-action);
+  box-shadow: inset 0 0 0 2px var(--t-line);
+}
+
+.dotDone {
+  background: var(--t-verified);
+  box-shadow: none;
+}
+
+.dotCurrent {
+  box-shadow: inset 0 0 0 2px var(--t-action);
+}
+
+.conn {
+  width: 2px;
+  flex: 1 1 auto;
+  min-height: 16px;
+  margin: 2px 0;
+  background: var(--t-line);
+}
+
+.connDone {
+  background: var(--t-verified);
+}
+
+.stepLabel {
+  padding: 1px 0 var(--s-4);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.labelDone {
+  color: var(--t-ink-1);
+  font-weight: var(--fw-semibold);
+}
+
+.labelCurrent {
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}
+
+/* Tekshirilgan holat */
+.verified {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: var(--s-4);
+}
+
+.seal {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+  padding: 8px;
+  margin-bottom: var(--s-2);
+}
+
+.vtitle {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-verified-ink);
+}
+
+.vtext {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}

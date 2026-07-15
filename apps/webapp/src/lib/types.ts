@@ -1,0 +1,84 @@
+// Frontend tiplari (v2 file-1 — mock). Backend 2-faylda ulanadi.
+
+export type Role = "talant" | "izlovchi";
+
+export type Direction =
+  | "dasturlash"
+  | "dizayn"
+  | "marketing"
+  | "sotuv"
+  | "data"
+  | "boshqa";
+
+export type Level = "intern" | "mutaxassis";
+
+export type WorkFormat = "ofis" | "masofaviy" | "aralash";
+
+export type TalentStatus =
+  | "yangi"
+  | "malumot_toldirilgan"
+  | "tolov_kutilmoqda"
+  | "tolov_tasdiqlangan"
+  | "cv_tayyor"
+  | "test_otgan"
+  | "suhbat_belgilangan"
+  | "tekshirilgan"
+  | "rad_etilgan";
+
+export type RequestStatus = "yuborildi" | "korildi" | "boglanildi" | "yopildi";
+
+export interface TalentProfile {
+  fullName: string;
+  birthYear: number | null;
+  city: string | null;
+  district: string | null;
+  direction: Direction | null;
+  level: Level | null;
+  experienceYears: number | null;
+  skills: string[];
+  workFormats: WorkFormat[];
+  salaryFrom: number | null;
+  photoUrl: string | null;
+  about: string | null;
+  portfolioUrl: string | null;
+}
+
+export interface TalentSnapshot {
+  status: TalentStatus;
+  score: number | null;
+  archetype: string | null;
+  interviewAt: string | null;
+  cvReady: boolean;
+  profile: TalentProfile;
+}
+
+export interface Application {
+  id: string;
+  company: string;
+  direction: Direction;
+  status: RequestStatus;
+  at: string;
+}
+
+export interface Candidate {
+  id: string;
+  displayName: string;
+  role: string;
+  direction: Direction;
+  archetype: string;
+  score: number;
+  district: string;
+  level: Level;
+  skills: string[];
+  about: string;
+  salaryFrom: number | null;
+  verified: boolean;
+  photoUrl: string | null;
+}
+
+export interface Zone {
+  district: string;
+  count: number;
+  x: number;
+  y: number;
+}
