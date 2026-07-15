@@ -167,10 +167,13 @@ export function Icon({
   name,
   size = 24,
   className,
+  filled = false,
 }: {
   name: IconName;
   size?: number;
   className?: string;
+  /** Faol/urg'uli holat — qalinroq stroke (to'ldirilgan taassurot). */
+  filled?: boolean;
 }): JSX.Element {
   return (
     <svg
@@ -179,7 +182,7 @@ export function Icon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.5}
+      strokeWidth={filled ? 2.1 : 1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"

@@ -12,11 +12,9 @@ export interface NavItem {
   icon: IconName;
 }
 
-/** Qorong'i suzuvchi pill. Faqat faol element yorliq ko'rsatadi. */
+/** Qorong'i suzuvchi pill — faqat iconlar; faol icon to'ldirilgan orange doira. */
 export function Nav({ items }: { items: NavItem[] }): JSX.Element {
   const pathname = usePathname();
-  // Faqat ENG UZUN mos keluvchi element faol — "/talant" barcha
-  // "/talant/*" sahifani egallab olmasin.
   const activeHref = items
     .filter(
       (it) => pathname === it.href || pathname.startsWith(`${it.href}/`),
@@ -25,6 +23,7 @@ export function Nav({ items }: { items: NavItem[] }): JSX.Element {
       (best, it) => (best && best.length >= it.href.length ? best : it.href),
       null,
     );
+
   return (
     <nav className={styles.nav} aria-label="Asosiy">
       {items.map((item) => {
@@ -35,11 +34,12 @@ export function Nav({ items }: { items: NavItem[] }): JSX.Element {
             href={item.href}
             aria-label={item.label}
             aria-current={active ? "page" : undefined}
-            className={`${styles.item} ${active ? styles.on : ""}`}
+            className={styles.item}
             onClick={() => haptic("light")}
           >
-            <Icon name={item.icon} size={22} />
-            <span className={styles.lbl}>{item.label}</span>
+            <span className={`${styles.dot} ${active ? styles.dotOn : ""}`}>
+              <Icon name={item.icon} size={24} filled={active} />
+            </span>
           </Link>
         );
       })}

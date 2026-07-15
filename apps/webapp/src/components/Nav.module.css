@@ -14,40 +14,26 @@
 }
 
 .item {
-  flex: 0 0 var(--h-nav-item);
+  flex: 1 1 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--h-nav-item);
+}
+
+.dot {
+  width: var(--h-nav-item);
   height: var(--h-nav-item);
   border-radius: var(--r-full);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* gap YO'Q — nofaol holatda yashirin yorliq icon'ni markazdan surmasin */
-  gap: 0;
-  overflow: hidden;
-  background: var(--t-ink-nav);
   color: var(--t-ink-3);
-  transition: flex var(--d-base) var(--e-out),
-    background var(--d-base) var(--e-out), color var(--d-base) var(--e-out);
+  transition: background var(--d-base) var(--e-out),
+    color var(--d-base) var(--e-out);
 }
 
-.on {
-  flex: 1 1 auto;
-  gap: var(--s-2);
-  padding: 0 var(--s-4);
+.dotOn {
   background: var(--t-action);
   color: var(--t-on-action);
-}
-
-.lbl {
-  max-width: 0;
-  opacity: 0;
-  white-space: nowrap;
-  font-size: var(--fs-body);
-  font-weight: var(--fw-bold);
-  transition: max-width var(--d-base) var(--e-out),
-    opacity var(--d-base) var(--e-out);
-}
-
-.on .lbl {
-  max-width: 140px;
-  opacity: 1;
 }
