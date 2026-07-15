@@ -1,0 +1,48 @@
+.h {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.group {
+  margin-top: var(--s-5);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+  box-shadow: inset 0 -1px 0 var(--t-line);
+}
+.row:last-child {
+  box-shadow: none;
+}
+.row:active {
+  background: var(--t-bg);
+}
+
+.ricon {
+  flex-shrink: 0;
+  color: var(--t-ink-2);
+}
+
+.rlabel {
+  flex: 1 1 auto;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-1);
+}
+
+.chev {
+  flex-shrink: 0;
+  color: var(--t-ink-3);
+}

@@ -1,0 +1,113 @@
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  padding: var(--s-4);
+  transition: transform var(--d-fast) var(--e-out);
+}
+.card:active {
+  transform: scale(0.99);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.texts {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.role {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.score {
+  flex-shrink: 0;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 var(--s-2);
+  border-radius: var(--r-sm);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  margin-top: var(--s-3);
+}
+
+.skill,
+.level {
+  padding: 4px var(--s-2);
+  border-radius: var(--r-xs);
+  background: var(--t-bg);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-2);
+}
+
+.level {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  box-shadow: inset 0 1px 0 var(--t-line);
+}
+
+.dir {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+}

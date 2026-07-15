@@ -1,0 +1,76 @@
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+}
+
+.htexts {
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  margin: 2px 0 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.card {
+  margin-bottom: var(--s-3);
+}
+
+.kicker {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+}
+
+.about {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-1);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.tag {
+  padding: 6px var(--s-3);
+  border-radius: var(--r-xs);
+  background: var(--t-bg);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-1);
+}
+
+.actions {
+  margin-top: var(--s-4);
+}
