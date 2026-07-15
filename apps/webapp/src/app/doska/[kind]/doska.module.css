@@ -1,0 +1,54 @@
+.h {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: left;
+  padding: var(--s-3);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  transition: transform var(--d-fast) var(--e-out);
+}
+
+.row:active {
+  transform: scale(0.99);
+}
+
+.texts {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
