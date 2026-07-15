@@ -38,7 +38,7 @@ export function Nav({ items }: { items: NavItem[] }): JSX.Element {
             className={`${styles.item} ${active ? styles.on : ""}`}
             onClick={() => haptic("light")}
           >
-            <Icon name={item.icon} size={26} />
+            <Icon name={item.icon} size={22} />
             <span className={styles.lbl}>{item.label}</span>
           </Link>
         );

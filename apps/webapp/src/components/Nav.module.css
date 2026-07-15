@@ -41,7 +41,7 @@
   max-width: 0;
   opacity: 0;
   white-space: nowrap;
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: var(--fw-bold);
   transition: max-width var(--d-base) var(--e-out),
     opacity var(--d-base) var(--e-out);
