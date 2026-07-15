@@ -1,219 +1,109 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "../styles/tokens.css";
 
-:root {
-  /* --- talantly design system (light + grotesk) --- */
-  --bg: #f5f5f7;
-  --surface: #ffffff;
-  --surface2: #f1f1f4;
-  --border: #e7e7eb;
-  --border-2: #efeff2;
-  --text: #17171b;
-  --muted: #6c6c76;
-  --dim: #9b9ba5;
-  --orange: #f26430;
-  --orange-deep: #e5551f;
-  --orange-soft: #fff1eb;
-  --green: #1f9e58;
-  --green-seal: #23b26a;
-  --green-soft: #eaf7f0;
-  --red: #dc2626;
-  --blue: #2563eb;
+/* VK Sans Display — yagona shrift. tokens.css --f-sans 'VK Sans Display' deydi,
+   shu nom bilan @font-face ulaymiz (fayllar public/fonts/ da). */
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Light.otf") format("opentype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-DemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
 
-  /* Decorative accent — celebration confetti only, NOT part of the UI palette. */
-  --gold: #f0c24b;
-
-  /* Back-compat aliases — some inline styles still read these names. */
-  --ink: var(--text);
-  --ink-soft: var(--muted);
-  --ink-faint: var(--dim);
-  --line: var(--border);
-  --orange-light: #ff8a3d;
-  --green-deep: var(--green);
-  --orange-tint: rgba(242, 100, 48, 0.06);
-  --green-tint: rgba(31, 158, 88, 0.1);
-
-  /* Telegram safe-area insets (set from JS in fullscreen; ~0 in compact mode). */
-  --tg-safe-top: 0px;
-  --tg-safe-bottom: 0px;
-  --tg-content-top: 0px;
-  --tg-content-bottom: 0px;
-  /* Combined insets layouts pad against. */
-  --tg-top: 0px;
-  --tg-bottom: 0px;
-
-  /* Real drawable height of the Mini App (Telegram viewportStableHeight),
-     overwritten from JS. Falls back to 100vh outside Telegram / before init. */
-  --tg-vh: 100vh;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body {
-  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-vksans), var(--font-onest), -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--t-bg);
+  color: var(--t-ink-1);
+  font-family: var(--f-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
 }
 
-/* VK Sans Display drives all type — headings, numbers, buttons, names,
-   archetype labels, and body copy (single brand typeface). Grotesk/Onest
-   remain as fallbacks. */
-h1,
-h2,
-h3,
-.font-display {
-  font-family: var(--font-vksans), var(--font-grotesk), var(--font-onest),
-    sans-serif;
+/* Ilova qobig'i — balandlik 100vh EMAS, --tg-vh (viewportStableHeight). */
+.app {
+  height: var(--tg-vh);
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Tabular figures for scores, prices, counters. */
-.num {
-  font-family: var(--font-vksans), var(--font-grotesk), sans-serif;
-  font-feature-settings: "tnum" 1;
+/* Scroll shu yerda; nav va sticky CTA .app ichida absolute. */
+.screen {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: var(--tg-top);
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+  padding-bottom: calc(96px + var(--tg-bottom));
 }
 
-/* App shell pads clear of Telegram's status bar + floating controls in
-   fullscreen; collapses to no extra padding in compact mode (insets ~0). */
-.app-shell {
-  padding-top: calc(var(--tg-safe-top) + var(--tg-content-top));
+button {
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
 }
 
-/* Telegram-safe full height — use instead of Tailwind's min-h-screen (100vh),
-   which overflows past Telegram's viewport in fullscreen Mini Apps. */
-.min-h-app {
-  min-height: var(--tg-vh);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Utility for fixed bottom bars to clear the home indicator in fullscreen. */
-.safe-bottom {
-  padding-bottom: calc(1.5rem + var(--tg-safe-bottom) + var(--tg-content-bottom));
+img,
+svg {
+  max-width: 100%;
+  display: block;
 }
 
-@layer components {
-  .label-caps {
-    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-soft;
-  }
-  .input-base {
-    @apply w-full rounded-input border border-line bg-surface px-4 py-3.5 text-[15px] text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-orange;
-  }
+:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
 }
 
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-
-@keyframes step-in {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes step-in-back {
-  from {
-    opacity: 0;
-    transform: translateX(-16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.step-enter {
-  animation: step-in 0.25s ease both;
-}
-
-.step-enter-back {
-  animation: step-in-back 0.25s ease both;
-}
-
-@keyframes soft-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.55;
-  }
-}
-
-.soft-pulse {
-  animation: soft-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    #ececef 25%,
-    #f6f6f8 50%,
-    #ececef 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.4s ease-in-out infinite;
-}
-
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(-10vh) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(105vh) rotate(540deg);
-    opacity: 0.6;
-  }
-}
-
-.confetti-piece {
-  position: fixed;
-  top: 0;
-  width: 8px;
-  height: 12px;
-  border-radius: 2px;
-  animation: confetti-fall linear both;
-  pointer-events: none;
-}
-
-@keyframes seal-pop {
-  0% {
-    transform: scale(0.4);
-    opacity: 0;
-  }
-  70% {
-    transform: scale(1.08);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.seal-pop {
-  animation: seal-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+@media (hover: hover) {
+  /* hover-holatlar faqat shu yerda — komponentlar ichida qo'llanadi */
 }
