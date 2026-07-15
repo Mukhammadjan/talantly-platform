@@ -3,11 +3,10 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
-import { CandidateCard } from "@/components/CandidateCard";
 import { EmptyState } from "@/components/EmptyState";
 import { Icon } from "@/lib/icons";
 import { formatSalary } from "@/lib/labels";
-import { CANDIDATES } from "@/mock/data";
+import { SENT_VACANCIES } from "@/mock/data";
 import { haptic, initTelegram } from "@/lib/telegram";
 import { useBackButton } from "@/lib/useBackButton";
 import styles from "./doska.module.css";
@@ -54,24 +53,19 @@ const SUHBATLAR: IntRow[] = [
   { cid: "c2", name: "Ruslan Ubaydullayev", role: "Front End dasturchi", at: "23.02.2023 · 14:00", state: "declined" },
 ];
 
-interface OfferRow {
-  cid: string;
-  name: string;
-  role: string;
-  salary: number;
-  status: string;
-  tone: "neutral" | "action" | "verified";
-}
-const TAKLIFLAR: OfferRow[] = [
-  { cid: "c1", name: "Kamola O.", role: "Frontend dasturchi", salary: 9000000, status: "Yuborildi", tone: "neutral" },
-  { cid: "c2", name: "Jasur T.", role: "UI/UX dizayner", salary: 8000000, status: "Ko'rildi", tone: "action" },
-  { cid: "c3", name: "Nilufar S.", role: "SMM menejer", salary: 4500000, status: "Bog'lanildi", tone: "verified" },
+// Saqlangan nomzodlar — reference'dagi boy karta uchun.
+const SAVED = [
+  { cid: "c1", name: "Abdusattor Mirpulatov", role: "UI/UX dizayner", city: "Toshkent", salary: 12000000, age: 37, exp: 5 },
+  { cid: "c2", name: "Shoxrux Shavqiev", role: "UI/UX dizayner", city: "Toshkent", salary: 12000000, age: 37, exp: 5 },
+  { cid: "c3", name: "Zafar Olimov", role: "UI/UX dizayner", city: "Toshkent", salary: 12000000, age: 37, exp: 5 },
+  { cid: "c1", name: "Xusniddin Usmanov", role: "UI/UX dizayner", city: "Toshkent", salary: 12000000, age: 37, exp: 5 },
 ];
 
 export default function DoskaKindPage(): JSX.Element {
   const params = useParams<{ kind: string }>();
   const router = useRouter();
   const [decided, setDecided] = useState<Record<string, "accepted" | "declined">>({});
+  const [unsaved, setUnsaved] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     initTelegram();
@@ -95,12 +89,46 @@ export default function DoskaKindPage(): JSX.Element {
     <main className="screen">
       <h1 className={styles.h}>{TITLES[kind]}</h1>
 
-      {/* SAQLANGAN — to'liq nomzod kartalari */}
+      {/* SAQLANGAN NOMZODLAR */}
       {kind === "saqlangan" && (
-        <div className={styles.cards}>
-          {[...CANDIDATES, ...CANDIDATES].slice(0, 5).map((c, i) => (
-            <CandidateCard key={`${c.id}-${i}`} c={c} />
-          ))}
+        <div className={styles.list}>
+          {SAVED.map((r, i) => {
+            const key = `sv${i}`;
+            const off = unsaved[key];
+            return (
+              <button key={key} type="button" className={styles.card} onClick={() => open(r.cid)}>
+                <span className={styles.head}>
+                  <Avatar name={r.name} size={44} />
+                  <span className={styles.htext}>
+                    <span className={styles.hname}>{r.name}</span>
+                    <span className={styles.hrole}>{r.role}</span>
+                  </span>
+                  <span
+                    className={`${styles.bookmark} ${off ? styles.bookmarkOff : ""}`}
+                    role="button"
+                    tabIndex={0}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      haptic("light");
+                      setUnsaved((u) => ({ ...u, [key]: !u[key] }));
+                    }}
+                  >
+                    <Icon name="bookmark" size={18} filled={!off} />
+                  </span>
+                </span>
+                <span className={styles.salary}>{formatSalary(r.salary)}dan</span>
+                <span className={styles.loc}>{r.city} shahri</span>
+                <div className={styles.stat}>
+                  <span className={styles.statItem}>
+                    Yosh: <b>{r.age}</b>
+                  </span>
+                  <span className={styles.statItem}>
+                    Tajriba: <b>{r.exp} yil</b>
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -218,30 +246,32 @@ export default function DoskaKindPage(): JSX.Element {
         </div>
       )}
 
-      {/* YUBORILGAN TAKLIFLAR */}
+      {/* YUBORILGAN TAKLIFLAR — vakansiya bo'yicha guruhlangan */}
       {kind === "takliflar" && (
         <div className={styles.list}>
-          {TAKLIFLAR.map((r, i) => (
-            <button key={`t${i}`} type="button" className={styles.card} onClick={() => open(r.cid)}>
+          {SENT_VACANCIES.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              className={styles.card}
+              onClick={() => {
+                haptic("light");
+                router.push(`/taklif/${v.id}`);
+              }}
+            >
               <span className={styles.head}>
-                <Avatar name={r.name} size={44} />
+                <Avatar name={v.company} size={40} />
                 <span className={styles.htext}>
-                  <span className={styles.hname}>{r.name}</span>
-                  <span className={styles.hrole}>{r.role}</span>
-                </span>
-                <span
-                  className={`${styles.pill} ${
-                    r.tone === "verified" ? styles.pGreen : r.tone === "action" ? styles.pOrange : styles.pGray
-                  }`}
-                >
-                  {r.status}
+                  <span className={styles.company}>{v.company}</span>
+                  <span className={styles.vtitle}>{v.title}</span>
                 </span>
               </span>
-              <div className={styles.money}>
-                <span className={styles.salary}>{formatSalary(r.salary)}dan</span>
-                <span className={styles.openLink}>
-                  Profil <Icon name="chevron" size={14} />
-                </span>
+              <span className={styles.salary}>{formatSalary(v.salaryFrom)}dan</span>
+              <span className={styles.loc}>
+                {v.date} · {v.district}
+              </span>
+              <div className={styles.sentBox}>
+                Yuborilgan: <b>{v.candidates.length} nomzodga</b>
               </div>
             </button>
           ))}

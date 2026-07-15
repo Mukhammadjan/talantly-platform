@@ -1,0 +1,191 @@
+.edit {
+  position: absolute;
+  top: calc(var(--tg-top) + var(--s-5));
+  right: var(--gutter);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  color: var(--t-ink-2);
+  z-index: 5;
+}
+
+.title {
+  margin: 0 40px var(--s-1) 0;
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.category {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-body);
+  color: var(--t-ink-3);
+}
+
+/* ---- Info qatorlari ---- */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+}
+
+.infoLabel {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.infoValue {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+/* ---- Segmented tab ---- */
+.tabs {
+  display: flex;
+  gap: var(--s-1);
+  padding: var(--s-1);
+  margin-bottom: var(--s-4);
+  background: var(--t-fill);
+  border-radius: var(--r-md);
+}
+
+.tab {
+  flex: 1 1 0;
+  height: 40px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-3);
+  white-space: nowrap;
+  transition: background var(--d-fast) var(--e-out),
+    color var(--d-fast) var(--e-out);
+}
+
+.tabOn {
+  background: var(--t-white);
+  color: var(--t-ink-1);
+  box-shadow: var(--sh-raise);
+}
+
+/* ---- Nomzod ro'yxati ---- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.name {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.role {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--t-action-ink);
+}
+
+.date {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--t-line);
+}
+
+.statItem {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.statItem b {
+  color: var(--t-ink-1);
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- Status pill ---- */
+.pill {
+  flex: 0 0 auto;
+  padding: 4px var(--s-3);
+  border-radius: var(--r-full);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+}
+
+.pGreen {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.pRed {
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+}
+
+.pGray {
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}

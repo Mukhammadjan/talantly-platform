@@ -215,3 +215,67 @@
   font-size: var(--fs-caption);
   font-weight: var(--fw-semibold);
 }
+
+/* ---- Saqlangan: bookmark + yosh/tajriba ---- */
+.bookmark {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action);
+  cursor: pointer;
+}
+
+.bookmarkOff {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--t-line);
+}
+
+.statItem {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.statItem b {
+  color: var(--t-ink-1);
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- Yuborilgan taklif (vakansiya) kartasi ---- */
+.company {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+  font-weight: var(--fw-medium);
+}
+
+.vtitle {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sentBox {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+  font-size: var(--fs-caption);
+}
+
+.sentBox b {
+  color: var(--t-ink-1);
+  font-weight: var(--fw-semibold);
+}
