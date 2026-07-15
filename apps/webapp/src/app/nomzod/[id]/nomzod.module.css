@@ -196,6 +196,13 @@
   color: var(--t-ink-2);
 }
 
+.cardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
 .cnum {
   margin: 0;
   font-size: var(--fs-title);
@@ -203,6 +210,32 @@
   letter-spacing: 0.04em;
   color: var(--t-ink-1);
   font-variant-numeric: tabular-nums;
+}
+
+.copyBtn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 36px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  box-shadow: inset 0 0 0 1px var(--t-line);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.copyBtn:active {
+  background: var(--t-bg);
+}
+
+.copied {
+  color: var(--t-verified-ink);
+  background: var(--t-verified-soft);
+  box-shadow: inset 0 0 0 1px var(--t-verified);
 }
 
 .cowner {

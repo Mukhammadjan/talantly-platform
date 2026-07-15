@@ -32,7 +32,8 @@ export type IconName =
   | "phone"
   | "download"
   | "info"
-  | "swap";
+  | "swap"
+  | "copy";
 
 const PATHS: Record<IconName, ReactNode> = {
   back: <path d="M14.5 5.5 8 12l6.5 6.5" />,
@@ -154,6 +155,12 @@ const PATHS: Record<IconName, ReactNode> = {
     </>
   ),
   swap: <path d="M7 8h11m0 0-3-3m3 3-3 3M17 16H6m0 0 3-3m-3 3 3 3" />,
+  copy: (
+    <>
+      <rect x="8.5" y="8.5" width="11" height="11" rx="2.5" />
+      <path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" />
+    </>
+  ),
 };
 
 export function Icon({

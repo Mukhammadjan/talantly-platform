@@ -17,6 +17,8 @@ import type { Candidate } from "@/lib/types";
 import { useBackButton } from "@/lib/useBackButton";
 import styles from "./nomzod.module.css";
 
+const CARD_NUMBER = "8600 1234 5678 9012";
+
 export default function NomzodDetailPage(): JSX.Element {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -25,6 +27,18 @@ export default function NomzodDetailPage(): JSX.Element {
   const [pay, setPay] = useState(false);
   const [plan, setPlan] = useState<"bir" | "obuna">("bir");
   const [sent, setSent] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyCard = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(CARD_NUMBER.replace(/\s/g, ""));
+      haptic("success");
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      haptic("error");
+    }
+  };
 
   useEffect(() => {
     initTelegram();
@@ -147,7 +161,18 @@ export default function NomzodDetailPage(): JSX.Element {
         </div>
         <Card className={styles.cardInfo}>
           <p className={styles.ckicker}>To&apos;lov kartasi</p>
-          <p className={styles.cnum}>8600 1234 5678 9012</p>
+          <div className={styles.cardRow}>
+            <p className={styles.cnum}>{CARD_NUMBER}</p>
+            <button
+              type="button"
+              className={`${styles.copyBtn} ${copied ? styles.copied : ""}`}
+              onClick={() => void copyCard()}
+              aria-label="Karta raqamini nusxalash"
+            >
+              <Icon name={copied ? "check" : "copy"} size={16} />
+              {copied ? "Nusxalandi" : "Nusxa"}
+            </button>
+          </div>
           <p className={styles.cowner}>Talantly MChJ</p>
         </Card>
         <p className={styles.payHint}>
