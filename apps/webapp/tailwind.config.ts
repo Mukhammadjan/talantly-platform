@@ -25,6 +25,8 @@ const config: Config = {
           deep: "var(--green-deep)",
           tint: "var(--green-tint)",
         },
+        red: "var(--red)",
+        blue: "var(--blue)",
         // Text scale — legacy `ink*` names kept so existing markup stays valid.
         ink: {
           DEFAULT: "var(--text)",
@@ -40,15 +42,20 @@ const config: Config = {
         },
       },
       borderRadius: {
-        card: "18px",
+        card: "16px",
+        btn: "12px",
+        input: "12px",
+        chip: "8px",
+        pill: "99px",
+        // Legacy keys kept so pre-existing screens keep compiling.
         role: "22px",
-        input: "15px",
         opt: "15px",
-        chip: "10px",
       },
       fontFamily: {
-        display: ["var(--font-grotesk)", "sans-serif"],
-        sans: ["var(--font-onest)", "sans-serif"],
+        // VK Sans Display is the brand typeface; legacy fonts stay as fallbacks.
+        sans: ["var(--font-vksans)", "var(--font-onest)", "sans-serif"],
+        display: ["var(--font-vksans)", "var(--font-grotesk)", "sans-serif"],
+        vksans: ["var(--font-vksans)", "sans-serif"],
       },
       boxShadow: {
         soft: "0 18px 40px -22px rgba(23,23,27,.22)",

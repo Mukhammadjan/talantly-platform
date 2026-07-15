@@ -24,6 +24,7 @@ import {
   WORK_FORMATS,
 } from "@/lib/registration";
 import { haptic, initTelegramUi } from "@/lib/telegram";
+import { useTelegramBackButton } from "@/lib/useTelegramBackButton";
 
 interface WizardValues {
   fullName: string;
@@ -159,6 +160,9 @@ export default function RegisterPage(): JSX.Element {
   const [fatal, setFatal] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const nameRef = useRef<string>("");
+  // Telegram's native BackButton drives step-back; the ref lets us call the
+  // real goBack (defined below the early returns) without breaking hook order.
+  const goBackRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     initTelegramUi();
@@ -185,9 +189,13 @@ export default function RegisterPage(): JSX.Element {
     };
   }, [router]);
 
+  useTelegramBackButton(
+    step !== null && step > 1 ? () => goBackRef.current() : null,
+  );
+
   if (fatal) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6">
+      <main className="flex min-h-app flex-col items-center justify-center px-6">
         <p className="text-center text-[14px] text-ink-soft">
           Ulanishda xatolik yuz berdi. Ilovani yopib, qayta oching.
         </p>
@@ -220,6 +228,7 @@ export default function RegisterPage(): JSX.Element {
       step === EXPERIENCE_STEP + 1 && values.level !== "mutaxassis";
     setStep(step - (skipExperience ? 2 : 1));
   };
+  goBackRef.current = goBack;
 
   const stepValue = (target: number): unknown => {
     switch (target) {
@@ -355,7 +364,7 @@ export default function RegisterPage(): JSX.Element {
   if (celebrating) {
     const firstName = nameRef.current.split(" ")[0] ?? "";
     return (
-      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
+      <main className="relative flex min-h-app flex-col items-center justify-center overflow-hidden px-6">
         <Confetti />
         <Seal size={88} className="seal-pop" />
         <h1 className="mt-6 text-center text-2xl font-bold">
@@ -377,7 +386,7 @@ export default function RegisterPage(): JSX.Element {
 
   if (step === 0) {
     return (
-      <main className="flex min-h-screen flex-col px-6 pb-8 pt-16">
+      <main className="flex min-h-app flex-col px-6 pb-8 pt-16">
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <Wordmark height={42} className="seal-pop" />
           <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
@@ -428,25 +437,8 @@ export default function RegisterPage(): JSX.Element {
   };
 
   return (
-    <main className="flex min-h-screen flex-col px-5 pb-8 pt-5">
+    <main className="flex min-h-app flex-col px-5 pb-8 pt-5">
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={step <= 1 || submitting}
-          aria-label="Orqaga"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-ink transition-all active:scale-95 disabled:opacity-30"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 5 8 12l7 7"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
         <ProgressBar value={step / TOTAL_STEPS} />
         <span className="label-caps num shrink-0">
           {step}/{TOTAL_STEPS}

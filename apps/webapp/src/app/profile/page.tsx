@@ -572,7 +572,7 @@ export default function ProfilePage(): JSX.Element {
 
   if (failed) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6">
+      <main className="flex min-h-app flex-col items-center justify-center px-6">
         <p className="text-center text-[14px] text-ink-soft">
           Profilni yuklab bo&apos;lmadi. Ilovani yopib, qayta oching.
         </p>

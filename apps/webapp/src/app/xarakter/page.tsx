@@ -46,7 +46,7 @@ function ResultScreen({
   onNext: () => void;
 }): JSX.Element {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+    <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
       <div className="seal-pop flex h-24 w-24 items-center justify-center rounded-full bg-orange-soft text-5xl">
         {archetypeEmoji(result.archetypeCode)}
       </div>
@@ -185,7 +185,7 @@ export default function XarakterPage(): JSX.Element {
 
   if (phase.kind === "error") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <p className="text-[14px] leading-relaxed text-ink-soft">
           {phase.message}
         </p>
@@ -207,7 +207,7 @@ export default function XarakterPage(): JSX.Element {
 
   if (phase.kind === "intro") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <div className="text-5xl">🧭</div>
         <h1 className="mt-5 text-xl font-bold">Xarakter testi</h1>
         <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">

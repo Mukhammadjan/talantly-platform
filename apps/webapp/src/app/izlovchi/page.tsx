@@ -33,6 +33,7 @@ import type {
 } from "@/lib/apiTypes";
 import { CITIES } from "@/lib/registration";
 import { haptic, initTelegramUi } from "@/lib/telegram";
+import { useTelegramBackButton } from "@/lib/useTelegramBackButton";
 
 const KIND_OPTIONS: { value: CompanyKind; icon: string }[] = [
   { value: "kompaniya", icon: "🏢" },
@@ -117,6 +118,15 @@ function Onboarding({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useTelegramBackButton(
+    step > 1
+      ? () => {
+          haptic("light");
+          setStep((prev) => prev - 1);
+        }
+      : null,
+  );
+
   const advance = (patch: Partial<OnboardingValues>): void => {
     haptic("light");
     setValues((prev) => ({ ...prev, ...patch }));
@@ -179,23 +189,8 @@ function Onboarding({
   const meta = titles[step] ?? titles[1];
 
   return (
-    <main className="flex min-h-screen flex-col px-5 pb-10 pt-6">
+    <main className="flex min-h-app flex-col px-5 pb-10 pt-6">
       <div className="flex items-center gap-4">
-        {step > 1 ? (
-          <button
-            type="button"
-            onClick={() => {
-              haptic("light");
-              setStep((prev) => prev - 1);
-            }}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-[18px] text-ink-soft transition-all active:scale-95"
-            aria-label="Orqaga"
-          >
-            ‹
-          </button>
-        ) : (
-          <span className="h-9 w-9 shrink-0" />
-        )}
         <div className="flex-1">
           <ProgressBar value={(step - 1) / ONBOARDING_STEPS} />
         </div>
@@ -740,7 +735,7 @@ export default function IzlovchiPage(): JSX.Element {
 
   if (failed) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6">
+      <main className="flex min-h-app flex-col items-center justify-center px-6">
         <p className="text-center text-[14px] text-ink-soft">
           Ma&apos;lumotlarni yuklab bo&apos;lmadi. Ilovani yopib, qayta oching.
         </p>

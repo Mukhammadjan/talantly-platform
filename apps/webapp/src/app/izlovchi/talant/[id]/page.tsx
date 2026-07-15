@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/Skeleton";
 import { ApiError, apiFetch, authenticate, isInsideTelegram } from "@/lib/api";
 import type { TalentDetailPublic } from "@/lib/apiTypes";
 import { haptic, initTelegramUi } from "@/lib/telegram";
+import { useTelegramBackButton } from "@/lib/useTelegramBackButton";
 
 function ScoreDial({ score }: { score: number }): JSX.Element {
   const radius = 34;
@@ -106,6 +107,8 @@ export default function TalentDetailPage({
     };
   }, [router, params.id]);
 
+  useTelegramBackButton(() => router.back());
+
   const sendRequest = async (): Promise<void> => {
     if (sending || sent || !talent || talent.isDemo) return;
     setSending(true);
@@ -131,7 +134,7 @@ export default function TalentDetailPage({
 
   if (failed) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6">
+      <main className="flex min-h-app flex-col items-center justify-center px-6">
         <p className="text-center text-[14px] text-ink-soft">
           Nomzodni yuklab bo&apos;lmadi.
         </p>
@@ -175,19 +178,7 @@ export default function TalentDetailPage({
 
   return (
     <main className="px-5 pb-44 pt-6">
-      <button
-        type="button"
-        onClick={() => {
-          haptic("light");
-          router.back();
-        }}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-[18px] text-ink-soft transition-all active:scale-95"
-        aria-label="Orqaga"
-      >
-        ‹
-      </button>
-
-      <div className="mt-5 flex items-center gap-4">
+      <div className="flex items-center gap-4">
         {talent.photoUrl ? (
           <img
             src={talent.photoUrl}

@@ -111,7 +111,7 @@ export default function RolePage(): JSX.Element {
   }
 
   return (
-    <main className="flex min-h-screen flex-col px-5 pb-10 pt-12">
+    <main className="flex min-h-app flex-col px-5 pb-10 pt-12">
       <div className="flex flex-col items-center">
         <Wordmark height={38} className="seal-pop" />
         <h1 className="mt-6 text-[22px] font-bold tracking-tight text-ink">

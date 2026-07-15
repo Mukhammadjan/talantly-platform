@@ -18,6 +18,8 @@
   --green: #1f9e58;
   --green-seal: #23b26a;
   --green-soft: #eaf7f0;
+  --red: #dc2626;
+  --blue: #2563eb;
 
   /* Decorative accent — celebration confetti only, NOT part of the UI palette. */
   --gold: #f0c24b;
@@ -37,6 +39,13 @@
   --tg-safe-bottom: 0px;
   --tg-content-top: 0px;
   --tg-content-bottom: 0px;
+  /* Combined insets layouts pad against. */
+  --tg-top: 0px;
+  --tg-bottom: 0px;
+
+  /* Real drawable height of the Mini App (Telegram viewportStableHeight),
+     overwritten from JS. Falls back to 100vh outside Telegram / before init. */
+  --tg-vh: 100vh;
 }
 
 html,
@@ -47,25 +56,27 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-onest), -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-vksans), var(--font-onest), -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
 }
 
-/* Space Grotesk drives structural type: headings, numbers, buttons, names,
-   archetype labels. Body copy stays on Onest via the body rule above. */
+/* VK Sans Display drives all type — headings, numbers, buttons, names,
+   archetype labels, and body copy (single brand typeface). Grotesk/Onest
+   remain as fallbacks. */
 h1,
 h2,
 h3,
 .font-display {
-  font-family: var(--font-grotesk), var(--font-onest), sans-serif;
+  font-family: var(--font-vksans), var(--font-grotesk), var(--font-onest),
+    sans-serif;
 }
 
 /* Tabular figures for scores, prices, counters. */
 .num {
-  font-family: var(--font-grotesk), sans-serif;
+  font-family: var(--font-vksans), var(--font-grotesk), sans-serif;
   font-feature-settings: "tnum" 1;
 }
 
@@ -73,6 +84,12 @@ h3,
    fullscreen; collapses to no extra padding in compact mode (insets ~0). */
 .app-shell {
   padding-top: calc(var(--tg-safe-top) + var(--tg-content-top));
+}
+
+/* Telegram-safe full height — use instead of Tailwind's min-h-screen (100vh),
+   which overflows past Telegram's viewport in fullscreen Mini Apps. */
+.min-h-app {
+  min-height: var(--tg-vh);
 }
 
 /* Utility for fixed bottom bars to clear the home indicator in fullscreen. */

@@ -205,7 +205,7 @@ export default function TestPage(): JSX.Element {
 
   if (phase.kind === "unavailable") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <div className="text-5xl">🛠️</div>
         <h1 className="mt-5 text-xl font-bold">Test tez orada</h1>
         <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">
@@ -225,7 +225,7 @@ export default function TestPage(): JSX.Element {
 
   if (phase.kind === "error") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <p className="text-[14px] leading-relaxed text-ink-soft">
           {phase.message}
         </p>
@@ -239,7 +239,7 @@ export default function TestPage(): JSX.Element {
   if (phase.kind === "result") {
     const { title, body } = encouragement(phase.score);
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <div className="seal-pop">
           <ScoreDial score={phase.score} />
         </div>

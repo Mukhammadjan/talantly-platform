@@ -119,7 +119,7 @@ export default function BookingPage(): JSX.Element {
 
   if (phase.kind === "error") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <p className="text-[14px] leading-relaxed text-ink-soft">
           {phase.message}
         </p>
@@ -132,7 +132,7 @@ export default function BookingPage(): JSX.Element {
 
   if (phase.kind === "booked") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 pb-16 text-center">
+      <main className="flex min-h-app flex-col items-center justify-center px-6 pb-16 text-center">
         <div className="seal-pop">
           <Seal size={72} />
         </div>
