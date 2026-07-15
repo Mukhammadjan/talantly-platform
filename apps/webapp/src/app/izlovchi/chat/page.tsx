@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Avatar } from "@/components/Avatar";
 import { EmptyState } from "@/components/EmptyState";
 import { Icon } from "@/lib/icons";
-import { initTelegram } from "@/lib/telegram";
+import { haptic, initTelegram } from "@/lib/telegram";
 import styles from "./chat.module.css";
 
 const CHATS = [
@@ -13,6 +14,7 @@ const CHATS = [
 ];
 
 export default function ChatPage(): JSX.Element {
+  const router = useRouter();
   useEffect(() => {
     initTelegram();
   }, []);
@@ -35,7 +37,15 @@ export default function ChatPage(): JSX.Element {
       <h1 className={styles.h}>Chat</h1>
       <div className={styles.list}>
         {CHATS.map((c) => (
-          <button key={c.id} type="button" className={styles.item}>
+          <button
+            key={c.id}
+            type="button"
+            className={styles.item}
+            onClick={() => {
+              haptic("light");
+              router.push(`/suhbat/${c.id}`);
+            }}
+          >
             <Avatar name={c.name} size={48} />
             <div className={styles.texts}>
               <span className={styles.name}>{c.name}</span>

@@ -1,0 +1,133 @@
+.wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--tg-top);
+}
+
+/* ---- Sarlavha ---- */
+.top {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--gutter);
+  background: var(--t-white);
+  box-shadow: 0 1px 0 var(--t-line);
+}
+
+.htext {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.name {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.online {
+  font-size: var(--fs-caption);
+  color: var(--t-verified);
+  font-weight: var(--fw-medium);
+}
+
+/* ---- Xabarlar ---- */
+.thread {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--gutter);
+}
+
+.row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rowMe {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 78%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+}
+
+.them {
+  background: var(--t-white);
+  border-bottom-left-radius: var(--r-xs);
+  color: var(--t-ink-1);
+}
+
+.me {
+  background: var(--t-action);
+  border-bottom-right-radius: var(--r-xs);
+  color: var(--t-on-action);
+}
+
+.msgText {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.time {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: var(--fs-micro);
+  opacity: 0.7;
+}
+
+/* ---- Yozish paneli ---- */
+.composer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--gutter) calc(var(--s-2) + var(--tg-bottom));
+  background: var(--t-white);
+  box-shadow: 0 -1px 0 var(--t-line);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 44px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-1);
+  font-size: var(--fs-body);
+}
+
+.input::placeholder {
+  color: var(--t-ink-3);
+}
+
+.send {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  transition: opacity var(--d-fast) var(--e-out);
+}
+
+.send:disabled {
+  opacity: 0.4;
+}
