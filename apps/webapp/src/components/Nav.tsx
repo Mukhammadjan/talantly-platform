@@ -15,12 +15,20 @@ export interface NavItem {
 /** Qorong'i suzuvchi pill. Faqat faol element yorliq ko'rsatadi. */
 export function Nav({ items }: { items: NavItem[] }): JSX.Element {
   const pathname = usePathname();
+  // Faqat ENG UZUN mos keluvchi element faol — "/talant" barcha
+  // "/talant/*" sahifani egallab olmasin.
+  const activeHref = items
+    .filter(
+      (it) => pathname === it.href || pathname.startsWith(`${it.href}/`),
+    )
+    .reduce<string | null>(
+      (best, it) => (best && best.length >= it.href.length ? best : it.href),
+      null,
+    );
   return (
     <nav className={styles.nav} aria-label="Asosiy">
       {items.map((item) => {
-        const active =
-          item.href === pathname ||
-          (item.href !== "/" && pathname.startsWith(item.href));
+        const active = item.href === activeHref;
         return (
           <Link
             key={item.href}

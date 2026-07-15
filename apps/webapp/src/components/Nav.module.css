@@ -20,7 +20,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--s-2);
+  /* gap YO'Q — nofaol holatda yashirin yorliq icon'ni markazdan surmasin */
+  gap: 0;
   overflow: hidden;
   background: var(--t-ink-nav);
   color: var(--t-ink-3);
@@ -30,6 +31,7 @@
 
 .on {
   flex: 1 1 auto;
+  gap: var(--s-2);
   padding: 0 var(--s-4);
   background: var(--t-action);
   color: var(--t-on-action);
