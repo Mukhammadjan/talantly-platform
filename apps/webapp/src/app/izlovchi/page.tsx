@@ -765,11 +765,8 @@ export default function IzlovchiPage(): JSX.Element {
   }
 
   if (!data.company) {
-    return (
-      <Onboarding
-        onDone={(company) => setData({ company, talents: data.talents })}
-      />
-    );
+    // After creating the company profile, land on the new recruiter feed.
+    return <Onboarding onDone={() => router.push("/ish")} />;
   }
 
   return <Feed company={data.company} talents={data.talents} />;

@@ -31,7 +31,7 @@ export default function EntryPage(): JSX.Element {
         if (!snapshot.preferredMode) {
           router.replace("/rol");
         } else if (snapshot.preferredMode === "izlovchi") {
-          router.replace("/izlovchi");
+          router.replace("/ish");
         } else {
           router.replace(
             snapshot.status === "yangi" ? "/register" : "/profile",

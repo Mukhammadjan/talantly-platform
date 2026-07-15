@@ -101,7 +101,7 @@ export default function RolePage(): JSX.Element {
       if (mode === "talant") {
         router.replace(snapshot.status === "yangi" ? "/register" : "/profile");
       } else {
-        router.replace("/izlovchi");
+        router.replace("/ish");
       }
     } catch {
       setChoice(null);
