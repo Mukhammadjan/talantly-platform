@@ -3,8 +3,9 @@ import { Nav, type NavItem } from "@/components/Nav";
 
 const TALANT_NAV: NavItem[] = [
   { href: "/talant", label: "Asosiy", icon: "home" },
+  { href: "/talant/vakansiyalar", label: "Vakansiyalar", icon: "briefcase" },
   { href: "/talant/testlar", label: "Testlar", icon: "doc" },
-  { href: "/talant/arizalar", label: "Arizalar", icon: "briefcase" },
+  { href: "/talant/arizalar", label: "Arizalar", icon: "send" },
   { href: "/talant/profil", label: "Profil", icon: "user" },
 ];
 

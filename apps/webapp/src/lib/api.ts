@@ -2,7 +2,7 @@
 // tashqarida yoki xato bo'lsa mock'ka tushadi — imzolar o'zgarmaydi.
 
 import { authedFetch, hasSession } from "@/lib/auth";
-import { APPLICATIONS, CANDIDATES, TALENT, ZONES } from "@/mock/data";
+import { APPLICATIONS, CANDIDATES, TALENT, VACANCIES, ZONES } from "@/mock/data";
 import {
   PERSONALITY_QUESTIONS,
   SKILL_QUESTIONS,
@@ -12,6 +12,7 @@ import type {
   Application,
   Candidate,
   TalentSnapshot,
+  Vacancy,
   Zone,
 } from "@/lib/types";
 
@@ -130,6 +131,14 @@ export const api = {
     } catch {
       return null;
     }
+  },
+
+  // Vakansiyalar — Run 2'da real /api/vacancies ga ulanadi.
+  getVacancies(): Promise<Vacancy[]> {
+    return delay(VACANCIES);
+  },
+  getVacancy(id: string): Promise<Vacancy | null> {
+    return delay(VACANCIES.find((v) => v.id === id) ?? null);
   },
 
   getApplications(): Promise<Application[]> {

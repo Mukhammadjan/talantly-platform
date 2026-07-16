@@ -64,6 +64,7 @@ export default function SozlamalarPage(): JSX.Element {
       </div>
 
       <div className={styles.group}>
+        <Row icon="info" label="Yordam" onClick={() => router.push("/yordam")} />
         <Row icon="swap" label="Rolni almashtirish" onClick={() => router.push("/rol")} />
         <Row
           icon="logout"

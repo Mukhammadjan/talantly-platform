@@ -111,3 +111,19 @@ export interface Zone {
   x: number;
   y: number;
 }
+
+/** Talant ko'radigan vakansiya (v2 `vacancies` jadvali ko'rinishi). */
+export interface Vacancy {
+  id: string;
+  company: string;
+  title: string;
+  direction: Direction;
+  level: Level | "ikkalasi";
+  salaryFrom: number;
+  salaryTo: number | null;
+  city: string;
+  district: string;
+  workFormats: WorkFormat[];
+  description: string[];
+  requirements: string[];
+}
