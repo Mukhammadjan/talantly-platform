@@ -1,17 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Icon } from "@/lib/icons";
 import { CV_MOCK } from "@/mock/quiz";
-import { initTelegram } from "@/lib/telegram";
+import { haptic, initTelegram } from "@/lib/telegram";
 import { useBackButton } from "@/lib/useBackButton";
 import styles from "./cv.module.css";
 
 export default function CvPage(): JSX.Element {
   const router = useRouter();
+  const [sent, setSent] = useState(false);
   useEffect(() => {
     initTelegram();
   }, []);
@@ -59,10 +60,28 @@ export default function CvPage(): JSX.Element {
       </Card>
 
       <div className={styles.actions}>
-        <Button full icon={<Icon name="download" size={20} />}>
-          Yuklab olish
-        </Button>
-        <Button variant="secondary" full icon={<Icon name="edit" size={20} />}>
+        {sent ? (
+          <p className={styles.sentBar}>
+            <Icon name="check" size={18} /> CV Telegram bot orqali yuborildi
+          </p>
+        ) : (
+          <Button
+            full
+            icon={<Icon name="download" size={20} />}
+            onClick={() => {
+              haptic("success");
+              setSent(true);
+            }}
+          >
+            Yuklab olish
+          </Button>
+        )}
+        <Button
+          variant="secondary"
+          full
+          icon={<Icon name="edit" size={20} />}
+          onClick={() => router.push("/profil-forma")}
+        >
           Tahrirlash
         </Button>
       </div>

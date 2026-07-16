@@ -6,6 +6,7 @@ import { Button } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Input } from "@/components/Input";
 import { Progress } from "@/components/Progress";
+import { api } from "@/lib/api";
 import {
   DIRECTION_LABELS,
   LEVEL_LABELS,
@@ -57,6 +58,30 @@ export default function ProfilFormaPage(): JSX.Element {
 
   useEffect(() => {
     initTelegram();
+    let live = true;
+    // Tahrirlash uchun mavjud profilni oldindan to'ldiramiz.
+    api.getTalent().then((s) => {
+      if (!live) return;
+      const p = s.profile;
+      if (!p.fullName) return;
+      setF({
+        fullName: p.fullName,
+        birthYear: p.birthYear ? String(p.birthYear) : "",
+        city: p.city ?? "",
+        district: p.district ?? "",
+        direction: p.direction,
+        level: p.level,
+        experience: p.experienceYears ? String(p.experienceYears) : "",
+        skills: p.skills,
+        workFormats: p.workFormats,
+        salary: p.salaryFrom ? String(p.salaryFrom) : "",
+        about: p.about ?? "",
+        portfolio: p.portfolioUrl ?? "",
+      });
+    });
+    return () => {
+      live = false;
+    };
   }, []);
 
   useBackButton(() => {
