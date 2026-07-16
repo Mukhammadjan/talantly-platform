@@ -1,6 +1,14 @@
 import { interviewsRepo } from "@talantly/shared";
-import type { InterviewDecision, InterviewRow } from "@talantly/shared";
+import type {
+  InterviewDecision,
+  InterviewInsert,
+  InterviewRow,
+} from "@talantly/shared";
 import { getSupabase } from "./client.js";
+
+export async function insert(values: InterviewInsert): Promise<InterviewRow> {
+  return interviewsRepo.insert(getSupabase(), values);
+}
 
 export async function findUndecided(): Promise<InterviewRow[]> {
   return interviewsRepo.findUndecided(getSupabase());

@@ -1,13 +1,18 @@
 import { Bot, type CommandContext, type Context } from "grammy";
 import { config } from "./config.js";
 import { startCvPdfWorker, stopCvPdfBrowser } from "./cv/pdfWorker.js";
+import { handleAdmin } from "./handlers/admin.js";
 import {
   handleBaholash,
   handleBaholashCallback,
   handleBaholashText,
 } from "./handlers/baholash.js";
+import { handleHolat } from "./handlers/holat.js";
+import { handleMenuText } from "./handlers/menu.js";
 import { handleProfil } from "./handlers/profil.js";
 import { handleStart } from "./handlers/start.js";
+import { handleSuhbat, handleSuhbatCallback } from "./handlers/suhbat.js";
+import { handlePaymentPhoto, handleTolov } from "./handlers/tolov.js";
 import { handleYordam } from "./handlers/yordam.js";
 import { logger } from "./logger.js";
 import { GENERIC_ERROR } from "./text.js";
@@ -36,8 +41,12 @@ async function main(): Promise<void> {
 
   bot.command("start", safe(handleStart));
   bot.command("profil", safe(handleProfil));
+  bot.command("holat", safe(handleHolat));
+  bot.command("suhbat", safe(handleSuhbat));
+  bot.command("tolov", safe(handleTolov));
   bot.command("yordam", safe(handleYordam));
   bot.command("baholash", safe(handleBaholash));
+  bot.command("admin", safe(handleAdmin));
 
   bot.callbackQuery(/^bhl:/, async (ctx) => {
     try {
@@ -47,11 +56,35 @@ async function main(): Promise<void> {
     }
   });
 
+  bot.callbackQuery(/^sbt:/, async (ctx) => {
+    try {
+      await handleSuhbatCallback(ctx);
+    } catch (err) {
+      logger.error({ err }, "suhbat callback error");
+      try {
+        await ctx.answerCallbackQuery({ text: GENERIC_ERROR });
+      } catch {
+        /* ignore */
+      }
+    }
+  });
+
+  // To'lov cheki (rasm) — to'lovgacha bo'lgan talantlar uchun.
+  bot.on("message:photo", async (ctx) => {
+    try {
+      await handlePaymentPhoto(ctx);
+    } catch (err) {
+      logger.error({ err }, "payment photo error");
+    }
+  });
+
+  // Matn: avval moderator baholash sessiyasi, keyin doimiy menyu tugmalari.
   bot.on("message:text", async (ctx) => {
     try {
-      await handleBaholashText(ctx);
+      if (await handleBaholashText(ctx)) return;
+      await handleMenuText(ctx);
     } catch (err) {
-      logger.error({ err }, "baholash text error");
+      logger.error({ err }, "text handler error");
     }
   });
 
@@ -59,18 +92,21 @@ async function main(): Promise<void> {
     logger.error({ err }, "Bot error");
   });
 
-  await bot.api.setMyCommands([
+  const publicCommands = [
     { command: "start", description: "Botni ishga tushirish" },
-    { command: "profil", description: "Profil holati" },
+    { command: "holat", description: "Tekshiruv holatim va yo'lim" },
+    { command: "profil", description: "Profilim" },
+    { command: "suhbat", description: "Suhbat vaqtini band qilish" },
+    { command: "tolov", description: "AI CV uchun to'lov" },
     { command: "yordam", description: "Yordam va bog'lanish" },
-  ]);
+  ];
+  await bot.api.setMyCommands(publicCommands);
   if (config.adminTgId) {
     await bot.api.setMyCommands(
       [
-        { command: "start", description: "Botni ishga tushirish" },
-        { command: "profil", description: "Profil holati" },
-        { command: "yordam", description: "Yordam va bog'lanish" },
+        ...publicCommands,
         { command: "baholash", description: "Suhbatlarni baholash (moderator)" },
+        { command: "admin", description: "Statistika (admin)" },
       ],
       { scope: { type: "chat", chat_id: Number(config.adminTgId) } },
     );

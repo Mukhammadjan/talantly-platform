@@ -1,8 +1,13 @@
 import type { CommandContext, Context } from "grammy";
 import * as talentsRepo from "../db/talentsRepo.js";
 import * as usersRepo from "../db/usersRepo.js";
-import { profileKeyboard, registerKeyboard } from "../keyboards.js";
 import {
+  mainMenuKeyboard,
+  profileKeyboard,
+  registerKeyboard,
+} from "../keyboards.js";
+import {
+  MENU_HINT,
   MINI_APP_COMING_SOON,
   WELCOME_ROADMAP,
   deepLinkGreeting,
@@ -50,18 +55,23 @@ export async function handleStart(
 
   const talent = await talentsRepo.findByUserId(user.id);
   if (talent && talent.status !== "yangi") {
-    const keyboard = profileKeyboard();
     await ctx.reply(
       returningGreeting({
         fullName: talent.full_name,
         firstName: from.first_name,
         status: talent.status,
       }),
-      keyboard ? { reply_markup: keyboard } : undefined,
+      { reply_markup: mainMenuKeyboard() },
     );
+    const keyboard = profileKeyboard();
+    if (keyboard) {
+      await ctx.reply(MENU_HINT, { reply_markup: keyboard });
+    }
     return;
   }
 
-  await ctx.reply(welcomeIntro(from.first_name));
+  await ctx.reply(welcomeIntro(from.first_name), {
+    reply_markup: mainMenuKeyboard(),
+  });
   await sendRegisterPrompt(ctx);
 }

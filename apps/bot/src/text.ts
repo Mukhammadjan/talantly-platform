@@ -254,3 +254,201 @@ export function cvReadyMessage(
 
 export const GENERIC_ERROR =
   "Kechirasiz, texnik xatolik yuz berdi. Birozdan so'ng qayta urinib ko'ring.";
+
+// ---- Doimiy menyu tugmalari ----
+export const MENU = {
+  holat: "🧭 Holatim",
+  profil: "👤 Profilim",
+  suhbat: "📅 Suhbat",
+  tolov: "💳 To'lov",
+  yordam: "❓ Yordam",
+} as const;
+
+export const MENU_HINT = "Quyidagi menyudan kerakli bo'limni tanlang. 👇";
+
+// ---- Tekshiruv yo'li (roadmap) ----
+const STATUS_RANK: Record<TalentStatus, number> = {
+  yangi: 0,
+  malumot_toldirilgan: 1,
+  tolov_kutilmoqda: 1,
+  tolov_tasdiqlangan: 2,
+  cv_tayyor: 2,
+  test_otgan: 3,
+  suhbat_belgilangan: 4,
+  tekshirilgan: 5,
+  rad_etilgan: 0,
+};
+
+const ROADMAP_STAGES = [
+  "Ma'lumot to'ldirish",
+  "To'lov — AI CV",
+  "Testlar",
+  "Suhbat",
+  "Tekshirilgan ✅",
+];
+
+export function statusRank(status: TalentStatus): number {
+  return STATUS_RANK[status];
+}
+
+export function roadmapText(status: TalentStatus): string {
+  const rank = STATUS_RANK[status];
+  const lines = ROADMAP_STAGES.map((label, i) => {
+    const stage = i + 1;
+    const mark = rank >= stage ? "✅" : rank + 1 === stage ? "🟠" : "⚪️";
+    return `${mark} ${label}`;
+  });
+  return lines.join("\n");
+}
+
+const NEXT_HINT: Record<TalentStatus, string> = {
+  yangi: "Keyingi qadam — ma'lumotlaringizni to'ldiring (ilovada «👤 Profilim»).",
+  malumot_toldirilgan: "Keyingi qadam — AI CV uchun to'lov. «💳 To'lov» tugmasini bosing.",
+  tolov_kutilmoqda: "To'lovingiz tekshirilmoqda — 24 soat ichida tasdiqlaymiz. ⏳",
+  tolov_tasdiqlangan: "AI professional CV'ingiz tayyorlanmoqda. Tez orada yuboramiz. ✨",
+  cv_tayyor: "Keyingi qadam — yo'nalishingiz bo'yicha ko'nikma testi (ilovada).",
+  test_otgan: "Keyingi qadam — suhbat vaqtini tanlang. «📅 Suhbat» tugmasini bosing.",
+  suhbat_belgilangan: "Suhbatingiz belgilangan. Vaqtidan 1 soat oldin eslatma yuboramiz. 📅",
+  tekshirilgan: "🎉 Siz tekshirilgansiz! Profilingiz ishonchli kompaniyalarga tavsiya etiladi.",
+  rad_etilgan: "Bu safar tasdiqlanmadi. 30 kundan so'ng qayta urinishingiz mumkin. 💪",
+};
+
+export function holatText(params: {
+  fullName: string | null;
+  status: TalentStatus;
+}): string {
+  const name = params.fullName ? `${params.fullName}, ` : "";
+  return (
+    `🧭 ${name}holatingiz\n\n` +
+    `${STATUS_LABELS[params.status]}\n\n` +
+    "Tekshiruv yo'li:\n" +
+    `${roadmapText(params.status)}\n\n` +
+    `👉 ${NEXT_HINT[params.status]}`
+  );
+}
+
+// ---- Suhbat band qilish ----
+export const SUHBAT_INTRO =
+  "📅 Suhbat vaqtini tanlang\n\n" +
+  "Sizga qulay kun va vaqtni bosing — moderator bilan qisqa onlayn suhbat belgilanadi:";
+
+export const SUHBAT_EMPTY =
+  "Hozircha bo'sh suhbat vaqti yo'q. Tez orada yangi vaqtlar ochiladi — birozdan so'ng qayta urinib ko'ring.";
+
+export function suhbatNotEligible(status: TalentStatus): string {
+  return (
+    "📅 Suhbat bosqichiga hali yetmadingiz.\n\n" +
+    `Joriy holat: ${STATUS_LABELS[status]}\n\n` +
+    "Tekshiruv yo'li:\n" +
+    `${roadmapText(status)}\n\n` +
+    `👉 ${NEXT_HINT[status]}`
+  );
+}
+
+export function suhbatAlready(scheduledAt: string | null): string {
+  const when = scheduledAt ? `\n\n🗓 Vaqt: ${formatDateTimeUz(scheduledAt)}` : "";
+  return (
+    "📅 Sizda allaqachon belgilangan suhbat bor." +
+    when +
+    "\n\nVaqtidan 1 soat oldin eslatma yuboramiz. Omad! 🍀"
+  );
+}
+
+export function suhbatBooked(scheduledAt: string): string {
+  return (
+    "✅ Suhbat band qilindi!\n\n" +
+    `🗓 Vaqt: ${formatDateTimeUz(scheduledAt)}\n\n` +
+    "Moderator shu yerda siz bilan bog'lanadi. Vaqtida onlayn bo'ling. Boshlanishidan 1 soat oldin eslatma yuboramiz. 🍀"
+  );
+}
+
+export const SUHBAT_TAKEN =
+  "Afsuski, bu vaqt endigina band bo'ldi. Iltimos, boshqa vaqtni tanlang.";
+
+export function suhbatSlotLabel(iso: string): string {
+  return formatDateTimeUz(iso);
+}
+
+export function adminNewInterview(params: {
+  fullName: string | null;
+  scheduledAt: string;
+}): string {
+  return (
+    "🆕 Yangi suhbat band qilindi\n\n" +
+    `Nomzod: ${params.fullName ?? "Noma'lum"}\n` +
+    `Vaqt: ${formatDateTimeUz(params.scheduledAt)}`
+  );
+}
+
+// ---- To'lov ----
+export function tolovInfo(params: {
+  card: string | undefined;
+  owner: string | undefined;
+  status: TalentStatus;
+}): string {
+  const lines = [
+    "💳 AI professional CV — to'lov",
+    "",
+    "Narx: 35 000 so'm (bir martalik)",
+  ];
+  if (params.card) {
+    lines.push("", `💳 Karta: ${params.card}`);
+    if (params.owner) lines.push(`👤 Egasi: ${params.owner}`);
+  }
+  lines.push(
+    "",
+    "1️⃣ Yuqoridagi kartaga 35 000 so'm o'tkazing.",
+    "2️⃣ Chek skrinshotini shu yerga rasm qilib yuboring.",
+    "3️⃣ Moderator 24 soat ichida tasdiqlaydi.",
+  );
+  if (!params.card) {
+    lines.push(
+      "",
+      "⚠️ Karta ma'lumoti hozircha sozlanmagan — admin bilan bog'laning (/yordam).",
+    );
+  }
+  return lines.join("\n");
+}
+
+export const TOLOV_PHOTO_RECEIVED =
+  "✅ Chek qabul qilindi! Moderator 24 soat ichida to'lovni tasdiqlaydi. Natija shu yerga yuboriladi.";
+
+export function adminPaymentScreenshot(params: {
+  fullName: string | null;
+  tgId: number;
+}): string {
+  return (
+    "🧾 Yangi to'lov cheki\n\n" +
+    `Nomzod: ${params.fullName ?? "Noma'lum"}\n` +
+    `Telegram ID: ${params.tgId}\n\n` +
+    "Tasdiqlash uchun admin panelidan foydalaning."
+  );
+}
+
+// ---- Admin statistika ----
+export function adminStats(counts: {
+  total: number;
+  yangi?: number;
+  malumot_toldirilgan?: number;
+  tolov_kutilmoqda?: number;
+  test_otgan?: number;
+  suhbat_belgilangan?: number;
+  tekshirilgan?: number;
+  rad_etilgan?: number;
+}): string {
+  const n = (v?: number): number => v ?? 0;
+  return (
+    "📊 Talantly statistikasi\n\n" +
+    `👥 Jami talantlar: ${counts.total}\n\n` +
+    `🆕 Yangi: ${n(counts.yangi)}\n` +
+    `📝 Ma'lumot to'ldirilgan: ${n(counts.malumot_toldirilgan)}\n` +
+    `⏳ To'lov kutilmoqda: ${n(counts.tolov_kutilmoqda)}\n` +
+    `🧠 Testdan o'tgan: ${n(counts.test_otgan)}\n` +
+    `📅 Suhbat belgilangan: ${n(counts.suhbat_belgilangan)}\n` +
+    `✅ Tekshirilgan: ${n(counts.tekshirilgan)}\n` +
+    `❌ Rad etilgan: ${n(counts.rad_etilgan)}\n\n` +
+    "Suhbatlarni baholash: /baholash"
+  );
+}
+
+export const ADMIN_DENIED = "Bu buyruq faqat administrator uchun.";
