@@ -1,13 +1,88 @@
 .h {
-  margin: 0 0 var(--s-4);
+  margin: 0 0 var(--s-1);
   font-size: var(--fs-display-m);
   line-height: var(--lh-display-m);
   letter-spacing: var(--ls-display-m);
   font-weight: var(--fw-bold);
 }
 
+.sub {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+/* ---- Doska kartalari (Ko'proqga ko'chirilgan) ---- */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  min-height: 132px;
+  padding: var(--s-4);
+  text-align: left;
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  transition: transform var(--d-fast) var(--e-out);
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.tile {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.count {
+  min-width: 28px;
+  height: 26px;
+  padding: 0 var(--s-2);
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  margin-top: auto;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.create {
+  margin-bottom: var(--s-2);
+}
+
 .group {
-  margin-top: var(--s-5);
+  margin-top: var(--s-3);
   background: var(--t-white);
   border-radius: var(--r-lg);
   box-shadow: var(--sh-raise);

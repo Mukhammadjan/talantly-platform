@@ -1,0 +1,109 @@
+.h {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+/* ---- Kompaniya kartasi ---- */
+.company {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  margin-bottom: var(--s-4);
+}
+
+.logo {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-md);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+}
+
+.ctexts {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cname {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.csub {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.cchev {
+  flex: 0 0 auto;
+  color: var(--t-ink-3);
+}
+
+/* ---- Guruhlar ---- */
+.group {
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  overflow: hidden;
+  margin-bottom: var(--s-4);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+}
+
+.row + .row {
+  border-top: 1px solid var(--t-line);
+}
+
+.row:active {
+  background: var(--t-bg);
+}
+
+.ricon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}
+
+.rlabel {
+  flex: 1 1 auto;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-1);
+}
+
+.chev {
+  flex: 0 0 auto;
+  color: var(--t-ink-3);
+}
