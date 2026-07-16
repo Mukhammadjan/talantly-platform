@@ -6,157 +6,50 @@
   background: var(--t-bg);
 }
 
-/* ---- Xarita dunyosi (zoom qatlami) ---- */
-.world {
+.mapEl {
   position: absolute;
   inset: 0;
-  transform-origin: 50% 46%;
-  transition: transform var(--d-base) var(--e-out);
 }
 
-.mapSvg {
+/* ---- Yuklanish / xato qoplamasi ---- */
+.overlay {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.block {
-  fill: var(--t-fill);
-  opacity: 0.55;
-}
-
-.park {
-  fill: rgba(31, 158, 88, 0.14);
-}
-
-.parkLabel {
-  fill: rgba(31, 158, 88, 0.75);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.water {
-  fill: none;
-  stroke: rgba(37, 99, 235, 0.16);
-  stroke-width: 16;
-  stroke-linecap: round;
-}
-
-.roadCasing {
-  fill: none;
-  stroke: var(--t-line);
-  stroke-width: 18;
-  stroke-linecap: round;
-}
-
-.roadMain {
-  fill: none;
-  stroke: var(--t-white);
-  stroke-width: 14;
-  stroke-linecap: round;
-}
-
-.roadSecond {
-  fill: none;
-  stroke: var(--t-white);
-  stroke-width: 7;
-  stroke-linecap: round;
-}
-
-.lane {
-  fill: none;
-  stroke: var(--t-white);
-  stroke-width: 3;
-}
-
-.roadLabel {
-  fill: var(--t-ink-3);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-/* ---- Men (joylashuv) ---- */
-.me {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-radius: var(--r-full);
-  background: var(--t-blue);
-  border: 3px solid var(--t-white);
-  box-shadow: var(--sh-raise);
-  transform: translate(-50%, -50%);
-  z-index: 3;
-}
-
-.mePulse {
-  position: absolute;
-  inset: -12px;
-  border-radius: var(--r-full);
-  background: rgba(37, 99, 235, 0.15);
-  animation: pulse 2.2s ease-out infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-
-/* ---- Tuman pinlari ---- */
-.pin {
-  position: absolute;
-  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  z-index: 4;
-}
-
-.pinCircle {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--r-full);
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  background: var(--t-ink-1);
-  color: var(--t-white);
+  gap: var(--s-3);
+  padding: var(--s-6);
+  text-align: center;
+  background: var(--t-bg);
+  z-index: 5;
+}
+
+.overlayIcon {
+  color: var(--t-ink-3);
+}
+
+.overlayText {
+  margin: 0;
+  max-width: 260px;
   font-size: var(--fs-body);
-  font-weight: var(--fw-bold);
-  font-variant-numeric: tabular-nums;
-  border: 3px solid var(--t-action);
-  box-shadow: var(--sh-float);
-  transition: transform var(--d-fast) var(--e-out);
+  color: var(--t-ink-2);
 }
 
-.pin:active .pinCircle {
-  transform: scale(0.94);
-}
-
-.pinLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 3px 8px;
+.spinner {
+  width: 28px;
+  height: 28px;
   border-radius: var(--r-full);
-  background: var(--t-white);
-  color: var(--t-ink-1);
-  font-size: var(--fs-micro);
-  font-weight: var(--fw-semibold);
-  box-shadow: var(--sh-raise);
-  white-space: nowrap;
+  border: 3px solid var(--t-line);
+  border-top-color: var(--t-action);
+  animation: spin 0.8s linear infinite;
 }
 
-.pinCheck {
-  color: var(--t-verified);
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---- Ustki panel ---- */
@@ -216,54 +109,7 @@
   box-shadow: var(--sh-float);
 }
 
-/* ---- Zoom + lokatsiya ---- */
-.zoomBox {
-  position: absolute;
-  top: calc(var(--tg-top) + 96px);
-  right: var(--gutter);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--t-white);
-  border-radius: var(--r-full);
-  box-shadow: var(--sh-float);
-  z-index: 10;
-}
-
-.zoomBtn {
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  font-weight: var(--fw-semibold);
-  color: var(--t-ink-1);
-}
-
-.zoomDivider {
-  width: 22px;
-  height: 1px;
-  background: var(--t-line);
-}
-
-.locate {
-  position: absolute;
-  top: calc(var(--tg-top) + 200px);
-  right: var(--gutter);
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--r-full);
-  background: var(--t-white);
-  color: var(--t-ink-1);
-  box-shadow: var(--sh-float);
-  z-index: 10;
-}
-
-/* ---- Eslatma ---- */
+/* ---- Pastki eslatma ---- */
 .note {
   position: absolute;
   left: 50%;
@@ -281,11 +127,4 @@
   box-shadow: var(--sh-float);
   white-space: nowrap;
   z-index: 10;
-}
-
-/* ---- Sheet ro'yxati ---- */
-.sheetList {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
 }
