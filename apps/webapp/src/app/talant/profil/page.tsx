@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
@@ -35,6 +36,7 @@ function Row({
 }
 
 export default function ProfilPage(): JSX.Element {
+  const router = useRouter();
   const [snap, setSnap] = useState<TalentSnapshot | null>(null);
 
   useEffect(() => {
@@ -62,6 +64,15 @@ export default function ProfilPage(): JSX.Element {
 
   return (
     <main className="screen">
+      <button
+        type="button"
+        className={styles.settings}
+        onClick={() => router.push("/sozlamalar")}
+        aria-label="Sozlamalar"
+      >
+        <Icon name="settings" size={22} />
+      </button>
+
       <div className={styles.head}>
         <Avatar name={p.fullName} photoUrl={p.photoUrl} size={64} />
         <div className={styles.htexts}>
@@ -118,10 +129,20 @@ export default function ProfilPage(): JSX.Element {
       ) : null}
 
       <div className={styles.actions}>
+        {snap.cvReady ? (
+          <Button
+            full
+            icon={<Icon name="doc" size={20} />}
+            onClick={() => router.push("/cv")}
+          >
+            CV&apos;ni ko&apos;rish
+          </Button>
+        ) : null}
         <Button
           variant="secondary"
           full
           icon={<Icon name="edit" size={20} />}
+          onClick={() => router.push("/profil-forma")}
         >
           Profilni tahrirlash
         </Button>

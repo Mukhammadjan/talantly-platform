@@ -1,0 +1,144 @@
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-5);
+}
+
+.logo {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+}
+
+.htexts {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.card {
+  margin-bottom: var(--s-4);
+}
+
+.kicker {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--t-ink-3);
+}
+
+/* ---- Timeline ---- */
+.flow {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.dotCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-fill);
+  color: var(--t-white);
+}
+
+.dotDone {
+  background: var(--t-verified);
+}
+
+.dotCurrent {
+  box-shadow: 0 0 0 4px var(--t-verified-soft);
+}
+
+.conn {
+  flex: 1 1 auto;
+  width: 2px;
+  min-height: 26px;
+  background: var(--t-line);
+  margin: 2px 0;
+}
+
+.connDone {
+  background: var(--t-verified);
+}
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: var(--s-4);
+}
+
+.stepLabel {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-3);
+}
+
+.labelDone {
+  color: var(--t-ink-1);
+}
+
+.stepText {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+/* ---- Eslatma ---- */
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-body);
+}
+
+.noteIcon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--t-action);
+}

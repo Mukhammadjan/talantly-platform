@@ -11,6 +11,7 @@ const ACTIONS: { icon: IconName; label: string; href: string }[] = [
   { icon: "grid", label: "Kompaniya profili", href: "/kompaniya" },
   { icon: "briefcase", label: "Mening vakansiyalarim", href: "/vakansiyalar" },
   { icon: "info", label: "Yordam", href: "/yordam" },
+  { icon: "settings", label: "Sozlamalar", href: "/sozlamalar" },
   { icon: "user", label: "Rolni almashtirish", href: "/rol" },
 ];
 

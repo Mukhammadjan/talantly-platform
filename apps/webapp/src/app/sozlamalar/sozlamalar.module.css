@@ -1,0 +1,170 @@
+.h {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+/* ---- Guruh (grouped list) ---- */
+.group {
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+  overflow: hidden;
+  margin-bottom: var(--s-4);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+}
+
+.row + .row {
+  border-top: 1px solid var(--t-line);
+}
+
+.ricon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}
+
+.riconDanger {
+  background: var(--t-danger-soft);
+  color: var(--t-danger);
+}
+
+.rlabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-1);
+}
+
+.rlabelDanger {
+  color: var(--t-danger-ink);
+}
+
+.rvalue {
+  flex: 0 0 auto;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.chev {
+  flex: 0 0 auto;
+  color: var(--t-ink-3);
+}
+
+/* ---- Toggle ---- */
+.toggle {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 28px;
+  border-radius: var(--r-full);
+  background: var(--t-line-strong);
+  padding: 3px;
+  transition: background var(--d-base) var(--e-out);
+}
+
+.toggleOn {
+  background: var(--t-action);
+}
+
+.knob {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition: transform var(--d-base) var(--e-out);
+}
+
+.toggleOn .knob {
+  transform: translateX(18px);
+}
+
+.version {
+  margin: var(--s-4) 0 0;
+  text-align: center;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+/* ---- Til sheet ---- */
+.langList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.langRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  border: 1.5px solid transparent;
+}
+
+.langOn {
+  background: var(--t-action-soft);
+  border-color: var(--t-action);
+}
+
+.langLabel {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.langCheck {
+  color: var(--t-action);
+}
+
+/* ---- Chiqish sheet ---- */
+.logoutText {
+  margin: 0 0 var(--s-5);
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.logoutActions {
+  display: flex;
+  gap: var(--s-3);
+}
+
+.cancelBtn {
+  flex: 1 1 0;
+  height: 52px;
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}
+
+.confirmBtn {
+  flex: 1 1 0;
+  height: 52px;
+  border-radius: var(--r-md);
+  background: var(--t-danger);
+  color: var(--t-white);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}

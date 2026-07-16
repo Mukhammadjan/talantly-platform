@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/Badge";
 import { Card } from "@/components/Card";
@@ -8,7 +9,7 @@ import { Skeleton } from "@/components/Skeleton";
 import { Icon } from "@/lib/icons";
 import { api } from "@/lib/api";
 import { DIRECTION_LABELS, REQUEST_STATUS_LABELS } from "@/lib/labels";
-import { initTelegram } from "@/lib/telegram";
+import { haptic, initTelegram } from "@/lib/telegram";
 import type { Application, RequestStatus } from "@/lib/types";
 import styles from "./arizalar.module.css";
 
@@ -23,6 +24,7 @@ const VARIANT: Record<
 };
 
 export default function ArizalarPage(): JSX.Element {
+  const router = useRouter();
   const [apps, setApps] = useState<Application[] | null>(null);
 
   useEffect(() => {
@@ -53,7 +55,14 @@ export default function ArizalarPage(): JSX.Element {
       ) : (
         <div className={styles.list}>
           {apps.map((a) => (
-            <Card key={a.id} className={styles.item}>
+            <Card
+              key={a.id}
+              className={styles.item}
+              onClick={() => {
+                haptic("light");
+                router.push(`/ariza/${a.id}`);
+              }}
+            >
               <div className={styles.top}>
                 <span className={styles.company}>{a.company}</span>
                 <Badge variant={VARIANT[a.status]}>

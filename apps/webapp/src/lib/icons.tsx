@@ -33,7 +33,10 @@ export type IconName =
   | "download"
   | "info"
   | "swap"
-  | "copy";
+  | "copy"
+  | "settings"
+  | "globe"
+  | "logout";
 
 const PATHS: Record<IconName, ReactNode> = {
   back: <path d="M14.5 5.5 8 12l6.5 6.5" />,
@@ -161,6 +164,19 @@ const PATHS: Record<IconName, ReactNode> = {
       <path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" />
     </>
   ),
+  settings: (
+    <>
+      <circle cx="12" cy="12" r="3.4" />
+      <path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5" />
+    </>
+  ),
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17M12 3.5c2.3 2.3 3.5 5.3 3.5 8.5s-1.2 6.2-3.5 8.5c-2.3-2.3-3.5-5.3-3.5-8.5S9.7 5.8 12 3.5z" />
+    </>
+  ),
+  logout: <path d="M14 8.5V6a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 5 6v12a1.5 1.5 0 0 0 1.5 1.5h6A1.5 1.5 0 0 0 14 18v-2.5M10 12h10m0 0-3-3m3 3-3 3" />,
 };
 
 export function Icon({
