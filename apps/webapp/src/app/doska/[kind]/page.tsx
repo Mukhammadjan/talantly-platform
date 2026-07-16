@@ -76,7 +76,7 @@ export default function DoskaKindPage(): JSX.Element {
   useEffect(() => {
     initTelegram();
   }, []);
-  useBackButton(() => router.push("/izlovchi/koproq"));
+  useBackButton(() => router.push("/izlovchi/profil"));
 
   const kind = (
     KINDS.includes(params.kind as Kind) ? params.kind : "arizalar"

@@ -107,3 +107,19 @@
   flex: 0 0 auto;
   color: var(--t-ink-3);
 }
+
+.badge {
+  flex: 0 0 auto;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}

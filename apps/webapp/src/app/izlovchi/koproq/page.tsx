@@ -3,23 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Button } from "@/components/Button";
-import { Icon, type IconName } from "@/lib/icons";
+import { Icon } from "@/lib/icons";
 import { haptic, initTelegram } from "@/lib/telegram";
 import styles from "./koproq.module.css";
-
-interface BoardCard {
-  icon: IconName;
-  label: string;
-  count: number;
-  kind: string;
-}
-
-const CARDS: BoardCard[] = [
-  { icon: "doc", label: "Kelgan arizalar", count: 12, kind: "arizalar" },
-  { icon: "calendar", label: "Suhbatlar", count: 3, kind: "suhbatlar" },
-  { icon: "send", label: "Yuborilgan takliflar", count: 6, kind: "takliflar" },
-  { icon: "bookmark", label: "Saqlangan nomzodlar", count: 42, kind: "saqlangan" },
-];
 
 export default function KoproqPage(): JSX.Element {
   const router = useRouter();
@@ -35,26 +21,7 @@ export default function KoproqPage(): JSX.Element {
   return (
     <main className="screen">
       <h1 className={styles.h}>Ko&apos;proq</h1>
-      <p className={styles.sub}>Ish jarayoningiz va vakansiyalar.</p>
-
-      <div className={styles.grid}>
-        {CARDS.map((c) => (
-          <button
-            key={c.label}
-            type="button"
-            className={styles.card}
-            onClick={() => go(`/doska/${c.kind}`)}
-          >
-            <div className={styles.top}>
-              <span className={styles.tile}>
-                <Icon name={c.icon} size={24} />
-              </span>
-              <span className={styles.count}>{c.count}</span>
-            </div>
-            <span className={styles.label}>{c.label}</span>
-          </button>
-        ))}
-      </div>
+      <p className={styles.sub}>Vakansiyalar boshqaruvi.</p>
 
       <Button
         full
@@ -71,6 +38,13 @@ export default function KoproqPage(): JSX.Element {
             <Icon name="briefcase" size={20} />
           </span>
           <span className={styles.rlabel}>Mening vakansiyalarim</span>
+          <Icon name="chevron" size={18} className={styles.chev} />
+        </button>
+        <button type="button" className={styles.row} onClick={() => go("/xarita")}>
+          <span className={styles.ricon}>
+            <Icon name="map" size={20} />
+          </span>
+          <span className={styles.rlabel}>Nomzodlar xaritasi</span>
           <Icon name="chevron" size={18} className={styles.chev} />
         </button>
       </div>

@@ -15,6 +15,13 @@ interface Item {
   danger?: boolean;
 }
 
+const DOSKA: { icon: IconName; label: string; count: number; kind: string }[] = [
+  { icon: "doc", label: "Kelgan arizalar", count: 12, kind: "arizalar" },
+  { icon: "calendar", label: "Suhbatlar", count: 3, kind: "suhbatlar" },
+  { icon: "send", label: "Yuborilgan takliflar", count: 6, kind: "takliflar" },
+  { icon: "bookmark", label: "Saqlangan nomzodlar", count: 42, kind: "saqlangan" },
+];
+
 const ACCOUNT: Item[] = [
   { icon: "grid", label: "Kompaniya profili", href: "/kompaniya" },
   { icon: "settings", label: "Sozlamalar", href: "/sozlamalar" },
@@ -54,6 +61,24 @@ export default function IzlovchiProfilPage(): JSX.Element {
         </span>
         <Icon name="chevron" size={18} className={styles.cchev} />
       </button>
+
+      <div className={styles.group}>
+        {DOSKA.map((d) => (
+          <button
+            key={d.kind}
+            type="button"
+            className={styles.row}
+            onClick={() => go(`/doska/${d.kind}`)}
+          >
+            <span className={styles.ricon}>
+              <Icon name={d.icon} size={20} />
+            </span>
+            <span className={styles.rlabel}>{d.label}</span>
+            <span className={styles.badge}>{d.count}</span>
+            <Icon name="chevron" size={18} className={styles.chev} />
+          </button>
+        ))}
+      </div>
 
       <div className={styles.group}>
         {ACCOUNT.map((it) => (

@@ -22,7 +22,7 @@ export default function TaklifPage(): JSX.Element {
   useEffect(() => {
     initTelegram();
   }, []);
-  useBackButton(() => router.push("/izlovchi/koproq"));
+  useBackButton(() => router.push("/izlovchi/profil"));
 
   const v = SENT_VACANCIES.find((x) => x.id === params.id) ?? SENT_VACANCIES[0];
   if (!v) {
