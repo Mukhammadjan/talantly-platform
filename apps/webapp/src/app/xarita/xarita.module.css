@@ -109,6 +109,116 @@
   box-shadow: var(--sh-float);
 }
 
+/* ---- Pin preview kartasi ---- */
+.preview {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(var(--tg-bottom) + var(--s-4));
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sheet);
+  z-index: 15;
+  animation: rise var(--d-base) var(--e-out);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close {
+  position: absolute;
+  top: var(--s-3);
+  right: var(--s-3);
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+}
+
+.phead {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+  padding-right: var(--s-8);
+}
+
+.ptexts {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pname {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.pseal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.prole {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.pscore {
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-md);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.pbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  width: 100%;
+  height: 50px;
+  border-radius: var(--r-md);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+}
+
 /* ---- Pastki eslatma ---- */
 .note {
   position: absolute;
