@@ -54,6 +54,7 @@ const EMPTY: FormState = {
 export default function ProfilFormaPage(): JSX.Element {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [saving, setSaving] = useState(false);
   const [f, setF] = useState<FormState>(EMPTY);
 
   useEffect(() => {
@@ -106,8 +107,28 @@ export default function ProfilFormaPage(): JSX.Element {
 
   const next = (): void => {
     haptic("light");
-    if (step < TOTAL) setStep(step + 1);
-    else router.replace("/talant");
+    if (step < TOTAL) {
+      setStep(step + 1);
+      return;
+    }
+    // Yakuniy qadam — real backend'ga saqlash (mock rejimda null qaytadi).
+    setSaving(true);
+    void api
+      .saveTalentProfile({
+        fullName: f.fullName.trim(),
+        birthYear: f.birthYear ? Number(f.birthYear) : null,
+        city: f.city || null,
+        district: f.district || null,
+        direction: f.direction,
+        level: f.level,
+        experienceYears: f.experience ? Number(f.experience) : null,
+        skills: f.skills,
+        workFormats: f.workFormats,
+        salaryFrom: f.salary ? Number(f.salary) : null,
+        about: f.about || null,
+        portfolioUrl: f.portfolio || null,
+      })
+      .finally(() => router.replace("/talant"));
   };
 
   const canNext =
@@ -251,7 +272,7 @@ export default function ProfilFormaPage(): JSX.Element {
       </div>
 
       <div className={styles.cta}>
-        <Button full disabled={!canNext} onClick={next}>
+        <Button full disabled={!canNext} loading={saving} onClick={next}>
           {step < TOTAL ? "Davom etish" : "Yakunlash"}
         </Button>
       </div>

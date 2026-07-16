@@ -102,3 +102,19 @@
   flex-direction: column;
   gap: var(--s-2);
 }
+
+.grading {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-full);
+  border: 3px solid var(--t-line);
+  border-top-color: var(--t-action);
+  animation: qspin 0.8s linear infinite;
+  margin-bottom: var(--s-2);
+}
+
+@keyframes qspin {
+  to {
+    transform: rotate(360deg);
+  }
+}

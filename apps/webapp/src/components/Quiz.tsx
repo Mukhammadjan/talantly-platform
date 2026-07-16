@@ -18,7 +18,7 @@ interface QuizResult {
 
 interface QuizProps {
   questions: Question[];
-  result: (answers: number[]) => QuizResult;
+  result: (answers: number[]) => QuizResult | Promise<QuizResult>;
 }
 
 export function Quiz({ questions, result }: QuizProps): JSX.Element | null {
@@ -26,11 +26,24 @@ export function Quiz({ questions, result }: QuizProps): JSX.Element | null {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [done, setDone] = useState(false);
+  const [res, setRes] = useState<QuizResult | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
 
   useEffect(() => {
     initTelegram();
   }, []);
+
+  // Natija sync yoki async bo'lishi mumkin (server baholashi).
+  useEffect(() => {
+    if (!done || res) return;
+    let live = true;
+    void Promise.resolve(result(answers)).then((r) => {
+      if (live) setRes(r);
+    });
+    return () => {
+      live = false;
+    };
+  }, [done, res, answers, result]);
 
   useBackButton(
     done
@@ -55,15 +68,24 @@ export function Quiz({ questions, result }: QuizProps): JSX.Element | null {
   };
 
   if (done) {
-    const r = result(answers);
+    if (!res) {
+      return (
+        <main className="screen">
+          <div className={styles.result}>
+            <span className={styles.grading} aria-hidden="true" />
+            <p className={styles.rtext}>Natija hisoblanmoqda...</p>
+          </div>
+        </main>
+      );
+    }
     return (
       <main className="screen">
         <div className={styles.result}>
           <span className={styles.rmark}>
             <Icon name="check" size={40} />
           </span>
-          <h1 className={styles.rtitle}>{r.title}</h1>
-          <p className={styles.rtext}>{r.text}</p>
+          <h1 className={styles.rtitle}>{res.title}</h1>
+          <p className={styles.rtext}>{res.text}</p>
           <Button full onClick={() => router.replace("/talant")}>
             Davom etish
           </Button>
