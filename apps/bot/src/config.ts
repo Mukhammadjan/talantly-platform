@@ -46,6 +46,7 @@ export const config = {
   paymentCardNumber: optional("PAYMENT_CARD_NUMBER"),
   paymentCardOwner: optional("PAYMENT_CARD_OWNER"),
   webappUrl: optional("WEBAPP_URL"),
+  channelUrl: optional("CHANNEL_URL"),
 } as const;
 
 export type Config = typeof config;

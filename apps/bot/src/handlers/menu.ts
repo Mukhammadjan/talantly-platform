@@ -1,6 +1,7 @@
 import type { Context } from "grammy";
 import { MENU } from "../text.js";
 import { handleHolat } from "./holat.js";
+import { handleBildirishnoma, handleKanal, handleTil } from "./info.js";
 import { handleProfil } from "./profil.js";
 import { handleSuhbat } from "./suhbat.js";
 import { handleTolov } from "./tolov.js";
@@ -26,6 +27,15 @@ export async function handleMenuText(ctx: Context): Promise<boolean> {
       return true;
     case MENU.tolov:
       await handleTolov(ctx);
+      return true;
+    case MENU.bildirishnoma:
+      await handleBildirishnoma(ctx);
+      return true;
+    case MENU.kanal:
+      await handleKanal(ctx);
+      return true;
+    case MENU.til:
+      await handleTil(ctx);
       return true;
     case MENU.yordam:
       await handleYordam(ctx);

@@ -257,14 +257,60 @@ export const GENERIC_ERROR =
 
 // ---- Doimiy menyu tugmalari ----
 export const MENU = {
+  ilova: "📲 Talantly ilovasi",
   holat: "🧭 Holatim",
   profil: "👤 Profilim",
   suhbat: "📅 Suhbat",
   tolov: "💳 To'lov",
+  bildirishnoma: "🔔 Bildirishnomalar",
+  kanal: "📢 Kanalimiz",
+  til: "🌍 Til",
   yordam: "❓ Yordam",
 } as const;
 
 export const MENU_HINT = "Quyidagi menyudan kerakli bo'limni tanlang. 👇";
+
+export const BILDIRISHNOMA_INFO =
+  "🔔 Bildirishnomalar\n\n" +
+  "Muhim yangiliklarni shu yerga yuboramiz:\n\n" +
+  "💳 To'lovingiz tasdiqlanganda\n" +
+  "📄 AI CV'ingiz tayyor bo'lganda\n" +
+  "📅 Suhbat vaqti yaqinlashganda (1 soat oldin)\n" +
+  "✅ Tekshiruvdan o'tganingizda\n" +
+  "🏢 Kompaniya siz bilan bog'lanmoqchi bo'lganda\n\n" +
+  "Bildirishnomalar yoqilgan — hech narsani o'tkazib yubormaysiz. 👍";
+
+export function kanalText(channelUrl?: string): string {
+  if (channelUrl) {
+    return (
+      "📢 Rasmiy kanalimiz\n\n" +
+      "Yangi imkoniyatlar, foydali maslahatlar va e'lonlar:\n" +
+      channelUrl
+    );
+  }
+  return "📢 Rasmiy kanalimiz tez orada ochiladi. Kuzatib boring! 🙌";
+}
+
+export const TIL_INFO =
+  "🌍 Til\n\n" +
+  "Hozircha bot o'zbek tilida ishlaydi.\n" +
+  "🇷🇺 Rus tili tez orada qo'shiladi.";
+
+// ---- /start banner sarlavhasi ----
+export function startCaption(firstName?: string): string {
+  const greeting = firstName
+    ? `Assalomu alaykum, ${firstName}! 👋`
+    : "Assalomu alaykum! 👋";
+  return (
+    `${greeting}\n\n` +
+    "talantly — tajribasiz yoshlarni ishonchli kompaniyalar bilan bog'laydigan platforma.\n\n" +
+    "Bir joyda:\n" +
+    "🤖 AI yordamida professional CV\n" +
+    "🧠 Yo'nalish bo'yicha skill test\n" +
+    "🎤 Jonli suhbat va yashil ✅ \"Tekshirilgan\" belgisi\n\n" +
+    "Ilova orqali barcha imkoniyatlardan foydalaning yoki quyidagi menyudan boshlang. 👇"
+  );
+}
 
 // ---- Tekshiruv yo'li (roadmap) ----
 const STATUS_RANK: Record<TalentStatus, number> = {

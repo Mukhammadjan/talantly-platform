@@ -14,14 +14,21 @@ export function profileKeyboard(): InlineKeyboard | undefined {
 
 /** Doimiy pastki menyu — bot har doim tugmalar bilan boshqariladi. */
 export function mainMenuKeyboard(): Keyboard {
-  return new Keyboard()
-    .text(MENU.holat)
+  const kb = new Keyboard();
+  // Yuqorida to'liq kenglikdagi ilova (web_app) tugmasi.
+  if (config.webappUrl) {
+    kb.webApp(MENU.ilova, config.webappUrl).row();
+  }
+  kb.text(MENU.holat)
+    .text(MENU.suhbat)
+    .row()
+    .text(MENU.tolov)
     .text(MENU.profil)
     .row()
-    .text(MENU.suhbat)
-    .text(MENU.tolov)
+    .text(MENU.bildirishnoma)
+    .text(MENU.kanal)
     .row()
-    .text(MENU.yordam)
-    .resized()
-    .persistent();
+    .text(MENU.til)
+    .text(MENU.yordam);
+  return kb.resized().persistent();
 }
