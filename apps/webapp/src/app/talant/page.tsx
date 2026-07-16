@@ -65,21 +65,28 @@ const NEXT_STEP: Record<TalentStatus, NextStep | null> = {
   rad_etilgan: null,
 };
 
-const STEP_ORDER: TalentStatus[] = [
-  "yangi",
-  "malumot_toldirilgan",
-  "tolov_tasdiqlangan",
-  "test_otgan",
-  "tekshirilgan",
-];
-
 const PATH_LABELS = [
   "Ro'yxatdan o'tish",
   "Ma'lumot",
   "To'lov",
   "Test",
+  "Suhbat",
   "Tekshirilgan",
 ];
+
+// Har bir status uchun bosib o'tilgan bosqichlar soni (PATH_LABELS indeksi).
+// -1 = rad etilgan (yo'l ko'rsatilmaydi).
+const ROADMAP_RANK: Record<TalentStatus, number> = {
+  yangi: 0,
+  malumot_toldirilgan: 1,
+  tolov_kutilmoqda: 1,
+  tolov_tasdiqlangan: 2,
+  cv_tayyor: 2,
+  test_otgan: 3,
+  suhbat_belgilangan: 4,
+  tekshirilgan: 5,
+  rad_etilgan: -1,
+};
 
 export default function TalantHubPage(): JSX.Element {
   const router = useRouter();
@@ -107,7 +114,8 @@ export default function TalantHubPage(): JSX.Element {
   }
 
   const next = NEXT_STEP[snap.status];
-  const doneIndex = STEP_ORDER.indexOf(snap.status);
+  const rejected = snap.status === "rad_etilgan";
+  const doneIndex = ROADMAP_RANK[snap.status];
 
   return (
     <main className="screen">
@@ -122,6 +130,25 @@ export default function TalantHubPage(): JSX.Element {
             Profilingiz ishonchli kompaniyalarga tavsiya qilinadi.
           </p>
         </Card>
+      ) : rejected ? (
+        <Card className={styles.rejected}>
+          <span className={styles.rejIcon}>
+            <Icon name="info" size={28} />
+          </span>
+          <h2 className={styles.rejTitle}>Bu safar tasdiqlanmadi</h2>
+          <p className={styles.rejText}>
+            Suhbat natijasiga ko&apos;ra profilingiz hozircha tasdiqlanmadi. Bu
+            yakuniy emas — tajriba orttirib, 30 kundan so&apos;ng qayta
+            urinishingiz mumkin.
+          </p>
+          <Button
+            variant="secondary"
+            full
+            onClick={() => router.push("/talant/testlar")}
+          >
+            Testlarni takrorlash
+          </Button>
+        </Card>
       ) : next ? (
         <Card className={styles.step}>
           <p className={styles.kicker}>Keyingi qadam</p>
@@ -133,6 +160,7 @@ export default function TalantHubPage(): JSX.Element {
         </Card>
       ) : null}
 
+      {rejected ? null : (
       <Card className={styles.path}>
         <p className={styles.kicker}>Tekshiruv yo&apos;li</p>
         <div className={styles.steps}>
@@ -172,6 +200,7 @@ export default function TalantHubPage(): JSX.Element {
           })}
         </div>
       </Card>
+      )}
     </main>
   );
 }

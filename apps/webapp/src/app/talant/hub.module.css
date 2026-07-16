@@ -148,3 +148,38 @@
   font-size: var(--fs-body);
   color: var(--t-ink-2);
 }
+
+/* ---- Rad etilgan holat ---- */
+.rejected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+.rejIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-full);
+  background: var(--t-danger-soft);
+  color: var(--t-danger);
+}
+
+.rejTitle {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-danger-ink);
+}
+
+.rejText {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
