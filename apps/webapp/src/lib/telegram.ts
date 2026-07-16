@@ -35,6 +35,17 @@ export interface TelegramWebApp {
     impactOccurred: (style: "light" | "medium" | "heavy") => void;
     notificationOccurred: (type: "error" | "success" | "warning") => void;
   };
+  CloudStorage?: {
+    setItem: (
+      key: string,
+      value: string,
+      cb?: (err: string | null, ok?: boolean) => void,
+    ) => void;
+    getItem: (
+      key: string,
+      cb: (err: string | null, value?: string) => void,
+    ) => void;
+  };
 }
 
 declare global {

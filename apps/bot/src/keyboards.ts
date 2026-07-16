@@ -12,6 +12,16 @@ export function profileKeyboard(): InlineKeyboard | undefined {
   return new InlineKeyboard().webApp(PROFILE_BUTTON_LABEL, config.webappUrl);
 }
 
+/** Yangi foydalanuvchi uchun rol tanlash — tanlov ilovada saqlanadi. */
+export function roleChoiceKeyboard(): InlineKeyboard | undefined {
+  if (!config.webappUrl) return undefined;
+  const join = config.webappUrl.includes("?") ? "&" : "?";
+  return new InlineKeyboard()
+    .webApp("👤 Men talantman", `${config.webappUrl}${join}role=talant`)
+    .row()
+    .webApp("💼 Ish beruvchiman", `${config.webappUrl}${join}role=izlovchi`);
+}
+
 /** Doimiy pastki menyu — bot har doim tugmalar bilan boshqariladi. */
 export function mainMenuKeyboard(): Keyboard {
   const kb = new Keyboard();

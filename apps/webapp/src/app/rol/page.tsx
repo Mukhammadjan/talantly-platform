@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 import { Icon, type IconName } from "@/lib/icons";
+import { saveRole } from "@/lib/role";
 import { haptic, initTelegram } from "@/lib/telegram";
 import { useBackButton } from "@/lib/useBackButton";
 import styles from "./rol.module.css";
@@ -87,7 +88,11 @@ export default function RolPage(): JSX.Element {
           full
           disabled={!chosen}
           iconRight={<Icon name="arrow" size={20} />}
-          onClick={() => chosen && router.push(chosen.href)}
+          onClick={() => {
+            if (!chosen) return;
+            saveRole(chosen.id);
+            router.push(chosen.href);
+          }}
         >
           Davom etish
         </Button>

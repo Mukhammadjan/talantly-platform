@@ -270,6 +270,12 @@ export const MENU = {
 
 export const MENU_HINT = "Quyidagi menyudan kerakli bo'limni tanlang. 👇";
 
+export const ROLE_PROMPT =
+  "Kim sifatida davom etasiz?\n\n" +
+  "👤 Talant — tekshiruvdan o'ting, tasdiqlangan profil oling va takliflar qabul qiling.\n\n" +
+  "💼 Ish beruvchi — tekshirilgan nomzodlarni toping va tez bog'laning.\n\n" +
+  "Tanlovingiz saqlanadi — ilova keyingi safar to'g'ri bo'limda ochiladi. ✅";
+
 export const BILDIRISHNOMA_INFO =
   "🔔 Bildirishnomalar\n\n" +
   "Muhim yangiliklarni shu yerga yuboramiz:\n\n" +

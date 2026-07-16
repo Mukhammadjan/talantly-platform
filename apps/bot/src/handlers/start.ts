@@ -5,9 +5,14 @@ import { InputFile, type CommandContext, type Context } from "grammy";
 import * as talentsRepo from "../db/talentsRepo.js";
 import * as usersRepo from "../db/usersRepo.js";
 import { logger } from "../logger.js";
-import { mainMenuKeyboard, registerKeyboard } from "../keyboards.js";
+import {
+  mainMenuKeyboard,
+  registerKeyboard,
+  roleChoiceKeyboard,
+} from "../keyboards.js";
 import {
   MINI_APP_COMING_SOON,
+  ROLE_PROMPT,
   WELCOME_ROADMAP,
   deepLinkGreeting,
   returningGreeting,
@@ -54,6 +59,16 @@ async function sendRegisterPrompt(
   }
 }
 
+/** Yangi foydalanuvchi: rol tanlash — tugma ilovani ?role= bilan ochadi. */
+async function sendRolePrompt(ctx: CommandContext<Context>): Promise<void> {
+  const keyboard = roleChoiceKeyboard();
+  if (keyboard) {
+    await ctx.reply(ROLE_PROMPT, { reply_markup: keyboard });
+  } else {
+    await ctx.reply(`${ROLE_PROMPT}\n\n${MINI_APP_COMING_SOON}`);
+  }
+}
+
 export async function handleStart(
   ctx: CommandContext<Context>,
 ): Promise<void> {
@@ -95,5 +110,5 @@ export async function handleStart(
   }
 
   await sendWelcome(ctx, startCaption(from.first_name));
-  await sendRegisterPrompt(ctx);
+  await sendRolePrompt(ctx);
 }
