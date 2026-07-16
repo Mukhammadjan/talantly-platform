@@ -28,10 +28,6 @@ const ACCOUNT: Item[] = [
   { icon: "info", label: "Yordam", href: "/yordam" },
 ];
 
-const SECONDARY: Item[] = [
-  { icon: "swap", label: "Rolni almashtirish", href: "/rol" },
-];
-
 export default function IzlovchiProfilPage(): JSX.Element {
   const router = useRouter();
   useEffect(() => {
@@ -92,17 +88,6 @@ export default function IzlovchiProfilPage(): JSX.Element {
         ))}
       </div>
 
-      <div className={styles.group}>
-        {SECONDARY.map((it) => (
-          <button key={it.label} type="button" className={styles.row} onClick={() => go(it.href)}>
-            <span className={styles.ricon}>
-              <Icon name={it.icon} size={20} />
-            </span>
-            <span className={styles.rlabel}>{it.label}</span>
-            <Icon name="chevron" size={18} className={styles.chev} />
-          </button>
-        ))}
-      </div>
     </main>
   );
 }
