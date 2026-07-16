@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Input } from "@/components/Input";
 import { Progress } from "@/components/Progress";
+import { api } from "@/lib/api";
 import { Icon } from "@/lib/icons";
 import { DIRECTION_LABELS, LEVEL_LABELS, WORK_FORMAT_LABELS } from "@/lib/labels";
 import { haptic, initTelegram } from "@/lib/telegram";
@@ -40,6 +41,7 @@ export default function VakansiyaYangiPage(): JSX.Element {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [f, setF] = useState<VForm>(EMPTY);
   const set = (p: Partial<VForm>): void => setF((s) => ({ ...s, ...p }));
 
@@ -58,11 +60,27 @@ export default function VakansiyaYangiPage(): JSX.Element {
 
   const next = (): void => {
     haptic("light");
-    if (step < TOTAL) setStep((s) => s + 1);
-    else {
-      haptic("success");
-      setDone(true);
+    if (step < TOTAL) {
+      setStep((s) => s + 1);
+      return;
     }
+    // Real backend'ga e'lon qilinadi (mock rejimda ham success).
+    setPublishing(true);
+    void api
+      .createVacancy({
+        title: f.title.trim(),
+        direction: f.direction ?? "boshqa",
+        level: f.level ?? "ikkalasi",
+        salaryFrom: f.salaryFrom ? Number(f.salaryFrom) : undefined,
+        salaryTo: f.salaryTo ? Number(f.salaryTo) : undefined,
+        workFormats: f.format ? [f.format] : [],
+        description: f.requirements.trim() || undefined,
+      })
+      .finally(() => {
+        haptic("success");
+        setPublishing(false);
+        setDone(true);
+      });
   };
 
   if (done) {
@@ -174,7 +192,7 @@ export default function VakansiyaYangiPage(): JSX.Element {
       </div>
 
       <div className={styles.cta}>
-        <Button full disabled={!canNext} onClick={next}>
+        <Button full disabled={!canNext} loading={publishing} onClick={next}>
           {step < TOTAL ? "Davom etish" : "E'lon qilish"}
         </Button>
       </div>

@@ -76,6 +76,7 @@ export interface Candidate {
   photoUrl: string | null;
   age?: number;
   experienceYears?: number;
+  isDemo?: boolean;
 }
 
 /** Yuborilgan taklif — bitta vakansiya, ko'p nomzodga yuborilgan. */
@@ -126,4 +127,5 @@ export interface Vacancy {
   workFormats: WorkFormat[];
   description: string[];
   requirements: string[];
+  isDemo?: boolean;
 }

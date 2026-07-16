@@ -124,6 +124,7 @@ export default function TalantVakansiyalarPage(): JSX.Element {
                     haptic("light");
                     const now = toggleSavedVacancy(v.id);
                     setSaved((s) => ({ ...s, [v.id]: now }));
+                    void api.toggleSaveRemote("vacancy", v.id);
                   }}
                 >
                   <Icon name="bookmark" size={18} filled={saved[v.id]} />

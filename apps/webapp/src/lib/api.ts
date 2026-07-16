@@ -133,21 +133,134 @@ export const api = {
     }
   },
 
-  // Vakansiyalar — Run 2'da real /api/vacancies ga ulanadi.
-  getVacancies(): Promise<Vacancy[]> {
-    return delay(VACANCIES);
+  // ---- Vakansiyalar (real /api/vacancies, mock fallback) ----
+  async getVacancies(): Promise<Vacancy[]> {
+    const real = await getJson<{ vacancies: Vacancy[] }>("/api/vacancies");
+    return real ? real.vacancies : delay(VACANCIES);
   },
-  getVacancy(id: string): Promise<Vacancy | null> {
+  async getVacancy(id: string): Promise<Vacancy | null> {
+    const real = await getJson<{ vacancies: Vacancy[] }>(
+      `/api/vacancies?id=${encodeURIComponent(id)}`,
+    );
+    if (real?.vacancies?.[0]) return real.vacancies[0];
     return delay(VACANCIES.find((v) => v.id === id) ?? null);
+  },
+
+  /** Vakansiyaga ariza (talant_qiziqishi). Mock rejimda ok=true. */
+  async applyVacancy(
+    vacancyId: string,
+  ): Promise<{ ok: boolean; already?: boolean; demo?: boolean }> {
+    try {
+      if (!(await hasSession())) return { ok: true };
+      const res = await authedFetch("/api/vacancies/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ vacancyId }),
+      });
+      if (res.ok) return { ok: true };
+      if (res.status === 403) return { ok: false, demo: true };
+      if (res.status === 409) {
+        const b = (await res.json()) as { error?: string };
+        if (b.error === "already_applied") return { ok: true, already: true };
+      }
+      return { ok: false };
+    } catch {
+      return { ok: false };
+    }
+  },
+
+  /** Yangi vakansiya (izlovchi). Mock rejimda true. */
+  async createVacancy(input: {
+    title: string;
+    direction: string;
+    level: string;
+    salaryFrom?: number;
+    salaryTo?: number;
+    workFormats: string[];
+    description?: string;
+  }): Promise<boolean> {
+    try {
+      if (!(await hasSession())) return true;
+      const res = await authedFetch("/api/vacancies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(input),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  /** Kompaniya so'rovi. Demo profilga server 403 beradi. */
+  async sendRequest(
+    talentId: string,
+    vacancyId?: string,
+  ): Promise<{ ok: boolean; demo?: boolean }> {
+    try {
+      if (!(await hasSession())) return { ok: true };
+      const res = await authedFetch("/api/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ talentId, vacancyId }),
+      });
+      if (res.ok) return { ok: true };
+      if (res.status === 403) return { ok: false, demo: true };
+      return { ok: false };
+    } catch {
+      return { ok: false };
+    }
+  },
+
+  /** Kontakt ochish to'lovi (contact_unlocks, kutilmoqda). */
+  async createUnlock(
+    talentId: string,
+    kind: "bir_martalik" | "obuna",
+  ): Promise<boolean> {
+    try {
+      if (!(await hasSession())) return true;
+      const res = await authedFetch("/api/unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ talentId, kind }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
+  /** saved_items toggle (real bo'lsa) — fire-and-forget. */
+  async toggleSaveRemote(
+    kind: "vacancy" | "talant" | "company",
+    targetId: string,
+  ): Promise<void> {
+    try {
+      if (!(await hasSession())) return;
+      await authedFetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind, targetId }),
+      });
+    } catch {
+      /* saqlash statistikasi — jim yiqiladi */
+    }
   },
 
   getApplications(): Promise<Application[]> {
     return delay(APPLICATIONS);
   },
-  getCandidates(): Promise<Candidate[]> {
-    return delay(CANDIDATES);
+
+  // ---- Izlovchi feed (real /api/feed, mock fallback) ----
+  async getCandidates(): Promise<Candidate[]> {
+    const real = await getJson<{ candidates: Candidate[] }>("/api/feed");
+    return real ? real.candidates : delay(CANDIDATES);
   },
-  getCandidate(id: string): Promise<Candidate | null> {
+  async getCandidate(id: string): Promise<Candidate | null> {
+    const real = await getJson<{ candidate: Candidate }>(
+      `/api/talent/${encodeURIComponent(id)}`,
+    );
+    if (real?.candidate) return real.candidate;
     return delay(CANDIDATES.find((c) => c.id === id) ?? null);
   },
   getZones(): Promise<Zone[]> {

@@ -12,6 +12,10 @@ export function getDb(): SupabaseClient {
   }
   client = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: {
+      // Next.js global fetch'ni keshlaydi — DB so'rovlari HAR DOIM jonli.
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
   });
   return client;
 }

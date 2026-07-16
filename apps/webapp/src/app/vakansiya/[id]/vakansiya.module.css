@@ -213,3 +213,14 @@
   font-weight: var(--fw-semibold);
   text-align: center;
 }
+
+.demoBar {
+  margin: 0 0 var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  text-align: center;
+}

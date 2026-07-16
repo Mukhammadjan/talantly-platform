@@ -37,6 +37,7 @@ export default function VakansiyaDetailPage(): JSX.Element {
   const [saved, setSaved] = useState(false);
   const [applied, setApplied] = useState(false);
   const [applying, setApplying] = useState(false);
+  const [demoErr, setDemoErr] = useState(false);
 
   useEffect(() => {
     initTelegram();
@@ -77,13 +78,20 @@ export default function VakansiyaDetailPage(): JSX.Element {
 
   const apply = (): void => {
     setApplying(true);
-    // Run 2: /api/vacancies/apply (requests: talant_qiziqishi). Hozircha lokal.
-    window.setTimeout(() => {
-      haptic("success");
-      markAppliedVacancy(v.id);
-      setApplied(true);
+    setDemoErr(false);
+    void api.applyVacancy(v.id).then((r) => {
       setApplying(false);
-    }, 450);
+      if (r.ok) {
+        haptic("success");
+        markAppliedVacancy(v.id);
+        setApplied(true);
+      } else if (r.demo) {
+        haptic("error");
+        setDemoErr(true);
+      } else {
+        haptic("error");
+      }
+    });
   };
 
   return (
@@ -98,6 +106,7 @@ export default function VakansiyaDetailPage(): JSX.Element {
             onClick={() => {
               haptic("light");
               setSaved(toggleSavedVacancy(v.id));
+              void api.toggleSaveRemote("vacancy", v.id);
             }}
           >
             <Icon name="bookmark" size={20} filled={saved} />
@@ -149,19 +158,24 @@ export default function VakansiyaDetailPage(): JSX.Element {
           </ul>
         </section>
 
-        <section className={styles.section}>
-          <h2 className={styles.skicker}>Talablar</h2>
-          <ul className={styles.ul}>
-            {v.requirements.map((r) => (
-              <li key={r} className={styles.li}>
-                {r}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {v.requirements.length > 0 ? (
+          <section className={styles.section}>
+            <h2 className={styles.skicker}>Talablar</h2>
+            <ul className={styles.ul}>
+              {v.requirements.map((r) => (
+                <li key={r} className={styles.li}>
+                  {r}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </div>
 
       <div className={styles.cta}>
+        {demoErr ? (
+          <p className={styles.demoBar}>Bu demo vakansiya — ariza yuborilmaydi.</p>
+        ) : null}
         {applied ? (
           <p className={styles.pending}>
             <Icon name="check" size={18} />

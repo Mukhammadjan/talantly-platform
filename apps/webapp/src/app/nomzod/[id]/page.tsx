@@ -32,6 +32,8 @@ export default function NomzodDetailPage(): JSX.Element {
   const [offer, setOffer] = useState(false);
   const [pickVac, setPickVac] = useState(SENT_VACANCIES[0]?.id ?? "");
   const [offerSent, setOfferSent] = useState(false);
+  const [demoMsg, setDemoMsg] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const copyCard = async (): Promise<void> => {
     try {
@@ -139,13 +141,27 @@ export default function NomzodDetailPage(): JSX.Element {
       </div>
 
       <div className={styles.cta}>
+        {demoMsg ? (
+          <p className={styles.demoBar}>Bu demo profil — so&apos;rov yuborilmaydi.</p>
+        ) : null}
         {sent ? (
           <p className={styles.sentBar}>
             So&apos;rov yuborildi ✓ 24 soat ichida bog&apos;lanamiz.
           </p>
         ) : (
           <div className={styles.ctaCol}>
-            <Button full icon={<Icon name="send" size={20} />} onClick={() => setPay(true)}>
+            <Button
+              full
+              icon={<Icon name="send" size={20} />}
+              onClick={() => {
+                if (c.isDemo) {
+                  haptic("error");
+                  setDemoMsg(true);
+                  return;
+                }
+                setPay(true);
+              }}
+            >
               Nomzodni so&apos;rash
             </Button>
             {offerSent ? (
@@ -200,10 +216,25 @@ export default function NomzodDetailPage(): JSX.Element {
         </p>
         <Button
           full
+          loading={sending}
           onClick={() => {
-            haptic("success");
-            setPay(false);
-            setSent(true);
+            setSending(true);
+            void api.sendRequest(c.id).then((r) => {
+              setSending(false);
+              if (!r.ok) {
+                haptic("error");
+                setPay(false);
+                if (r.demo) setDemoMsg(true);
+                return;
+              }
+              void api.createUnlock(
+                c.id,
+                plan === "obuna" ? "obuna" : "bir_martalik",
+              );
+              haptic("success");
+              setPay(false);
+              setSent(true);
+            });
           }}
         >
           Skrinshotni yubordim

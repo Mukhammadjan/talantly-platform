@@ -29,6 +29,7 @@ export function CandidateCard({ c }: { c: Candidate }): JSX.Element {
                 <Icon name="check" size={11} />
               </span>
             ) : null}
+            {c.isDemo ? <span className={styles.demo}>DEMO</span> : null}
           </span>
           <span className={styles.role}>
             {c.role} · {c.district}
