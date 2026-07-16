@@ -96,7 +96,12 @@ export default function KompaniyaPage(): JSX.Element {
           </Card>
 
           <div className={styles.actions}>
-            <Button variant="secondary" full icon={<Icon name="edit" size={20} />}>
+            <Button
+              variant="secondary"
+              full
+              icon={<Icon name="edit" size={20} />}
+              onClick={() => router.push("/kompaniya/tahrir")}
+            >
               Profilni tahrirlash
             </Button>
           </div>

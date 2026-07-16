@@ -1,101 +1,291 @@
-.head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-  margin-bottom: var(--s-4);
-}
-
-.h {
-  margin: 0;
-  font-size: var(--fs-display-m);
-  line-height: var(--lh-display-m);
-  letter-spacing: var(--ls-display-m);
-  font-weight: var(--fw-bold);
-}
-
-.listBtn {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-1);
-  height: var(--h-chip);
-  padding: 0 var(--s-3);
-  border-radius: var(--r-full);
-  background: var(--t-white);
-  box-shadow: inset 0 0 0 1px var(--t-line);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-semibold);
-  color: var(--t-ink-1);
-}
-
-.map {
+.wrap {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1.15;
-  border-radius: var(--r-lg);
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(31, 158, 88, 0.06), transparent 40%),
-    radial-gradient(circle at 70% 70%, rgba(242, 100, 48, 0.06), transparent 40%),
-    var(--t-white);
-  box-shadow: var(--sh-raise);
+  background: var(--t-bg);
 }
 
+/* ---- Xarita dunyosi (zoom qatlami) ---- */
+.world {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 46%;
+  transition: transform var(--d-base) var(--e-out);
+}
+
+.mapSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.block {
+  fill: var(--t-fill);
+  opacity: 0.55;
+}
+
+.park {
+  fill: rgba(31, 158, 88, 0.14);
+}
+
+.parkLabel {
+  fill: rgba(31, 158, 88, 0.75);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.water {
+  fill: none;
+  stroke: rgba(37, 99, 235, 0.16);
+  stroke-width: 16;
+  stroke-linecap: round;
+}
+
+.roadCasing {
+  fill: none;
+  stroke: var(--t-line);
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.roadMain {
+  fill: none;
+  stroke: var(--t-white);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.roadSecond {
+  fill: none;
+  stroke: var(--t-white);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.lane {
+  fill: none;
+  stroke: var(--t-white);
+  stroke-width: 3;
+}
+
+.roadLabel {
+  fill: var(--t-ink-3);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Men (joylashuv) ---- */
 .me {
   position: absolute;
   width: 16px;
   height: 16px;
   border-radius: var(--r-full);
   background: var(--t-blue);
-  box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.18);
+  border: 3px solid var(--t-white);
+  box-shadow: var(--sh-raise);
   transform: translate(-50%, -50%);
+  z-index: 3;
 }
 
-.zone {
+.mePulse {
+  position: absolute;
+  inset: -12px;
+  border-radius: var(--r-full);
+  background: rgba(37, 99, 235, 0.15);
+  animation: pulse 2.2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ---- Tuman pinlari ---- */
+.pin {
   position: absolute;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  z-index: 4;
 }
 
-.count {
-  width: 52px;
-  height: 52px;
+.pinCircle {
+  width: 46px;
+  height: 46px;
   border-radius: var(--r-full);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--t-action-soft);
-  color: var(--t-action-ink);
-  font-size: var(--fs-headline);
+  background: var(--t-ink-1);
+  color: var(--t-white);
+  font-size: var(--fs-body);
   font-weight: var(--fw-bold);
-  box-shadow: inset 0 0 0 2px var(--t-action);
   font-variant-numeric: tabular-nums;
+  border: 3px solid var(--t-action);
+  box-shadow: var(--sh-float);
+  transition: transform var(--d-fast) var(--e-out);
 }
 
-.name {
+.pin:active .pinCircle {
+  transform: scale(0.94);
+}
+
+.pinLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  color: var(--t-ink-1);
   font-size: var(--fs-micro);
   font-weight: var(--fw-semibold);
-  color: var(--t-ink-1);
-  background: var(--t-white);
-  padding: 2px 6px;
-  border-radius: var(--r-xs);
   box-shadow: var(--sh-raise);
   white-space: nowrap;
 }
 
-.chip {
-  position: absolute;
-  left: var(--s-3);
-  bottom: var(--s-3);
+.pinCheck {
+  color: var(--t-verified);
 }
 
+/* ---- Ustki panel ---- */
+.topBar {
+  position: absolute;
+  top: calc(var(--tg-top) + var(--s-3));
+  left: var(--gutter);
+  right: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  z-index: 10;
+}
+
+.search {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 48px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  box-shadow: var(--sh-float);
+}
+
+.sicon {
+  flex-shrink: 0;
+  color: var(--t-ink-3);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: var(--fs-body);
+  color: var(--t-ink-1);
+}
+
+.input::placeholder {
+  color: var(--t-ink-3);
+}
+
+.roundBtn {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  color: var(--t-ink-1);
+  box-shadow: var(--sh-float);
+}
+
+/* ---- Zoom + lokatsiya ---- */
+.zoomBox {
+  position: absolute;
+  top: calc(var(--tg-top) + 96px);
+  right: var(--gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--t-white);
+  border-radius: var(--r-full);
+  box-shadow: var(--sh-float);
+  z-index: 10;
+}
+
+.zoomBtn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.zoomDivider {
+  width: 22px;
+  height: 1px;
+  background: var(--t-line);
+}
+
+.locate {
+  position: absolute;
+  top: calc(var(--tg-top) + 200px);
+  right: var(--gutter);
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  color: var(--t-ink-1);
+  box-shadow: var(--sh-float);
+  z-index: 10;
+}
+
+/* ---- Eslatma ---- */
 .note {
-  margin: var(--s-3) 0 0;
-  font-size: var(--fs-caption);
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tg-bottom) + var(--s-4));
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: var(--r-full);
+  background: var(--t-white);
   color: var(--t-ink-2);
-  text-align: center;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-medium);
+  box-shadow: var(--sh-float);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* ---- Sheet ro'yxati ---- */
+.sheetList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
 }
