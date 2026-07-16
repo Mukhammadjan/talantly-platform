@@ -1,0 +1,88 @@
+.h {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  width: 100%;
+  text-align: left;
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.title {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.badge {
+  flex: 0 0 auto;
+  padding: 4px var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-semibold);
+}
+
+.cat {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.salary {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--t-line);
+}
+
+.stat,
+.statOk,
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.statOk {
+  color: var(--t-verified);
+}
+
+.open {
+  margin-left: auto;
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}

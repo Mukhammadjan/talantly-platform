@@ -9,8 +9,8 @@ import styles from "./koproq.module.css";
 
 const ACTIONS: { icon: IconName; label: string; href: string }[] = [
   { icon: "grid", label: "Kompaniya profili", href: "/kompaniya" },
-  { icon: "briefcase", label: "Mening vakansiyalarim", href: "/kompaniya" },
-  { icon: "info", label: "Yordam", href: "/kompaniya" },
+  { icon: "briefcase", label: "Mening vakansiyalarim", href: "/vakansiyalar" },
+  { icon: "info", label: "Yordam", href: "/yordam" },
   { icon: "user", label: "Rolni almashtirish", href: "/rol" },
 ];
 
@@ -27,7 +27,7 @@ export default function KoproqPage(): JSX.Element {
       <Button
         full
         icon={<Icon name="plus" size={20} />}
-        onClick={() => router.push("/kompaniya")}
+        onClick={() => router.push("/vakansiya/yangi")}
       >
         Vakansiya yaratish
       </Button>
