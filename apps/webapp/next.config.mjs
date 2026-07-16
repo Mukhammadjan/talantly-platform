@@ -12,6 +12,10 @@ if (existsSync(rootEnvPath)) {
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@talantly/shared"],
+  experimental: {
+    // Deploy hook: har deploy'da bot menu ?v=SHA avto-yangilanadi (spec §8)
+    instrumentationHook: true,
+  },
   webpack: (config) => {
     // @talantly/shared uses NodeNext ".js" import specifiers for .ts sources
     config.resolve.extensionAlias = {

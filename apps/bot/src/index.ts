@@ -1,4 +1,6 @@
-import { Bot, type CommandContext, type Context } from "grammy";
+import { createHmac } from "node:crypto";
+import http from "node:http";
+import { Bot, webhookCallback, type CommandContext, type Context } from "grammy";
 import { config } from "./config.js";
 import { startCvPdfWorker, stopCvPdfBrowser } from "./cv/pdfWorker.js";
 import { handleAdmin } from "./handlers/admin.js";
@@ -17,6 +19,7 @@ import { handleYordam } from "./handlers/yordam.js";
 import { logger } from "./logger.js";
 import { GENERIC_ERROR } from "./text.js";
 import { ensureUpcomingSlots } from "./workers/ensureSlots.js";
+import { startPushWorker } from "./workers/pushWorker.js";
 import { startReminderWorker } from "./workers/reminderWorker.js";
 
 type CommandHandler = (ctx: CommandContext<Context>) => Promise<void>;
@@ -114,9 +117,18 @@ async function main(): Promise<void> {
 
   const stopCvPdfWorker = startCvPdfWorker(bot);
   const stopReminderWorker = startReminderWorker(bot);
+  const stopPushWorker = startPushWorker(bot);
   ensureUpcomingSlots().catch((err) => {
     logger.error({ err }, "ensureUpcomingSlots failed");
   });
+
+  // Railway/prod: webhook; lokal dev: long polling.
+  const webhookDomain =
+    process.env.WEBHOOK_URL?.replace(/\/+$/, "") ??
+    (process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : null);
+  let server: http.Server | null = null;
 
   let stopping = false;
   const stop = (signal: string): void => {
@@ -125,20 +137,57 @@ async function main(): Promise<void> {
     logger.info({ signal }, "Shutting down bot...");
     stopCvPdfWorker();
     stopReminderWorker();
+    stopPushWorker();
+    server?.close();
     void stopCvPdfBrowser()
       .catch((err) => logger.error({ err }, "Browser close failed"))
-      .then(() => bot.stop());
+      .then(() => (webhookDomain ? process.exit(0) : bot.stop()));
   };
   process.once("SIGINT", () => stop("SIGINT"));
   process.once("SIGTERM", () => stop("SIGTERM"));
 
-  logger.info("Starting bot (long polling)...");
-  await bot.start({
-    onStart: (info) => {
-      logger.info(`Bot @${info.username} is running.`);
-    },
-  });
-  logger.info("Bot stopped. Bye.");
+  if (webhookDomain) {
+    const path = "/telegram-webhook";
+    const secretToken = createHmac("sha256", config.telegramBotToken)
+      .update("webhook")
+      .digest("hex")
+      .slice(0, 64);
+    const handler = webhookCallback(bot, "http", { secretToken });
+    await bot.init();
+    server = http.createServer((req, res) => {
+      if (req.url === "/healthz") {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end("ok");
+        return;
+      }
+      if (req.method === "POST" && req.url === path) {
+        void handler(req, res).catch((err) => {
+          logger.error({ err }, "webhook handler error");
+          if (!res.headersSent) res.writeHead(200);
+          res.end();
+        });
+        return;
+      }
+      res.writeHead(404);
+      res.end();
+    });
+    const port = Number(process.env.PORT ?? 8080);
+    await new Promise<void>((resolve) => server?.listen(port, resolve));
+    await bot.api.setWebhook(`${webhookDomain}${path}`, {
+      secret_token: secretToken,
+    });
+    logger.info(`Bot webhook rejimida: ${webhookDomain}${path} (port ${port})`);
+  } else {
+    // Polling oldidan eski webhook olib tashlanadi (409 bo'lmasin).
+    await bot.api.deleteWebhook().catch(() => undefined);
+    logger.info("Starting bot (long polling)...");
+    await bot.start({
+      onStart: (info) => {
+        logger.info(`Bot @${info.username} is running.`);
+      },
+    });
+    logger.info("Bot stopped. Bye.");
+  }
 }
 
 main().catch((err: unknown) => {
