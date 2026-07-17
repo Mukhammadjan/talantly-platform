@@ -90,9 +90,9 @@ export async function handleSuhbatCallback(ctx: Context): Promise<void> {
       talent_id: talent.id,
       scheduled_at: claimed.starts_at,
     });
-    await talentsRepo.setStatus(
+    await talentsRepo.applyEvent(
       { id: talent.id, status: talent.status },
-      "suhbat_belgilangan",
+      "suhbat_band_qilindi",
       `bot:${from.id}`,
     );
   } catch (err) {

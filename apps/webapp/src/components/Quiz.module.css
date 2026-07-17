@@ -118,3 +118,21 @@
     transform: rotate(360deg);
   }
 }
+
+.timer {
+  flex-shrink: 0;
+  min-width: 42px;
+  text-align: center;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.timerLow {
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+}

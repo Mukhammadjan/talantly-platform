@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
+import { requireUser } from "@/lib/server/guard";
 import { getDb } from "@/lib/server/db";
 
 export const dynamic = "force-dynamic";
@@ -8,8 +8,9 @@ const KINDS = ["vacancy", "talant", "company"];
 
 /** saved_items toggle — {saved: boolean} qaytaradi. */
 export async function POST(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
+  const session = g.session;
 
   let body: { kind?: unknown; targetId?: unknown };
   try {

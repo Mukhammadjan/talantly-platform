@@ -6,6 +6,21 @@ export interface CompanyRowV2 {
   user_id: string;
   name: string;
   is_demo: boolean;
+  is_verified?: boolean;
+}
+
+/** Faol obuna bormi — contact_unlocks kind='obuna' tasdiqlangan, muddati o'tmagan. */
+export async function hasActiveSubscription(companyId: string): Promise<boolean> {
+  const { data } = await getDb()
+    .from("contact_unlocks")
+    .select("id")
+    .eq("company_id", companyId)
+    .eq("kind", "obuna")
+    .eq("status", "tasdiqlangan")
+    .gt("expires_at", new Date().toISOString())
+    .limit(1)
+    .maybeSingle();
+  return Boolean(data);
 }
 
 /** Sessiya egasining companies qatori — bo'lmasa yaratiladi. */
@@ -21,7 +36,7 @@ export async function ensureCompany(
 
   const { data, error } = await db
     .from("companies")
-    .select("id, user_id, name, is_demo")
+    .select("id, user_id, name, is_demo, is_verified")
     .eq("user_id", session.userId)
     .single();
   if (error) throw new Error(`companies read failed: ${error.message}`);

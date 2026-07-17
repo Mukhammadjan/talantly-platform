@@ -6,6 +6,7 @@ import { Button } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Input } from "@/components/Input";
 import { Progress } from "@/components/Progress";
+import { Sheet } from "@/components/Sheet";
 import { api } from "@/lib/api";
 import {
   DIRECTION_LABELS,
@@ -55,6 +56,7 @@ export default function ProfilFormaPage(): JSX.Element {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [sealOpen, setSealOpen] = useState(false);
   const [f, setF] = useState<FormState>(EMPTY);
 
   useEffect(() => {
@@ -105,30 +107,42 @@ export default function ProfilFormaPage(): JSX.Element {
     });
   };
 
+  const buildPayload = (confirmSealReset: boolean) => ({
+    fullName: f.fullName.trim(),
+    birthYear: f.birthYear ? Number(f.birthYear) : null,
+    city: f.city || null,
+    district: f.district || null,
+    direction: f.direction,
+    level: f.level,
+    experienceYears: f.experience ? Number(f.experience) : null,
+    skills: f.skills,
+    workFormats: f.workFormats,
+    salaryFrom: f.salary ? Number(f.salary) : null,
+    about: f.about || null,
+    portfolioUrl: f.portfolio || null,
+    confirmSealReset,
+  });
+
+  const save = (confirmSealReset: boolean): void => {
+    setSaving(true);
+    void api.saveTalentProfile(buildPayload(confirmSealReset)).then((r) => {
+      // Muhr himoyasi (A5): server tasdiqsiz saqlamaydi — sheet ko'rsatamiz.
+      if (r && "error" in r && r.error === "seal_reset_confirm") {
+        setSaving(false);
+        setSealOpen(true);
+        return;
+      }
+      router.replace("/talant");
+    });
+  };
+
   const next = (): void => {
     haptic("light");
     if (step < TOTAL) {
       setStep(step + 1);
       return;
     }
-    // Yakuniy qadam — real backend'ga saqlash (mock rejimda null qaytadi).
-    setSaving(true);
-    void api
-      .saveTalentProfile({
-        fullName: f.fullName.trim(),
-        birthYear: f.birthYear ? Number(f.birthYear) : null,
-        city: f.city || null,
-        district: f.district || null,
-        direction: f.direction,
-        level: f.level,
-        experienceYears: f.experience ? Number(f.experience) : null,
-        skills: f.skills,
-        workFormats: f.workFormats,
-        salaryFrom: f.salary ? Number(f.salary) : null,
-        about: f.about || null,
-        portfolioUrl: f.portfolio || null,
-      })
-      .finally(() => router.replace("/talant"));
+    save(false);
   };
 
   const canNext =
@@ -276,6 +290,33 @@ export default function ProfilFormaPage(): JSX.Element {
           {step < TOTAL ? "Davom etish" : "Yakunlash"}
         </Button>
       </div>
+
+      <Sheet
+        open={sealOpen}
+        onClose={() => setSealOpen(false)}
+        title="Muhr qayta tekshiruvga qaytadi"
+      >
+        <p className={styles.sealText}>
+          Yo&apos;nalish yoki darajani o&apos;zgartirsangiz, yashil
+          &laquo;Tekshirilgan&raquo; muhringiz vaqtincha olinadi va suhbat
+          bosqichiga qaytasiz. Maosh, tavsif va portfolio o&apos;zgarishi
+          muhrga ta&apos;sir qilmaydi. Davom etasizmi?
+        </p>
+        <div className={styles.sealBtns}>
+          <Button variant="ghost" full onClick={() => setSealOpen(false)}>
+            Bekor qilish
+          </Button>
+          <Button
+            full
+            onClick={() => {
+              setSealOpen(false);
+              save(true);
+            }}
+          >
+            Ha, davom etaman
+          </Button>
+        </div>
+      </Sheet>
     </main>
   );
 }

@@ -350,13 +350,32 @@ function buildVerdict(input: CvInput, profile: DirectionProfile): string {
  * Deterministic template-based CV generator (demo mode). Same signature a
  * real LLM-backed generator will implement later.
  */
+/** Telefon raqami va telegram username'ni CV matnidan olib tashlaydi —
+ *  kontakt faqat pullik ochishdan keyin ko'rinadi (xavfsizlik F20). */
+export function scrubContact(text: string): string {
+  return text
+    .replace(/\+?\d[\d\s\-()]{7,}\d/g, "[kontakt yashirilgan]")
+    .replace(/@[a-zA-Z0-9_]{4,32}/g, "[kontakt yashirilgan]")
+    .replace(/t\.me\/[a-zA-Z0-9_]+/gi, "[kontakt yashirilgan]");
+}
+
 export function generateCv(input: CvInput): CvJson {
   const profile = DIRECTION_PROFILES[input.direction];
   const skills = extractSkills(input, profile);
-  return {
+  const raw: CvJson = {
     summary: buildSummary(input, profile, skills),
     skills,
     experience: buildExperience(input, profile),
     aiVerdict: buildVerdict(input, profile),
+  };
+  return {
+    ...raw,
+    summary: scrubContact(raw.summary),
+    experience: raw.experience.map((e) => ({
+      ...e,
+      title: scrubContact(e.title),
+      org: scrubContact(e.org),
+    })),
+    aiVerdict: scrubContact(raw.aiVerdict),
   };
 }

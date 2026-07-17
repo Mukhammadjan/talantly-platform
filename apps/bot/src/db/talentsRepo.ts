@@ -38,3 +38,27 @@ export async function updateBotState(
 ): Promise<TalentRow> {
   return talentsRepo.updateBotState(getSupabase(), talentId, botState);
 }
+
+import { statusMachine } from "@talantly/shared";
+
+/** YAGONA o'tish yo'li (A1) — bot ham statusMachine orqali yozadi. */
+export async function applyEvent(
+  talent: Pick<TalentRow, "id" | "status">,
+  event: statusMachine.TalantEvent,
+  changedBy: string,
+  extraFields: Partial<TalentInsert> = {},
+): Promise<string | null> {
+  const r = statusMachine.nextStatus(
+    talent.status as statusMachine.TalantStatus,
+    event,
+  );
+  if (!r.ok) return null;
+  await talentsRepo.setStatus(
+    getSupabase(),
+    talent,
+    r.next as TalentRow["status"],
+    changedBy,
+    extraFields,
+  );
+  return r.next;
+}

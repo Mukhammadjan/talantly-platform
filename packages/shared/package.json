@@ -11,7 +11,8 @@
     "./constants": "./src/constants.ts",
     "./db": "./src/db/index.ts",
     "./auth": "./src/auth/index.ts",
-    "./talent-view": "./src/talentView/index.ts"
+    "./talent-view": "./src/talentView/index.ts",
+    "./status-machine": "./src/statusMachine/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

@@ -1,5 +1,7 @@
+import { statusMachine } from "@talantly/shared";
 import type { SessionPayload } from "./auth";
 import { getDb, logStatus } from "./db";
+import { getSetting } from "./settings";
 
 export interface TalentRowV2 {
   id: string;
@@ -45,8 +47,8 @@ export async function ensureTalent(
   return data as TalentRowV2;
 }
 
-/** Status o'zgarishi — har doim status_log bilan. */
-export async function setTalentStatus(
+/** Status o'zgarishi — har doim status_log bilan. FAQAT applyEvent chaqiradi. */
+async function writeStatus(
   talent: Pick<TalentRowV2, "id" | "status">,
   newStatus: string,
   changedBy: string,
@@ -65,6 +67,27 @@ export async function setTalentStatus(
     newStatus,
     changedBy,
   });
+}
+
+/**
+ * YAGONA status o'tish yo'li (A1): hodisa → statusMachine.nextStatus →
+ * yozish. Noto'g'ri o'tish null qaytaradi (status o'zgarmaydi).
+ */
+export async function applyEvent(
+  talent: Pick<TalentRowV2, "id" | "status">,
+  event: statusMachine.TalantEvent,
+  changedBy: string,
+): Promise<string | null> {
+  const cvPaymentRequired =
+    ((await getSetting("cv_payment_required")) ?? "true").toLowerCase() === "true";
+  const r = statusMachine.nextStatus(
+    talent.status as statusMachine.TalantStatus,
+    event,
+    { cvPaymentRequired },
+  );
+  if (!r.ok) return null;
+  await writeStatus(talent, r.next, changedBy);
+  return r.next;
 }
 
 /** Frontend TalentSnapshot shakliga o'girish (api.ts imzosi saqlanadi). */
@@ -96,8 +119,25 @@ export async function buildSnapshot(
       .maybeSingle(),
   ]);
 
+  // Rad sababi (A4): suhbatdan — decision_reason; 3 yiqilgan test — test_past.
+  let radReason: string | null = null;
+  if (talent.status === "rad_etilgan") {
+    const { data: lastInt } = await db
+      .from("interviews")
+      .select("decision_reason")
+      .eq("talent_id", talent.id)
+      .not("decision_reason", "is", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    radReason =
+      (lastInt as { decision_reason: string } | null)?.decision_reason ?? "test_past";
+  }
+
   return {
     status: talent.status,
+    isHidden: (talent as { is_hidden?: boolean }).is_hidden ?? false,
+    radReason,
     score: (test as { score: number } | null)?.score ?? null,
     archetype: talent.archetype,
     interviewAt:

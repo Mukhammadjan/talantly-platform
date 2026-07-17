@@ -50,11 +50,11 @@ async function tgIdForTalent(talentId: string): Promise<number | null> {
   if (!t?.user_id || t.is_demo) return null;
   const { data: user } = await db
     .from("users")
-    .select("tg_id, is_blocked")
+    .select("tg_id, is_blocked_bot")
     .eq("id", t.user_id)
     .maybeSingle();
-  const u = user as { tg_id: number; is_blocked: boolean } | null;
-  return u && !u.is_blocked ? u.tg_id : null;
+  const u = user as { tg_id: number; is_blocked_bot: boolean } | null;
+  return u && !u.is_blocked_bot ? u.tg_id : null;
 }
 
 async function tgIdForCompany(companyId: string): Promise<number | null> {
@@ -68,11 +68,11 @@ async function tgIdForCompany(companyId: string): Promise<number | null> {
   if (!c?.user_id || c.is_demo) return null;
   const { data: user } = await db
     .from("users")
-    .select("tg_id, is_blocked")
+    .select("tg_id, is_blocked_bot")
     .eq("id", c.user_id)
     .maybeSingle();
-  const u = user as { tg_id: number; is_blocked: boolean } | null;
-  return u && !u.is_blocked ? u.tg_id : null;
+  const u = user as { tg_id: number; is_blocked_bot: boolean } | null;
+  return u && !u.is_blocked_bot ? u.tg_id : null;
 }
 
 /** 403 (bot bloklangan) → users.is_blocked = true. */
@@ -87,9 +87,10 @@ async function sendSafe(
   } catch (err) {
     const code = (err as { error_code?: number }).error_code;
     if (code === 403) {
+      // Bot bloklandi — faqat push to'xtaydi, API kirish saqlanadi (H29).
       await getSupabase()
         .from("users")
-        .update({ is_blocked: true })
+        .update({ is_blocked_bot: true })
         .eq("tg_id", tgId);
       logger.info({ tgId }, "push: user blocked bot, flagged");
     } else {
@@ -104,6 +105,72 @@ async function handleRow(bot: Bot, row: LogRow): Promise<void> {
     if (!text) return;
     const tgId = await tgIdForTalent(row.entity_id);
     if (tgId) await sendSafe(bot, tgId, text);
+    return;
+  }
+
+  // Suhbat hodisalari (C10/C11/H28)
+  if (row.entity === "interviews") {
+    const db = getSupabase();
+    const { data } = await db
+      .from("interviews")
+      .select("talent_id")
+      .eq("id", row.entity_id)
+      .maybeSingle();
+    const talentId = (data as { talent_id: string | null } | null)?.talent_id;
+    if (!talentId) return;
+    const tgId = await tgIdForTalent(talentId);
+    if (!tgId) return;
+    if (row.new_status === "kelmadi") {
+      await sendSafe(
+        bot,
+        tgId,
+        "😔 Suhbatga kela olmadingiz. Yangi qulay vaqtni tanlab, qayta band qiling — sizni kutamiz!",
+      );
+    } else if (row.new_status === "bekor") {
+      await sendSafe(
+        bot,
+        tgId,
+        "✅ Suhbatingiz bekor qilindi, slot bo'shatildi. Istalgan payt yangi vaqt tanlashingiz mumkin.",
+      );
+    }
+    return;
+  }
+
+  // Kontakt to'lovi holatlari (D16)
+  if (row.entity === "contact_unlocks") {
+    const db = getSupabase();
+    const { data } = await db
+      .from("contact_unlocks")
+      .select("company_id, amount")
+      .eq("id", row.entity_id)
+      .maybeSingle();
+    const u = data as { company_id: string | null; amount: number } | null;
+    if (!u?.company_id) return;
+    const tgId = await tgIdForCompany(u.company_id);
+    if (!tgId) return;
+    if (row.new_status === "tasdiqlangan") {
+      await sendSafe(
+        bot,
+        tgId,
+        "✅ To'lovingiz tasdiqlandi! Nomzod kontakti ochildi — ilovadan ko'ring.",
+      );
+    } else if (row.new_status === "rad") {
+      await sendSafe(
+        bot,
+        tgId,
+        "❌ To'lov cheki tasdiqlanmadi (summa mos kelmadi yoki chek o'qilmadi). Moderator bilan bog'laning: /yordam",
+      );
+    }
+    return;
+  }
+
+  // Shikoyat -> admin navbati (F23)
+  if (row.entity === "complaints" && config.adminTgId) {
+    await sendSafe(
+      bot,
+      Number(config.adminTgId),
+      "⚠️ Yangi shikoyat keldi — ko'rib chiqing.",
+    );
     return;
   }
 

@@ -90,7 +90,16 @@ function ratingKeyboard(interviewId: string): InlineKeyboard {
 function confirmKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
     .text("✅ Tasdiqlash", "bhl:dec:approved")
-    .text("❌ Rad etish", "bhl:dec:rejected");
+    .text("❌ Rad etish", "bhl:rejreason");
+}
+
+function rejectReasonKeyboard(): InlineKeyboard {
+  return new InlineKeyboard()
+    .text("Suhbatdan yiqildi", "bhl:dec:rejected:suhbat_yiqildi")
+    .row()
+    .text("Soxta ma'lumot (blok)", "bhl:dec:rejected:soxta_malumot")
+    .row()
+    .text("⬅️ Orqaga", "bhl:backconfirm");
 }
 
 async function loadInterviewContext(interviewId: string): Promise<{
@@ -124,7 +133,11 @@ async function handlePick(
       score: test?.score ?? null,
       scheduledAt: interview.scheduled_at,
     }),
-    { reply_markup: ratingKeyboard(interviewId) },
+    {
+      reply_markup: ratingKeyboard(interviewId)
+        .row()
+        .text("🚫 Kelmadi (no-show)", `bhl:ns:${interviewId}`),
+    },
   );
 }
 
@@ -162,6 +175,7 @@ async function applyDecision(
   ctx: CallbackQueryContext<Context>,
   moderatorTgId: number,
   approved: boolean,
+  reason?: string,
 ): Promise<void> {
   const pending = pendingReviews.get(moderatorTgId);
   if (!pending || pending.stage !== "confirm") {
@@ -182,10 +196,12 @@ async function applyDecision(
     rating: pending.rating,
     notes: pending.notes,
     decision: approved ? "approved" : "rejected",
+    ...(reason ? { decision_reason: reason } : {}),
   });
 
   if (approved) {
-    await talentsRepo.setStatus(talent, "tekshirilgan", moderator.id, {
+    // Holat mashinasi orqali (A1)
+    await talentsRepo.applyEvent(talent, "tekshirildi", moderator.id, {
       verified_at: new Date().toISOString(),
     });
     // Verification-first flow: the CV is the reward for passing verification.
@@ -212,7 +228,11 @@ async function applyDecision(
       });
     }
   } else {
-    await talentsRepo.setStatus(talent, "rad_etilgan", moderator.id);
+    await talentsRepo.applyEvent(talent, "rad_etildi", moderator.id);
+    // Soxta ma'lumot — foydalanuvchi bloklanadi (F).
+    if (reason === "soxta_malumot" && talent.user_id) {
+      await usersRepo.setBlocked(talent.user_id, true);
+    }
   }
 
   pendingReviews.delete(moderatorTgId);
@@ -272,9 +292,48 @@ export async function handleBaholashCallback(
     );
     return;
   }
-  if (action === "dec" && (parts[2] === "approved" || parts[2] === "rejected")) {
-    await applyDecision(ctx, from.id, parts[2] === "approved");
+  if (action === "rejreason") {
+    await ctx.editMessageReplyMarkup({ reply_markup: rejectReasonKeyboard() });
+    return;
   }
+  if (action === "backconfirm") {
+    await ctx.editMessageReplyMarkup({ reply_markup: confirmKeyboard() });
+    return;
+  }
+  if (action === "ns" && parts[2]) {
+    await handleNoShow(ctx, from.id, parts[2]);
+    return;
+  }
+  if (action === "dec" && (parts[2] === "approved" || parts[2] === "rejected")) {
+    await applyDecision(ctx, from.id, parts[2] === "approved", parts[3]);
+  }
+}
+
+/** Moderator "Kelmadi": slot bo'shaydi, holat test_otgan'ga qaytadi (C10). */
+async function handleNoShow(
+  ctx: CallbackQueryContext<Context>,
+  moderatorTgId: number,
+  interviewId: string,
+): Promise<void> {
+  const context = await loadInterviewContext(interviewId);
+  if (!context) {
+    await ctx.editMessageText(BAHOLASH_EXPIRED);
+    return;
+  }
+  const { interview, talent } = context;
+  await interviewsRepo.markNoShow(interviewId);
+  const slotId = (interview as { slot_id?: string | null }).slot_id;
+  if (slotId) await interviewsRepo.freeSlot(slotId);
+  await talentsRepo.applyEvent(talent, "suhbat_kelmadi", `mod:${moderatorTgId}`);
+  // status_log(interviews:kelmadi) — push worker talantga xabar yuboradi.
+  await interviewsRepo.logInterviewEvent(
+    interviewId,
+    "kelmadi",
+    `mod:${moderatorTgId}`,
+  );
+  await ctx.editMessageText(
+    `🚫 ${talent.full_name ?? "Nomzod"} — kelmadi deb belgilandi. Slot bo'shatildi, nomzodga yangi vaqt tanlash haqida xabar yuborildi.`,
+  );
 }
 
 /** Captures the moderator's notes text; returns true when it consumed the message. */

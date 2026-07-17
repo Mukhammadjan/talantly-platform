@@ -34,6 +34,12 @@ export default function NomzodDetailPage(): JSX.Element {
   const [offerSent, setOfferSent] = useState(false);
   const [demoMsg, setDemoMsg] = useState(false);
   const [sending, setSending] = useState(false);
+  const [subActive, setSubActive] = useState(false);
+  const [contact, setContact] = useState<{
+    username: string | null;
+    fullName: string | null;
+    portfolioUrl: string | null;
+  } | null>(null);
 
   const copyCard = async (): Promise<void> => {
     try {
@@ -49,10 +55,18 @@ export default function NomzodDetailPage(): JSX.Element {
   useEffect(() => {
     initTelegram();
     let live = true;
-    api.getCandidate(params.id).then((x) => {
+    api.getCandidateDetail(params.id).then((x) => {
       if (!live) return;
-      if (x) setC(x);
-      else setFailed(true);
+      if (x) {
+        setC(x.candidate);
+        if (x.contactUnlocked) {
+          setContact(x.contact);
+          setSent(true);
+        }
+      } else setFailed(true);
+    });
+    void api.getCompanyStatus().then((st) => {
+      if (live && st) setSubActive(st.subscriptionActive);
     });
     return () => {
       live = false;
@@ -127,17 +141,48 @@ export default function NomzodDetailPage(): JSX.Element {
           <p className={styles.salary}>{formatSalary(c.salaryFrom)}</p>
         </Section>
 
-        <Card className={styles.locked}>
-          <span className={styles.lockIcon}>
-            <Icon name="lock" size={20} />
-          </span>
-          <span className={styles.lockTexts}>
-            <span className={styles.lockTitle}>CV va telefon raqami</span>
-            <span className={styles.lockText}>
-              So&apos;rov yuborilgach ochiladi.
+        {contact ? (
+          <Card className={styles.contactCard}>
+            <p className={styles.ckicker}>Kontakt ochildi ✓</p>
+            <p className={styles.contactName}>{contact.fullName ?? c.displayName}</p>
+            {contact.username ? (
+              <a
+                className={styles.contactLink}
+                href={`https://t.me/${contact.username}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                @{contact.username}
+              </a>
+            ) : (
+              <p className={styles.lockText}>
+                Telegram username ko&apos;rsatilmagan — admin bog&apos;lab beradi.
+              </p>
+            )}
+            {contact.portfolioUrl ? (
+              <a
+                className={styles.contactLink}
+                href={contact.portfolioUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Portfolio
+              </a>
+            ) : null}
+          </Card>
+        ) : (
+          <Card className={styles.locked}>
+            <span className={styles.lockIcon}>
+              <Icon name="lock" size={20} />
             </span>
-          </span>
-        </Card>
+            <span className={styles.lockTexts}>
+              <span className={styles.lockTitle}>CV va telefon raqami</span>
+              <span className={styles.lockText}>
+                So&apos;rov yuborilgach ochiladi.
+              </span>
+            </span>
+          </Card>
+        )}
       </div>
 
       <div className={styles.cta}>
@@ -183,18 +228,24 @@ export default function NomzodDetailPage(): JSX.Element {
       </div>
 
       <Sheet open={pay} onClose={() => setPay(false)} title="Kontaktni ochish">
-        <div className={styles.plans}>
-          <Chip
-            label="Bir martalik · 99 000"
-            active={plan === "bir"}
-            onClick={() => setPlan("bir")}
-          />
-          <Chip
-            label="Oylik obuna · 2 500 000"
-            active={plan === "obuna"}
-            onClick={() => setPlan("obuna")}
-          />
-        </div>
+        {subActive ? (
+          <p className={styles.subActiveNote}>
+            ✓ Obunangiz faol — kontakt to&apos;lovsiz ochiladi.
+          </p>
+        ) : (
+          <div className={styles.plans}>
+            <Chip
+              label="Bir martalik · 99 000"
+              active={plan === "bir"}
+              onClick={() => setPlan("bir")}
+            />
+            <Chip
+              label="Oylik obuna · 2 500 000"
+              active={plan === "obuna"}
+              onClick={() => setPlan("obuna")}
+            />
+          </div>
+        )}
         <Card className={styles.cardInfo}>
           <p className={styles.ckicker}>To&apos;lov kartasi</p>
           <div className={styles.cardRow}>
@@ -227,10 +278,12 @@ export default function NomzodDetailPage(): JSX.Element {
                 if (r.demo) setDemoMsg(true);
                 return;
               }
-              void api.createUnlock(
-                c.id,
-                plan === "obuna" ? "obuna" : "bir_martalik",
-              );
+              void api
+                .createUnlock(c.id, plan === "obuna" ? "obuna" : "bir_martalik")
+                .then(() => api.getCandidateDetail(c.id))
+                .then((d) => {
+                  if (d?.contactUnlocked) setContact(d.contact);
+                });
               haptic("success");
               setPay(false);
               setSent(true);

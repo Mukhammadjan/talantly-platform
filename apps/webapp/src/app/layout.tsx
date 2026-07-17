@@ -1,4 +1,5 @@
 import "./globals.css";
+import { OfflineGate } from "@/components/OfflineGate";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -30,7 +31,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="app">{children}</div>
+        <div className="app"><OfflineGate />
+        {children}</div>
       </body>
     </html>
   );

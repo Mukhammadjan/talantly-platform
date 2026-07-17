@@ -63,6 +63,7 @@ const NEXT_STEP: Record<TalentStatus, NextStep | null> = {
   },
   tekshirilgan: null,
   rad_etilgan: null,
+  band: null,
 };
 
 const PATH_LABELS = [
@@ -86,6 +87,7 @@ const ROADMAP_RANK: Record<TalentStatus, number> = {
   suhbat_belgilangan: 4,
   tekshirilgan: 5,
   rad_etilgan: -1,
+  band: 5,
 };
 
 export default function TalantHubPage(): JSX.Element {
@@ -137,17 +139,27 @@ export default function TalantHubPage(): JSX.Element {
           </span>
           <h2 className={styles.rejTitle}>Bu safar tasdiqlanmadi</h2>
           <p className={styles.rejText}>
-            Suhbat natijasiga ko&apos;ra profilingiz hozircha tasdiqlanmadi. Bu
-            yakuniy emas — tajriba orttirib, 30 kundan so&apos;ng qayta
-            urinishingiz mumkin.
+            {snap.radReason === "test_past"
+              ? "Ko'nikma testidan yetarli ball to'planmadi. 24 soatdan so'ng testni qayta topshirishingiz mumkin — sizga ishonamiz!"
+              : snap.radReason === "soxta_malumot"
+                ? "Profil ma'lumotlarida nomuvofiqlik aniqlandi. Batafsil ma'lumot uchun administrator bilan bog'laning."
+                : "Suhbat natijasiga ko'ra profilingiz hozircha tasdiqlanmadi. 30 kundan so'ng bitta qayta suhbat imkoniyati beriladi."}
           </p>
-          <Button
-            variant="secondary"
-            full
-            onClick={() => router.push("/talant/testlar")}
-          >
-            Testlarni takrorlash
-          </Button>
+          {snap.radReason !== "soxta_malumot" ? (
+            <Button
+              variant="secondary"
+              full
+              onClick={() =>
+                router.push(
+                  snap.radReason === "test_past" ? "/konikma" : "/talant/testlar",
+                )
+              }
+            >
+              {snap.radReason === "test_past"
+                ? "Testni qayta topshirish"
+                : "Testlarni takrorlash"}
+            </Button>
+          ) : null}
         </Card>
       ) : next ? (
         <Card className={styles.step}>
@@ -159,6 +171,23 @@ export default function TalantHubPage(): JSX.Element {
           </Button>
         </Card>
       ) : null}
+
+      {/* Vakansiyalar — navdan chiqarildi (G24), Asosiy'da karta */}
+      <Card
+        className={styles.vacCard}
+        onClick={() => router.push("/talant/vakansiyalar")}
+      >
+        <span className={styles.vacIcon}>
+          <Icon name="briefcase" size={22} />
+        </span>
+        <span className={styles.vacTexts}>
+          <span className={styles.vacTitle}>Ochiq vakansiyalar</span>
+          <span className={styles.vacText}>
+            Kompaniyalarning takliflarini ko&apos;ring va ariza bering
+          </span>
+        </span>
+        <Icon name="chevron" size={18} className={styles.vacChev} />
+      </Card>
 
       {rejected ? null : (
       <Card className={styles.path}>

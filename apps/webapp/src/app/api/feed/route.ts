@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
+import { requireUser } from "@/lib/server/guard";
 import { latestScores, toCandidate } from "@/lib/server/candidates";
 import { getDb } from "@/lib/server/db";
 import { showDemo } from "@/lib/server/settings";
@@ -9,8 +9,8 @@ export const dynamic = "force-dynamic";
 
 /** Tekshirilgan nomzodlar feed'i — demo toggle har o'qishda settings'dan. */
 export async function GET(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
 
   const db = getDb();
   let query = db

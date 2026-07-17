@@ -344,3 +344,34 @@
   font-weight: var(--fw-medium);
   text-align: center;
 }
+
+/* ---- Kontakt ochilgan karta ---- */
+.contactCard {
+  margin-top: var(--s-2);
+}
+
+.contactName {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.contactLink {
+  display: inline-block;
+  margin-right: var(--s-3);
+  color: var(--t-action-ink);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  text-decoration: underline;
+}
+
+.subActiveNote {
+  margin: 0 0 var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+}

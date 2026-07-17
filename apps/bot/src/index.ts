@@ -15,6 +15,10 @@ import { handleProfil } from "./handlers/profil.js";
 import { handleStart } from "./handlers/start.js";
 import { handleSuhbat, handleSuhbatCallback } from "./handlers/suhbat.js";
 import { handlePaymentPhoto, handleTolov } from "./handlers/tolov.js";
+import {
+  handleTolovlar,
+  handleTolovlarCallback,
+} from "./handlers/tolovlar.js";
 import { handleYordam } from "./handlers/yordam.js";
 import { logger } from "./logger.js";
 import { GENERIC_ERROR } from "./text.js";
@@ -50,12 +54,21 @@ async function main(): Promise<void> {
   bot.command("yordam", safe(handleYordam));
   bot.command("baholash", safe(handleBaholash));
   bot.command("admin", safe(handleAdmin));
+  bot.command("tolovlar", safe(handleTolovlar));
 
   bot.callbackQuery(/^bhl:/, async (ctx) => {
     try {
       await handleBaholashCallback(ctx);
     } catch (err) {
       logger.error({ err }, "baholash callback error");
+    }
+  });
+
+  bot.callbackQuery(/^tlv:/, async (ctx) => {
+    try {
+      await handleTolovlarCallback(ctx);
+    } catch (err) {
+      logger.error({ err }, "tolovlar callback error");
     }
   });
 
@@ -109,6 +122,7 @@ async function main(): Promise<void> {
       [
         ...publicCommands,
         { command: "baholash", description: "Suhbatlarni baholash (moderator)" },
+        { command: "tolovlar", description: "To'lovlarni tasdiqlash (moderator)" },
         { command: "admin", description: "Statistika (admin)" },
       ],
       { scope: { type: "chat", chat_id: Number(config.adminTgId) } },

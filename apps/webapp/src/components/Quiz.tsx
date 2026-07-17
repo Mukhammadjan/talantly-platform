@@ -19,19 +19,49 @@ interface QuizResult {
 interface QuizProps {
   questions: Question[];
   result: (answers: number[]) => QuizResult | Promise<QuizResult>;
+  /** Savol boshiga vaqt limiti (soniya). 0 = timer yo'q. */
+  secondsPerQuestion?: number;
 }
 
-export function Quiz({ questions, result }: QuizProps): JSX.Element | null {
+export function Quiz({
+  questions,
+  result,
+  secondsPerQuestion = 0,
+}: QuizProps): JSX.Element | null {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [done, setDone] = useState(false);
   const [res, setRes] = useState<QuizResult | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(secondsPerQuestion);
 
   useEffect(() => {
     initTelegram();
   }, []);
+
+  // Savol taymeri (B7): vaqt tugasa javobsiz (-1) keyingi savolga o'tadi.
+  useEffect(() => {
+    if (!secondsPerQuestion || done) return;
+    setTimeLeft(secondsPerQuestion);
+    const t = window.setInterval(() => {
+      setTimeLeft((s) => {
+        if (s <= 1) {
+          window.clearInterval(t);
+          setAnswers((prev) => {
+            const next = [...prev];
+            if (next[index] === undefined) next[index] = -1;
+            return next;
+          });
+          if (index + 1 < questions.length) setIndex((i) => i + 1);
+          else setDone(true);
+          return secondsPerQuestion;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => window.clearInterval(t);
+  }, [index, secondsPerQuestion, done, questions.length]);
 
   // Natija sync yoki async bo'lishi mumkin (server baholashi).
   useEffect(() => {
@@ -104,6 +134,13 @@ export function Quiz({ questions, result }: QuizProps): JSX.Element | null {
         <span className={styles.count}>
           {index + 1}/{questions.length}
         </span>
+        {secondsPerQuestion ? (
+          <span
+            className={`${styles.timer} ${timeLeft <= 10 ? styles.timerLow : ""}`}
+          >
+            {timeLeft}s
+          </span>
+        ) : null}
       </div>
 
       <h1 className={styles.q}>{q.question}</h1>

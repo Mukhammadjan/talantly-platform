@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
-import { ensureCompany } from "@/lib/server/companies";
+import { requireUser } from "@/lib/server/guard";
+import {
+  ensureCompany,
+  hasActiveSubscription,
+} from "@/lib/server/companies";
 import { getDb } from "@/lib/server/db";
 import { showDemo } from "@/lib/server/settings";
+
+// Obunasiz kompaniya: maksimal faol vakansiya (E19).
+const FREE_ACTIVE_LIMIT = 1;
 
 export const dynamic = "force-dynamic";
 
@@ -48,8 +54,8 @@ function toClient(v: VacancyRow): Record<string, unknown> {
 
 /** Faol vakansiyalar (demo toggle bilan). ?id= bilan bitta. */
 export async function GET(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
 
   const id = new URL(req.url).searchParams.get("id");
   const db = getDb();
@@ -71,8 +77,9 @@ export async function GET(req: Request): Promise<NextResponse> {
 
 /** Vakansiya yaratish — o'z kompaniyasi nomidan. */
 export async function POST(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
+  const session = g.session;
 
   let body: {
     title?: unknown;
@@ -116,6 +123,19 @@ export async function POST(req: Request): Promise<NextResponse> {
     typeof body.description === "string" ? body.description.slice(0, 1500) : null;
 
   const company = await ensureCompany(session);
+
+  // Vakansiya limiti (E19): obunasiz maks 1 faol vakansiya.
+  if (!(await hasActiveSubscription(company.id))) {
+    const { count } = await getDb()
+      .from("vacancies")
+      .select("id", { count: "exact", head: true })
+      .eq("company_id", company.id)
+      .eq("status", "faol");
+    if ((count ?? 0) >= FREE_ACTIVE_LIMIT) {
+      return NextResponse.json({ error: "vacancy_limit" }, { status: 403 });
+    }
+  }
+
   const { data: created, error } = await getDb()
     .from("vacancies")
     .insert({

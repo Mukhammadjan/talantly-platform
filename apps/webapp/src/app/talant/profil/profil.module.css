@@ -116,3 +116,64 @@
   box-shadow: var(--sh-raise);
   z-index: 5;
 }
+
+/* ---- Faol/yashirin tumbler ---- */
+.visCard {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+.visTexts { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.visTitle { font-size: var(--fs-body); font-weight: var(--fw-semibold); color: var(--t-ink-1); }
+.visText { font-size: var(--fs-caption); color: var(--t-ink-3); }
+
+.visToggle {
+  flex: 0 0 auto;
+  width: 46px; height: 28px;
+  border-radius: var(--r-full);
+  background: var(--t-line-strong);
+  padding: 3px;
+  transition: background var(--d-base) var(--e-out);
+}
+.visOn { background: var(--t-action); }
+.visKnob {
+  display: block; width: 22px; height: 22px;
+  border-radius: var(--r-full); background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition: transform var(--d-base) var(--e-out);
+}
+.visOn .visKnob { transform: translateX(18px); }
+
+/* ---- Shikoyat ---- */
+.complaintBtn {
+  display: flex; align-items: center; justify-content: center; gap: var(--s-2);
+  width: 100%; margin-top: var(--s-3); padding: var(--s-3);
+  color: var(--t-ink-3); font-size: var(--fs-caption); font-weight: var(--fw-medium);
+}
+
+.complaintArea {
+  width: 100%;
+  border-radius: var(--r-sm);
+  padding: var(--s-3) var(--s-4);
+  background: var(--t-fill);
+  color: var(--t-ink-1);
+  font-family: inherit;
+  font-size: var(--fs-body);
+  resize: none;
+  margin-bottom: var(--s-3);
+  border: none;
+  outline: none;
+}
+
+.complaintOk {
+  margin: 0;
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  text-align: center;
+}

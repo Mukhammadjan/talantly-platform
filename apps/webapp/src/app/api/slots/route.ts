@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
+import { requireUser } from "@/lib/server/guard";
 import { getDb } from "@/lib/server/db";
 
 export const dynamic = "force-dynamic";
 
 /** Bo'sh kelgusi suhbat slotlari. */
 export async function GET(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
 
   const { data, error } = await getDb()
     .from("interview_slots")

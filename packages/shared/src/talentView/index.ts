@@ -115,7 +115,8 @@ export async function queryVerifiedTalents(
   let q = db
     .from("talents")
     .select("*", { count: "exact" })
-    .eq("status", "tekshirilgan");
+    .eq("status", "tekshirilgan")
+    .eq("is_hidden", false);
   if (!showDemo) q = q.eq("is_demo", false);
   if (filters.direction) q = q.eq("direction", filters.direction);
   if (filters.level) q = q.eq("level", filters.level);

@@ -25,6 +25,7 @@ export async function decide(
     rating: number;
     notes: string | null;
     decision: InterviewDecision;
+    decision_reason?: string;
   },
 ): Promise<InterviewRow> {
   return interviewsRepo.decide(getSupabase(), id, values);
@@ -35,4 +36,36 @@ export async function findScheduledBetween(
   toIso: string,
 ): Promise<InterviewRow[]> {
   return interviewsRepo.findScheduledBetween(getSupabase(), fromIso, toIso);
+}
+
+/** No-show belgilash: decision='kelmadi' + decided_at (C10). */
+export async function markNoShow(id: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from("interviews")
+    .update({ decision: "kelmadi", decided_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw new Error(`markNoShow failed: ${error.message}`);
+}
+
+export async function freeSlot(slotId: string): Promise<void> {
+  const { error } = await getSupabase()
+    .from("interview_slots")
+    .update({ is_taken: false })
+    .eq("id", slotId);
+  if (error) throw new Error(`freeSlot failed: ${error.message}`);
+}
+
+export async function logInterviewEvent(
+  interviewId: string,
+  newStatus: string,
+  changedBy: string,
+): Promise<void> {
+  const { error } = await getSupabase().from("status_log").insert({
+    entity: "interviews",
+    entity_id: interviewId,
+    old_status: null,
+    new_status: newStatus,
+    changed_by: changedBy,
+  });
+  if (error) throw new Error(`logInterviewEvent failed: ${error.message}`);
 }

@@ -6,6 +6,7 @@ import { Avatar } from "@/components/Avatar";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
+import { Sheet } from "@/components/Sheet";
 import { Skeleton } from "@/components/Skeleton";
 import { Icon } from "@/lib/icons";
 import { api } from "@/lib/api";
@@ -38,12 +39,18 @@ function Row({
 export default function ProfilPage(): JSX.Element {
   const router = useRouter();
   const [snap, setSnap] = useState<TalentSnapshot | null>(null);
+  const [hidden, setHidden] = useState(false);
+  const [complaintOpen, setComplaintOpen] = useState(false);
+  const [complaintText, setComplaintText] = useState("");
+  const [complaintSent, setComplaintSent] = useState(false);
 
   useEffect(() => {
     initTelegram();
     let live = true;
     api.getTalent().then((s) => {
-      if (live) setSnap(s);
+      if (!live) return;
+      setSnap(s);
+      setHidden(Boolean(s.isHidden));
     });
     return () => {
       live = false;
@@ -147,6 +154,76 @@ export default function ProfilPage(): JSX.Element {
           Profilni tahrirlash
         </Button>
       </div>
+
+      {verified || snap.status === "band" ? (
+        <Card className={styles.visCard}>
+          <span className={styles.visTexts}>
+            <span className={styles.visTitle}>Profil ko&apos;rinishi</span>
+            <span className={styles.visText}>
+              {hidden
+                ? "Yashirin — kompaniyalar sizni ko'rmaydi"
+                : "Faol — kompaniyalarga ko'rinasiz"}
+            </span>
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={!hidden}
+            aria-label="Profil ko'rinishi"
+            className={`${styles.visToggle} ${hidden ? "" : styles.visOn}`}
+            onClick={() => {
+              const next = !hidden;
+              setHidden(next);
+              void api.saveTalentProfile({ isHidden: next });
+            }}
+          >
+            <span className={styles.visKnob} />
+          </button>
+        </Card>
+      ) : null}
+
+      <button
+        type="button"
+        className={styles.complaintBtn}
+        onClick={() => setComplaintOpen(true)}
+      >
+        <Icon name="info" size={16} />
+        Shikoyat yuborish
+      </button>
+
+      <Sheet
+        open={complaintOpen}
+        onClose={() => setComplaintOpen(false)}
+        title="Shikoyat yuborish"
+      >
+        {complaintSent ? (
+          <p className={styles.complaintOk}>
+            ✓ Shikoyatingiz qabul qilindi — administrator ko&apos;rib chiqadi.
+          </p>
+        ) : (
+          <>
+            <textarea
+              className={styles.complaintArea}
+              rows={4}
+              maxLength={500}
+              placeholder="Muammoni qisqacha yozing..."
+              value={complaintText}
+              onChange={(e) => setComplaintText(e.target.value)}
+            />
+            <Button
+              full
+              disabled={complaintText.trim().length < 3}
+              onClick={() => {
+                void api
+                  .sendComplaint(complaintText.trim().slice(0, 140), complaintText.trim())
+                  .then(() => setComplaintSent(true));
+              }}
+            >
+              Yuborish
+            </Button>
+          </>
+        )}
+      </Sheet>
     </main>
   );
 }

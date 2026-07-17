@@ -23,7 +23,8 @@ export type TalentStatus =
   | "test_otgan"
   | "suhbat_belgilangan"
   | "tekshirilgan"
-  | "rad_etilgan";
+  | "rad_etilgan"
+  | "band";
 
 export type RequestStatus = "yuborildi" | "korildi" | "boglanildi" | "yopildi";
 
@@ -50,6 +51,10 @@ export interface TalentSnapshot {
   interviewAt: string | null;
   cvReady: boolean;
   profile: TalentProfile;
+  /** Rad sababi (A4): test_past | suhbat_yiqildi | soxta_malumot */
+  radReason?: string | null;
+  /** Profil feed'da yashirinmi (band bo'limi tumbleri) */
+  isHidden?: boolean;
 }
 
 export interface Application {

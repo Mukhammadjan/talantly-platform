@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
+import { requireUser } from "@/lib/server/guard";
 import { getDb } from "@/lib/server/db";
 import { ensureTalent } from "@/lib/server/talents";
 
@@ -16,8 +16,9 @@ const ARCHETYPES = [
 
 /** POST { answers: number[] } → talents.personality + archetype. */
 export async function POST(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
+  const session = g.session;
 
   let body: { answers?: unknown };
   try {

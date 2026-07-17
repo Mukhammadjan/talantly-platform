@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
-import { readSession } from "@/lib/server/auth";
 import { getDb } from "@/lib/server/db";
-import {
-  buildSnapshot,
-  ensureTalent,
-  setTalentStatus,
-} from "@/lib/server/talents";
+import { requireUser } from "@/lib/server/guard";
+import { applyEvent, buildSnapshot, ensureTalent } from "@/lib/server/talents";
 
 export const dynamic = "force-dynamic";
 
@@ -14,10 +10,10 @@ const LEVELS = ["intern", "mutaxassis"];
 const FORMATS = ["ofis", "masofaviy", "aralash"];
 
 export async function GET(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
 
-  const talent = await ensureTalent(session);
+  const talent = await ensureTalent(g.session);
   return NextResponse.json(await buildSnapshot(talent));
 }
 
@@ -34,12 +30,15 @@ interface ProfileBody {
   salaryFrom?: number | null;
   about?: string | null;
   portfolioUrl?: string | null;
+  isHidden?: boolean;
+  confirmSealReset?: boolean;
 }
 
 /** Talant FAQAT o'z qatorini yozadi (ownership = sessiyadagi userId). */
 export async function PATCH(req: Request): Promise<NextResponse> {
-  const session = await readSession(req);
-  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const g = await requireUser(req);
+  if (!g.ok) return g.res;
+  const session = g.session;
 
   let body: ProfileBody;
   try {
@@ -96,23 +95,42 @@ export async function PATCH(req: Request): Promise<NextResponse> {
   if (typeof body.portfolioUrl === "string") {
     patch.portfolio_url = body.portfolioUrl.slice(0, 300);
   }
+  // Profil faol/yashirin tumbler (band bo'limi) — muhrga tegmaydi.
+  if (typeof body.isHidden === "boolean") patch.is_hidden = body.isHidden;
 
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ error: "empty_patch" }, { status: 400 });
   }
 
   const talent = await ensureTalent(session);
+
+  // Muhr himoyasi (A5): tekshirilgan/band'da yo'nalish yoki daraja
+  // o'zgarsa — muhr qayta tekshiruvga qaytadi (yonalish_ozgardi hodisasi).
+  const sealedNow = talent.status === "tekshirilgan" || talent.status === "band";
+  const directionChanged =
+    typeof patch.direction === "string" && patch.direction !== talent.direction;
+  const levelChanged =
+    typeof patch.level === "string" && patch.level !== talent.level;
+  const sealReset = sealedNow && (directionChanged || levelChanged);
+  if (sealReset && body.confirmSealReset !== true) {
+    // UI oldin ogohlantirish sheet ko'rsatadi — tasdiqsiz saqlanmaydi.
+    return NextResponse.json({ error: "seal_reset_confirm" }, { status: 409 });
+  }
+
   const db = getDb();
   const { error } = await db.from("talents").update(patch).eq("id", talent.id);
   if (error) return NextResponse.json({ error: "db_error" }, { status: 500 });
 
-  // Birinchi to'liq saqlashda: yangi → malumot_toldirilgan (+status_log).
+  // Holat mashinasi orqali o'tishlar (A1):
   const complete =
     (patch.full_name ?? talent.full_name) &&
     (patch.direction ?? talent.direction) &&
     (patch.level ?? talent.level);
   if (talent.status === "yangi" && complete) {
-    await setTalentStatus(talent, "malumot_toldirilgan", `tg:${session.tgId}`);
+    await applyEvent(talent, "profil_toldirildi", `tg:${session.tgId}`);
+  }
+  if (sealReset) {
+    await applyEvent(talent, "yonalish_ozgardi", `tg:${session.tgId}`);
   }
 
   const { data: fresh } = await db
@@ -120,7 +138,6 @@ export async function PATCH(req: Request): Promise<NextResponse> {
     .select("*")
     .eq("id", talent.id)
     .single();
-  return NextResponse.json(
-    await buildSnapshot((fresh ?? talent) as typeof talent),
-  );
+  const snap = await buildSnapshot((fresh ?? talent) as typeof talent);
+  return NextResponse.json({ ...snap, sealReset });
 }

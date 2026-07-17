@@ -183,3 +183,48 @@
   line-height: var(--lh-body);
   color: var(--t-ink-2);
 }
+
+/* ---- Vakansiyalar kartasi (nav o'rniga) ---- */
+.vacCard {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+  cursor: pointer;
+}
+
+.vacIcon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.vacTexts {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.vacTitle {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.vacText {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.vacChev {
+  flex: 0 0 auto;
+  color: var(--t-ink-3);
+}
