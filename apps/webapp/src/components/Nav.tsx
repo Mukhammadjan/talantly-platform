@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Icon, type IconName } from "@/lib/icons";
 import { haptic } from "@/lib/telegram";
 import styles from "./Nav.module.css";
@@ -12,9 +13,44 @@ export interface NavItem {
   icon: IconName;
 }
 
-/** Qorong'i suzuvchi pill — faqat iconlar; faol icon to'ldirilgan orange doira. */
+function isTextField(el: unknown): boolean {
+  return (
+    el instanceof HTMLElement &&
+    (el.tagName === "INPUT" ||
+      el.tagName === "TEXTAREA" ||
+      el.isContentEditable)
+  );
+}
+
+/** Qorong'i suzuvchi pill — faqat iconlar; faol icon to'ldirilgan orange doira.
+ *  Klaviatura ochiq payt (matn maydoni fokusda) pastga yashirinadi. */
 export function Nav({ items }: { items: NavItem[] }): JSX.Element {
   const pathname = usePathname();
+  const [kbOpen, setKbOpen] = useState(false);
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    const onFocusIn = (e: FocusEvent): void => {
+      if (isTextField(e.target)) {
+        clearTimeout(t);
+        setKbOpen(true);
+      }
+    };
+    const onFocusOut = (): void => {
+      // Fokus maydonlar orasida ko'chsa lip-lip qilmasin.
+      clearTimeout(t);
+      t = setTimeout(() => {
+        if (!isTextField(document.activeElement)) setKbOpen(false);
+      }, 80);
+    };
+    document.addEventListener("focusin", onFocusIn);
+    document.addEventListener("focusout", onFocusOut);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener("focusin", onFocusIn);
+      document.removeEventListener("focusout", onFocusOut);
+    };
+  }, []);
   const activeHref = items
     .filter(
       (it) => pathname === it.href || pathname.startsWith(`${it.href}/`),
@@ -25,7 +61,10 @@ export function Nav({ items }: { items: NavItem[] }): JSX.Element {
     );
 
   return (
-    <nav className={styles.nav} aria-label="Asosiy">
+    <nav
+      className={`${styles.nav} ${kbOpen ? styles.navHidden : ""}`}
+      aria-label="Asosiy"
+    >
       {items.map((item) => {
         const active = item.href === activeHref;
         return (

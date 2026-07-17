@@ -11,6 +11,16 @@
   border-radius: var(--r-full);
   box-shadow: var(--sh-nav);
   z-index: 20;
+  transition: transform var(--d-base) var(--e-out),
+    opacity var(--d-base) var(--e-out);
+}
+
+/* Klaviatura ochiq — pill pastga chiqib yashirinadi. */
+.navHidden {
+  transform: translateX(-50%)
+    translateY(calc(100% + 24px + var(--tg-bottom)));
+  opacity: 0;
+  pointer-events: none;
 }
 
 .item {

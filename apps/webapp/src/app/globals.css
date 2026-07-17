@@ -107,6 +107,14 @@ svg {
   box-shadow: var(--sh-focus);
 }
 
+/* Matn maydonida karetka o'zi fokusni bildiradi — konteyner ichidagi
+   yalang'och inputda to'rtburchak halqa chizilmasin (konteyner
+   :focus-within bilan belgilanadi). */
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: none;
+}
+
 @media (hover: hover) {
   /* hover-holatlar faqat shu yerda — komponentlar ichida qo'llanadi */
 }

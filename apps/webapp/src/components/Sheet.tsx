@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { ReactNode } from "react";
 import styles from "./Sheet.module.css";
 
@@ -29,7 +30,9 @@ export function Sheet({
 
   if (!open) return null;
 
-  return (
+  // Portal: .screen (overflow scroll) iOS'da stacking context yaratadi va
+  // fixed backdrop nav ostida qolib ketadi — body'ga chiqaramiz.
+  return createPortal(
     <div className={styles.backdrop} onClick={onClose}>
       <div
         className={styles.sheet}
@@ -42,6 +45,7 @@ export function Sheet({
         {title ? <h2 className={styles.title}>{title}</h2> : null}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
