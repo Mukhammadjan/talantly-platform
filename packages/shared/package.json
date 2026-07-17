@@ -10,7 +10,8 @@
     "./types": "./src/types.ts",
     "./constants": "./src/constants.ts",
     "./db": "./src/db/index.ts",
-    "./auth": "./src/auth/index.ts"
+    "./auth": "./src/auth/index.ts",
+    "./talent-view": "./src/talentView/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
