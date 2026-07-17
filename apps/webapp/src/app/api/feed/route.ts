@@ -17,6 +17,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     .from("talents")
     .select("*")
     .eq("status", "tekshirilgan")
+    .eq("is_hidden", false)
     .order("created_at", { ascending: false })
     .limit(50);
   if (!(await showDemo())) {

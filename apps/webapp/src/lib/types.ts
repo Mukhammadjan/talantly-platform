@@ -79,6 +79,8 @@ export interface Candidate {
   salaryFrom: number | null;
   verified: boolean;
   photoUrl: string | null;
+  /** Xarita klasteri uchun; null yoki "Boshqa" — xaritaga tushmaydi. */
+  city?: string | null;
   age?: number;
   experienceYears?: number;
   isDemo?: boolean;

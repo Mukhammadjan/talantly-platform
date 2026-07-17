@@ -51,6 +51,7 @@ export function toCandidate(
     salaryFrom: t.salary_from,
     verified: t.status === "tekshirilgan",
     photoUrl: t.photo_url,
+    city: t.city ?? null,
     age: t.birth_year ? year - t.birth_year : undefined,
     experienceYears: t.experience_years ?? undefined,
     isDemo: t.is_demo,

@@ -329,6 +329,11 @@ export const api = {
     const real = await getJson<{ candidates: Candidate[] }>("/api/feed");
     return real ? real.candidates : delay(CANDIDATES);
   },
+  /** Xarita — FAQAT real ma'lumot, mock fallback yo'q (null = yuklanmadi). */
+  async getMapCandidates(): Promise<Candidate[] | null> {
+    const real = await getJson<{ candidates: Candidate[] }>("/api/feed");
+    return real ? real.candidates : null;
+  },
   async getCandidate(id: string): Promise<Candidate | null> {
     const real = await getJson<{ candidate: Candidate }>(
       `/api/talent/${encodeURIComponent(id)}`,
