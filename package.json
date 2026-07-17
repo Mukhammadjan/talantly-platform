@@ -16,7 +16,8 @@
     "seed:demo": "tsx scripts/seed-demo.ts",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p scripts",
     "lint": "eslint . --max-warnings 0",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "dev:hr": "npm run dev --workspace apps/hr"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",

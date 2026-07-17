@@ -29,21 +29,20 @@ export async function ensureTalent(
   session: SessionPayload,
 ): Promise<TalentRowV2> {
   const db = getDb();
-  const { data: found, error: findErr } = await db
+  // Poyga-xavfsiz: ON CONFLICT DO NOTHING, keyin o'qish.
+  const { error: upErr } = await db.from("talents").upsert(
+    { user_id: session.userId, is_demo: false },
+    { onConflict: "user_id", ignoreDuplicates: true },
+  );
+  if (upErr) throw new Error(`talents upsert failed: ${upErr.message}`);
+
+  const { data, error } = await db
     .from("talents")
     .select("*")
     .eq("user_id", session.userId)
-    .maybeSingle();
-  if (findErr) throw new Error(`talents find failed: ${findErr.message}`);
-  if (found) return found as TalentRowV2;
-
-  const { data: created, error: insErr } = await db
-    .from("talents")
-    .insert({ user_id: session.userId, is_demo: false })
-    .select()
     .single();
-  if (insErr) throw new Error(`talents insert failed: ${insErr.message}`);
-  return created as TalentRowV2;
+  if (error) throw new Error(`talents read failed: ${error.message}`);
+  return data as TalentRowV2;
 }
 
 /** Status o'zgarishi — har doim status_log bilan. */

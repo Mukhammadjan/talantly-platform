@@ -13,19 +13,17 @@ export async function ensureCompany(
   session: SessionPayload,
 ): Promise<CompanyRowV2> {
   const db = getDb();
-  const { data: found, error: findErr } = await db
+  const { error: upErr } = await db.from("companies").upsert(
+    { user_id: session.userId, name: "Kompaniya", is_demo: false },
+    { onConflict: "user_id", ignoreDuplicates: true },
+  );
+  if (upErr) throw new Error(`companies upsert failed: ${upErr.message}`);
+
+  const { data, error } = await db
     .from("companies")
     .select("id, user_id, name, is_demo")
     .eq("user_id", session.userId)
-    .maybeSingle();
-  if (findErr) throw new Error(`companies find failed: ${findErr.message}`);
-  if (found) return found as CompanyRowV2;
-
-  const { data: created, error: insErr } = await db
-    .from("companies")
-    .insert({ user_id: session.userId, name: "Kompaniya", is_demo: false })
-    .select("id, user_id, name, is_demo")
     .single();
-  if (insErr) throw new Error(`companies insert failed: ${insErr.message}`);
-  return created as CompanyRowV2;
+  if (error) throw new Error(`companies read failed: ${error.message}`);
+  return data as CompanyRowV2;
 }
