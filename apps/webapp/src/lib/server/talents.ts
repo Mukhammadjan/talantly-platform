@@ -96,7 +96,8 @@ export async function buildSnapshot(
 ): Promise<Record<string, unknown>> {
   const db = getDb();
 
-  const [{ data: test }, { data: interview }, { data: cv }] = await Promise.all([
+  const [{ data: test }, { data: interview }, { data: cv }, payReq, cvPrice] =
+    await Promise.all([
     db
       .from("skill_tests")
       .select("score")
@@ -117,6 +118,8 @@ export async function buildSnapshot(
       .eq("talent_id", talent.id)
       .limit(1)
       .maybeSingle(),
+    getSetting("cv_payment_required"),
+    getSetting("cv_price"),
   ]);
 
   // Rad sababi (A4): suhbatdan — decision_reason; 3 yiqilgan test — test_past.
@@ -138,6 +141,9 @@ export async function buildSnapshot(
     status: talent.status,
     isHidden: (talent as { is_hidden?: boolean }).is_hidden ?? false,
     radReason,
+    // To'lov qadami hub'da to'g'ri ko'rsatilishi uchun — narx settings'dan.
+    cvPaymentRequired: (payReq ?? "true").toLowerCase() === "true",
+    cvPrice: Number(cvPrice) > 0 ? Number(cvPrice) : 35000,
     score: (test as { score: number } | null)?.score ?? null,
     archetype: talent.archetype,
     interviewAt:

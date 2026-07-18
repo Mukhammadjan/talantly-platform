@@ -23,6 +23,7 @@ export interface TelegramWebApp {
   setHeaderColor: (color: string) => void;
   setBackgroundColor: (color: string) => void;
   openLink?: (url: string) => void;
+  openTelegramLink?: (url: string) => void;
   onEvent?: (event: string, handler: () => void) => void;
   offEvent?: (event: string, handler: () => void) => void;
   viewportHeight?: number;
@@ -142,4 +143,11 @@ export function openLink(url: string): void {
   const tg = getWebApp();
   if (tg?.openLink) tg.openLink(url);
   else if (typeof window !== "undefined") window.open(url, "_blank", "noopener");
+}
+
+/** t.me havolasi — Telegram ichida chat sifatida ochiladi (brauzer emas). */
+export function openTelegramLink(url: string): void {
+  const tg = getWebApp();
+  if (tg?.openTelegramLink) tg.openTelegramLink(url);
+  else openLink(url);
 }

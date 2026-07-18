@@ -55,6 +55,10 @@ export interface TalentSnapshot {
   radReason?: string | null;
   /** Profil feed'da yashirinmi (band bo'limi tumbleri) */
   isHidden?: boolean;
+  /** To'lov bosqichi kerakmi (settings.cv_payment_required) */
+  cvPaymentRequired?: boolean;
+  /** AI CV narxi so'mda (settings.cv_price) */
+  cvPrice?: number;
 }
 
 export interface Application {

@@ -41,7 +41,7 @@ export default function ShaxsiyatPage(): JSX.Element | null {
           "Yaratuvchi";
         return {
           title: arch,
-          text: "Sizning ish arxetipingiz aniqlandi. Endi ko'nikma testiga o'ting.",
+          text: "Sizning ish arxetipingiz aniqlandi. Keyingi qadam asosiy sahifada sizni kutmoqda.",
         };
       }}
     />

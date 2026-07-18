@@ -7,7 +7,7 @@ import { Card } from "@/components/Card";
 import { Skeleton } from "@/components/Skeleton";
 import { Icon } from "@/lib/icons";
 import { api } from "@/lib/api";
-import { initTelegram } from "@/lib/telegram";
+import { initTelegram, openTelegramLink } from "@/lib/telegram";
 import type { TalentSnapshot, TalentStatus } from "@/lib/types";
 import styles from "./hub.module.css";
 
@@ -25,6 +25,8 @@ const NEXT_STEP: Record<TalentStatus, NextStep | null> = {
     cta: "Boshlash",
     href: "/profil-forma",
   },
+  // malumot_toldirilgan — statik emas: archetype holatiga qarab tarmoqlanadi
+  // (nextStepFor). Bu yozuv faqat tiplar to'liqligi uchun.
   malumot_toldirilgan: {
     title: "Xarakter testi 🧭",
     text: "15 ta qisqa savol — to'g'ri javob yo'q. Ish uslubingizni ochadi.",
@@ -90,6 +92,31 @@ const ROADMAP_RANK: Record<TalentStatus, number> = {
   band: 5,
 };
 
+const BOT_URL = `https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME ?? "Talantly_bot"}`;
+
+// malumot_toldirilgan uch bosqichni qamraydi: shaxsiyat testi →
+// to'lov (payment ON) yoki to'g'ri ko'nikma testi (payment OFF).
+// Status faqat chek_yuborildi/test_otdi eventlarida o'zgaradi.
+function nextStepFor(snap: TalentSnapshot): NextStep | null {
+  if (snap.status !== "malumot_toldirilgan") return NEXT_STEP[snap.status];
+  if (!snap.archetype) return NEXT_STEP.malumot_toldirilgan;
+  if (snap.cvPaymentRequired === false) {
+    return {
+      title: "Ko'nikma testi",
+      text: "Yo'nalishingiz bo'yicha 10 savollik test.",
+      cta: "Testni boshlash",
+      href: "/konikma",
+    };
+  }
+  const price = (snap.cvPrice ?? 35000).toLocaleString("ru-RU");
+  return {
+    title: "AI CV uchun to'lov 💳",
+    text: `Arxetipingiz aniqlandi! Endi AI CV uchun ${price} so'm to'lov qiling — botdagi /tolov buyrug'i karta raqamini ko'rsatadi, chekni o'sha chatga yuborasiz.`,
+    cta: "Botda to'lov qilish",
+    href: BOT_URL,
+  };
+}
+
 export default function TalantHubPage(): JSX.Element {
   const router = useRouter();
   const [snap, setSnap] = useState<TalentSnapshot | null>(null);
@@ -115,7 +142,7 @@ export default function TalantHubPage(): JSX.Element {
     );
   }
 
-  const next = NEXT_STEP[snap.status];
+  const next = nextStepFor(snap);
   const rejected = snap.status === "rad_etilgan";
   const doneIndex = ROADMAP_RANK[snap.status];
 
@@ -166,7 +193,14 @@ export default function TalantHubPage(): JSX.Element {
           <p className={styles.kicker}>Keyingi qadam</p>
           <h2 className={styles.stitle}>{next.title}</h2>
           <p className={styles.stext}>{next.text}</p>
-          <Button full onClick={() => router.push(next.href)}>
+          <Button
+            full
+            onClick={() =>
+              next.href.startsWith("https://t.me/")
+                ? openTelegramLink(next.href)
+                : router.push(next.href)
+            }
+          >
             {next.cta}
           </Button>
         </Card>
