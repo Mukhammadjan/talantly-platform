@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AdminHeader } from "@/components/AdminHeader";
 import { PersonCell, TableCard } from "@/components/admin/ui";
 import { CompanyVerifyToggle } from "@/components/RowActions";
@@ -74,10 +75,12 @@ export default async function AdminKompaniyalarPage(): Promise<JSX.Element> {
                     {rows.map((c, i) => (
                       <tr key={c.id} className={i % 2 === 1 ? "bg-bg/60" : ""}>
                         <td className="px-4 py-3.5">
-                          <PersonCell
-                            name={c.name ?? "—"}
-                            sub={c.is_demo ? "Demo" : null}
-                          />
+                          <Link href={`/admin/kompaniyalar/${c.id}`}>
+                            <PersonCell
+                              name={c.name ?? "—"}
+                              sub={c.is_demo ? "Demo" : null}
+                            />
+                          </Link>
                         </td>
                         <td className="px-4 py-3.5">
                           <span className="block text-[14px] text-ink-1">
