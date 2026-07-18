@@ -35,9 +35,9 @@ const NEXT_STEP: Record<TalentStatus, NextStep | null> = {
   },
   tolov_kutilmoqda: {
     title: "To'lov tekshirilmoqda",
-    text: "Chekingiz qabul qilindi. 24 soat ichida tasdiqlaymiz.",
+    text: "Chekingiz qabul qilindi — moderator tasdiqlashi bilan avtomatik davom etasiz.",
     cta: "Holatni ko'rish",
-    href: "/talant",
+    href: "/tolov",
   },
   tolov_tasdiqlangan: {
     title: "AI CV tayyorlanmoqda ✨",
@@ -92,8 +92,6 @@ const ROADMAP_RANK: Record<TalentStatus, number> = {
   band: 5,
 };
 
-const BOT_URL = `https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME ?? "Talantly_bot"}`;
-
 // malumot_toldirilgan uch bosqichni qamraydi: shaxsiyat testi →
 // to'lov (payment ON) yoki to'g'ri ko'nikma testi (payment OFF).
 // Status faqat chek_yuborildi/test_otdi eventlarida o'zgaradi.
@@ -111,11 +109,17 @@ function nextStepFor(snap: TalentSnapshot): NextStep | null {
   const price = (snap.cvPrice ?? 35000).toLocaleString("ru-RU");
   return {
     title: "AI CV uchun to'lov 💳",
-    text: `Arxetipingiz aniqlandi! Endi AI CV uchun ${price} so'm to'lov qiling — botdagi /tolov buyrug'i karta raqamini ko'rsatadi, chekni o'sha chatga yuborasiz.`,
-    cta: "Botda to'lov qilish",
-    href: BOT_URL,
+    text: `Arxetipingiz aniqlandi! Endi AI CV uchun ${price} so'm to'lov qilasiz — karta raqami va chek yuborish ilovaning o'zida.`,
+    cta: "To'lov qilish",
+    href: "/tolov",
   };
 }
+
+// Moderator/AI tasdig'ini kutayotgan statuslar — hub o'zi yangilanib turadi.
+const POLL_STATUSES = new Set<TalentStatus>([
+  "tolov_kutilmoqda",
+  "tolov_tasdiqlangan",
+]);
 
 export default function TalantHubPage(): JSX.Element {
   const router = useRouter();
@@ -131,6 +135,16 @@ export default function TalantHubPage(): JSX.Element {
       live = false;
     };
   }, []);
+
+  // To'lov tekshiruvi paytida avto-yangilanish: moderator tasdiqlashi
+  // bilan "Keyingi qadam" o'z-o'zidan almashadi.
+  useEffect(() => {
+    if (!snap || !POLL_STATUSES.has(snap.status)) return;
+    const t = window.setInterval(() => {
+      void api.getTalent().then(setSnap);
+    }, 20_000);
+    return () => window.clearInterval(t);
+  }, [snap]);
 
   if (!snap) {
     return (

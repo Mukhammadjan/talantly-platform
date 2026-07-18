@@ -95,6 +95,36 @@ export const api = {
     return { questions: await delay(SKILL_QUESTIONS), key: null, secondsPerQuestion: 60 };
   },
 
+  /** To'lov sahifasi — karta/narx/holat. null = backend yo'q. */
+  async getPaymentInfo(): Promise<{
+    card: string;
+    owner: string;
+    price: number;
+    status: string;
+    payment: { status: string; createdAt: string } | null;
+  } | null> {
+    return getJson("/api/payment");
+  },
+
+  /** Chek screenshot yuborish. ok=false variantlar: already_pending va h.k. */
+  async sendPaymentReceipt(
+    imageDataUrl: string,
+  ): Promise<{ ok: boolean; error?: string }> {
+    try {
+      if (!(await hasSession())) return { ok: false, error: "no_session" };
+      const res = await authedFetch("/api/payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: imageDataUrl }),
+      });
+      const data = (await res.json()) as { ok?: boolean; error?: string };
+      if (!res.ok) return { ok: false, error: data.error ?? "failed" };
+      return { ok: true };
+    } catch {
+      return { ok: false, error: "network" };
+    }
+  },
+
   /** null = real backend yo'q (mock rejim). */
   async savePersonality(
     answers: number[],

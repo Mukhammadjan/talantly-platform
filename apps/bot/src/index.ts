@@ -16,6 +16,7 @@ import { handleStart } from "./handlers/start.js";
 import { handleSuhbat, handleSuhbatCallback } from "./handlers/suhbat.js";
 import { handlePaymentPhoto, handleTolov } from "./handlers/tolov.js";
 import {
+  handlePayCallback,
   handleTolovlar,
   handleTolovlarCallback,
 } from "./handlers/tolovlar.js";
@@ -69,6 +70,15 @@ async function main(): Promise<void> {
       await handleTolovlarCallback(ctx);
     } catch (err) {
       logger.error({ err }, "tolovlar callback error");
+    }
+  });
+
+  // Mini App'dan kelgan AI CV to'lovlari (payments) tasdiqlash oqimi.
+  bot.callbackQuery(/^pay:/, async (ctx) => {
+    try {
+      await handlePayCallback(ctx);
+    } catch (err) {
+      logger.error({ err }, "payment callback error");
     }
   });
 

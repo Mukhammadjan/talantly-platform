@@ -105,6 +105,14 @@ async function handleRow(bot: Bot, row: LogRow): Promise<void> {
     if (!text) return;
     const tgId = await tgIdForTalent(row.entity_id);
     if (tgId) await sendSafe(bot, tgId, text);
+    // Yangi chek keldi — moderator /tolovlar bilan tekshiradi.
+    if (row.new_status === "tolov_kutilmoqda" && config.adminTgId) {
+      await sendSafe(
+        bot,
+        Number(config.adminTgId),
+        "💳 Yangi AI CV to'lov cheki keldi — /tolovlar bilan tekshiring.",
+      );
+    }
     return;
   }
 
