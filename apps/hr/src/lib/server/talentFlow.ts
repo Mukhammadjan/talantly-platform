@@ -31,6 +31,7 @@ export async function applyEvent(
   talent: TalentStatusRow,
   event: statusMachine.TalantEvent,
   changedBy: string,
+  extra: Record<string, unknown> = {},
 ): Promise<string | null> {
   const cvPaymentRequired =
     ((await getSetting("cv_payment_required")) ?? "true").toLowerCase() ===
@@ -46,7 +47,7 @@ export async function applyEvent(
   const db = getDb();
   const { error } = await db
     .from("talents")
-    .update({ status: r.next })
+    .update({ status: r.next, ...extra })
     .eq("id", talent.id);
   if (error) throw new Error(`talent status update failed: ${error.message}`);
   const { error: logErr } = await db.from("status_log").insert({
