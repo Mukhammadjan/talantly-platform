@@ -144,6 +144,28 @@ async function handleRow(bot: Bot, row: LogRow): Promise<void> {
     return;
   }
 
+  // AI CV to'lov cheki rad etildi — talant qayta yuborishi mumkin.
+  // (Tasdiqlanganda talants entity'sining tolov_tasdiqlangan push'i ketadi.)
+  if (row.entity === "payments" && row.new_status === "rad") {
+    const db = getSupabase();
+    const { data } = await db
+      .from("payments")
+      .select("talent_id")
+      .eq("id", row.entity_id)
+      .maybeSingle();
+    const talentId = (data as { talent_id: string | null } | null)?.talent_id;
+    if (!talentId) return;
+    const tgId = await tgIdForTalent(talentId);
+    if (tgId) {
+      await sendSafe(
+        bot,
+        tgId,
+        "❌ To'lov chekingiz tasdiqlanmadi. To'lovni tekshirib, ilovada chekni qayta yuboring.",
+      );
+    }
+    return;
+  }
+
   // Kontakt to'lovi holatlari (D16)
   if (row.entity === "contact_unlocks") {
     const db = getSupabase();

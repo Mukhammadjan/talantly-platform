@@ -69,7 +69,13 @@ const NAV: NavItem[] = [
   },
 ];
 
-export function Sidebar({ companyName }: { companyName: string }): JSX.Element {
+export function Sidebar({
+  companyName,
+  showAdmin = false,
+}: {
+  companyName: string;
+  showAdmin?: boolean;
+}): JSX.Element {
   const pathname = usePathname();
   const activeHref =
     NAV.map((n) => n.href)
@@ -102,6 +108,20 @@ export function Sidebar({ companyName }: { companyName: string }): JSX.Element {
         })}
       </nav>
 
+      {showAdmin ? (
+        <div className="px-3 py-2 border-t border-white/10">
+          <Link
+            href="/admin"
+            className="flex items-center gap-3 h-11 px-3 rounded-md text-[15px] font-medium text-ink-3 hover:bg-ink-nav hover:text-white"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" {...stroke}>
+              <path d="M12 3.5 4.5 6.8v4.4c0 4.6 3.2 7.9 7.5 9.3 4.3-1.4 7.5-4.7 7.5-9.3V6.8L12 3.5z" />
+              <path d="m9.3 11.8 2 2 3.4-3.6" />
+            </svg>
+            Admin panel
+          </Link>
+        </div>
+      ) : null}
       <div className="px-5 py-4 border-t border-white/10">
         <p className="text-[13px] text-ink-3 truncate">{companyName}</p>
       </div>

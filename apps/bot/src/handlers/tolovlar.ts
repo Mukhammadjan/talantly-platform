@@ -236,22 +236,12 @@ export async function handlePayCallback(
       changed_by: `mod:${from.id}`,
     });
     // malumot_toldirilgan'ga qaytadi — talant chekni qayta yuborishi mumkin.
+    // Talant xabari pushWorker'dan boradi (payments rad) — dubl bo'lmasin.
     await talentsRepo.applyEvent(
       { id: talent.id, status: talent.status },
       "tolov_rad",
       `mod:${from.id}`,
     );
-    const user = talent.user_id ? await usersRepo.findById(talent.user_id) : null;
-    if (user?.tg_id) {
-      try {
-        await ctx.api.sendMessage(
-          user.tg_id,
-          "❌ To'lov chekingiz tasdiqlanmadi. Iltimos, to'lovni tekshirib, ilovada chekni qayta yuboring.",
-        );
-      } catch (err) {
-        logger.error({ err }, "payment reject notify failed");
-      }
-    }
     bankChecked.delete(`pay:${id}`);
     await ctx.editMessageText("❌ To'lov rad etildi — talantga xabar yuborildi.");
   }
