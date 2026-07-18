@@ -36,7 +36,10 @@ export type IconName =
   | "copy"
   | "settings"
   | "globe"
-  | "logout";
+  | "logout"
+  | "list"
+  | "minus"
+  | "locate";
 
 const PATHS: Record<IconName, ReactNode> = {
   back: <path d="M14.5 5.5 8 12l6.5 6.5" />,
@@ -177,6 +180,20 @@ const PATHS: Record<IconName, ReactNode> = {
     </>
   ),
   logout: <path d="M14 8.5V6a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 5 6v12a1.5 1.5 0 0 0 1.5 1.5h6A1.5 1.5 0 0 0 14 18v-2.5M10 12h10m0 0-3-3m3 3-3 3" />,
+  list: (
+    <>
+      <path d="M9 6h10.5M9 12h10.5M9 18h10.5" />
+      <path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01" />
+    </>
+  ),
+  minus: <path d="M5.5 12h13" />,
+  locate: (
+    <>
+      <circle cx="12" cy="12" r="6" />
+      <path d="M12 2.75V6m0 12v3.25M2.75 12H6m12 0h3.25" />
+      <circle cx="12" cy="12" r="1.1" />
+    </>
+  ),
 };
 
 export function Icon({
