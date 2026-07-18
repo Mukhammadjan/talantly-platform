@@ -60,44 +60,76 @@ export function AdminSidebar(): JSX.Element {
       .sort((a, b) => b.length - a.length)[0] ?? "/admin";
 
   return (
-    <aside className="w-[240px] shrink-0 bg-ink-1 text-white flex flex-col h-screen sticky top-0">
-      <div className="flex items-center gap-2.5 px-5 h-16">
+    <aside className="w-[264px] shrink-0 bg-ink-1 text-white flex flex-col h-screen sticky top-0">
+      <div className="flex items-center gap-2.5 px-5 h-[68px]">
         <img src="/brand/wordmark-light.svg" alt="Talantly" className="h-5 w-auto" />
-        <span className="text-[11px] font-bold uppercase tracking-wider text-action bg-white/10 rounded px-1.5 py-0.5">
+        <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-action bg-white/10 rounded-md px-2 py-1">
           Admin
         </span>
       </div>
 
-      <nav className="flex-1 flex flex-col gap-1 px-3 py-2">
+      {/* Platforma kartasi — referansdagi org-selector pozitsiyasida */}
+      <div className="mx-4 mb-2 rounded-xl bg-white/5 border border-white/10 px-4 py-3.5 flex items-center gap-3">
+        <span className="w-9 h-9 rounded-lg bg-white/10 grid place-items-center shrink-0">
+          <img src="/brand/mark.svg" alt="" className="h-5 w-5" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[14px] font-bold leading-tight">
+            Talantly platforma
+          </span>
+          <span className="block text-[12px] text-ink-3">Boshqaruv markazi</span>
+        </span>
+      </div>
+
+      <nav className="flex-1 flex flex-col gap-1 px-3 py-3">
         {NAV.map((item) => {
           const active = item.href === activeHref;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 h-11 px-3 rounded-md text-[15px] font-medium transition-colors ${
+              className={`relative flex items-center gap-3 h-12 px-3.5 rounded-lg text-[15px] font-medium transition-colors ${
                 active
-                  ? "bg-action text-white"
-                  : "text-ink-3 hover:bg-ink-nav hover:text-white"
+                  ? "bg-white/10 text-white"
+                  : "text-ink-3 hover:bg-white/5 hover:text-white"
               }`}
             >
-              <span className="shrink-0">{item.icon}</span>
+              {active ? (
+                <span className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-full bg-action" />
+              ) : null}
+              <span className={`shrink-0 ${active ? "text-action" : ""}`}>
+                {item.icon}
+              </span>
               {item.label}
             </Link>
           );
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-white/10">
+      <div className="px-3 py-2">
         <Link
           href="/nomzodlar"
-          className="flex items-center gap-3 h-11 px-3 rounded-md text-[15px] font-medium text-ink-3 hover:bg-ink-nav hover:text-white"
+          className="flex items-center gap-3 h-11 px-3.5 rounded-lg text-[14px] font-medium text-ink-3 hover:bg-white/5 hover:text-white"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" {...stroke}>
             <path d="M14.5 5.5 8 12l6.5 6.5" />
           </svg>
           HR ko&apos;rinishi
         </Link>
+      </div>
+
+      {/* Pastki blok — aloqa va versiya (referans uslubi) */}
+      <div className="px-5 py-4 border-t border-white/10 flex flex-col gap-1.5">
+        <span className="flex items-center gap-2 text-[13px] text-ink-3">
+          <svg width="15" height="15" viewBox="0 0 24 24" {...stroke}>
+            <path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
+          </svg>
+          +998 99 030 73 22
+        </span>
+        <span className="flex items-center justify-between text-[12px] text-ink-3/70">
+          <span>Powered by Talantly</span>
+          <span>v2.0</span>
+        </span>
       </div>
     </aside>
   );

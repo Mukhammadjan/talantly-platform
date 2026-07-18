@@ -8,8 +8,8 @@ export default async function AdminTolovlarPage(): Promise<JSX.Element> {
   await requireAdminPage();
   return (
     <>
-      <AdminHeader title="To'lovlar" />
-      <main className="flex-1 min-h-0 overflow-y-auto px-8 py-6">
+      <AdminHeader title="To'lovlar" crumb="Dashboard" />
+      <main className="flex-1 min-h-0 overflow-y-auto px-8 py-6 bg-bg">
         <div className="max-w-shell mx-auto">
           <TolovlarClient />
         </div>
