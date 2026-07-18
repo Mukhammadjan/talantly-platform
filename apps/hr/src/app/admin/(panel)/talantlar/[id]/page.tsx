@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Header } from "@/components/Header";
+import { AdminHeader } from "@/components/AdminHeader";
 import { TalentAdminActions } from "@/components/TalentAdminActions";
 import { requireAdminPage } from "@/lib/server/admin";
 import { getDb } from "@/lib/server/db";
@@ -107,7 +107,7 @@ export default async function AdminTalentDetailPage({
 
   return (
     <>
-      <Header title={talent.full_name ?? "Talant"} companyName="Admin" />
+      <AdminHeader title={talent.full_name ?? "Talant"} />
       <main className="flex-1 min-h-0 overflow-y-auto px-8 py-6">
         <div className="max-w-shell mx-auto flex flex-col gap-5">
           <Link

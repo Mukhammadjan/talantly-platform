@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Header } from "@/components/Header";
+import { AdminHeader } from "@/components/AdminHeader";
 import { requireAdminPage } from "@/lib/server/admin";
 import { getDb } from "@/lib/server/db";
 
@@ -59,7 +59,7 @@ export default async function AdminTalantlarPage({
 
   return (
     <>
-      <Header title="Talantlar" companyName="Admin" />
+      <AdminHeader title="Talantlar" />
       <main className="flex-1 min-h-0 overflow-y-auto px-8 py-6">
         <div className="max-w-shell mx-auto flex flex-col gap-4">
           <form className="flex gap-2" action="/admin/talantlar" method="get">

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminSession } from "@/lib/server/admin";
+import { adminAuthed } from "@/lib/server/admin";
 import { getDb } from "@/lib/server/db";
 
 export const dynamic = "force-dynamic";
@@ -9,8 +9,9 @@ export async function POST(
   req: Request,
   { params }: { params: { id: string } },
 ): Promise<NextResponse> {
-  const session = await adminSession();
-  if (!session) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!(await adminAuthed())) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
 
   let body: { action?: string };
   try {

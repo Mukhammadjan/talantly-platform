@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cvProfilesRepo, generateCv, type Direction } from "@talantly/shared";
-import { adminSession } from "@/lib/server/admin";
+import { adminAuthed } from "@/lib/server/admin";
 import { getDb } from "@/lib/server/db";
 import { applyEvent, logEntityStatus } from "@/lib/server/talentFlow";
 
@@ -25,8 +25,9 @@ interface UnlockRow {
 
 /** GET — kutilayotgan to'lovlar: talant CV cheklari + kompaniya unlock'lari. */
 export async function GET(): Promise<NextResponse> {
-  const session = await adminSession();
-  if (!session) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!(await adminAuthed())) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
 
   const db = getDb();
   const [{ data: payData }, { data: unlockData }] = await Promise.all([
@@ -100,8 +101,9 @@ export async function GET(): Promise<NextResponse> {
 
 /** POST { kind, id, action: "approve"|"reject" } — bot /tolovlar bilan bir mantiq. */
 export async function POST(req: Request): Promise<NextResponse> {
-  const session = await adminSession();
-  if (!session) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!(await adminAuthed())) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
 
   let body: { kind?: string; id?: string; action?: string };
   try {
@@ -114,7 +116,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
   const db = getDb();
-  const changedBy = `admin-web:${session.tgId}`;
+  const changedBy = "admin-web";
 
   if (kind === "cv") {
     const { data } = await db
