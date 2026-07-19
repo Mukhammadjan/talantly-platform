@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -25,8 +26,8 @@ export function AdminHeader({
   const [menuOpen, setMenuOpen] = useState(false);
 
   const logout = (): void => {
-    void fetch("/api/admin/logout", { method: "POST" }).then(() => {
-      window.location.href = "/admin/login";
+    void fetch(`${BP}/api/admin/logout`, { method: "POST" }).then(() => {
+      window.location.href = `${BP}/admin/login`;
     });
   };
 

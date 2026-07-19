@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useState } from "react";
 import { DIRECTION_LABELS } from "@/components/admin/ui";
 
@@ -22,7 +23,7 @@ export function SavollarClient(): JSX.Element {
 
   const load = useCallback((): void => {
     setItems(null);
-    void fetch(`/api/admin/questions?direction=${direction}`)
+    void fetch(`${BP}/api/admin/questions?direction=${direction}`)
       .then((r) => r.json())
       .then((d: { items?: QuestionItem[] }) => setItems(d.items ?? []));
   }, [direction]);
@@ -33,7 +34,7 @@ export function SavollarClient(): JSX.Element {
   const save = async (): Promise<void> => {
     if (!editing || busy) return;
     setBusy(true);
-    await fetch("/api/admin/questions", {
+    await fetch(`${BP}/api/admin/questions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,7 +52,7 @@ export function SavollarClient(): JSX.Element {
   };
 
   const toggleActive = async (q: QuestionItem): Promise<void> => {
-    await fetch("/api/admin/questions", {
+    await fetch(`${BP}/api/admin/questions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: q.id, isActive: !q.is_active }),

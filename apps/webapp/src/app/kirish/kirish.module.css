@@ -1,0 +1,73 @@
+.wrap {
+  min-height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+}
+
+.card {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: center;
+  background: var(--t-white);
+  border-radius: var(--r-xl);
+  padding: var(--s-6) var(--s-5);
+  box-shadow: var(--sh-float);
+}
+
+.logo {
+  height: 26px;
+  width: auto;
+  margin-bottom: var(--s-2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.widget {
+  min-height: 46px;
+  display: flex;
+  justify-content: center;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.err {
+  margin: 0;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-danger-ink);
+}
+
+.alt {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.alt a {
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}

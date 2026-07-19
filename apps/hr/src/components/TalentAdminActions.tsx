@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,7 +21,7 @@ export function TalentAdminActions({
   const act = async (action: string): Promise<void> => {
     if (busy) return;
     setBusy(true);
-    await fetch(`/api/admin/talents/${talentId}`, {
+    await fetch(`${BP}/api/admin/talents/${talentId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action }),

@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useState } from "react";
 
 interface ComplaintItem {
@@ -21,7 +22,7 @@ export function ShikoyatlarClient(): JSX.Element {
   const [items, setItems] = useState<ComplaintItem[] | null>(null);
 
   const load = useCallback((): void => {
-    void fetch("/api/admin/complaints")
+    void fetch(`${BP}/api/admin/complaints`)
       .then((r) => r.json())
       .then((d: { items?: ComplaintItem[] }) => setItems(d.items ?? []));
   }, []);
@@ -30,7 +31,7 @@ export function ShikoyatlarClient(): JSX.Element {
   }, [load]);
 
   const setStatus = async (id: string, status: string): Promise<void> => {
-    await fetch("/api/admin/complaints", {
+    await fetch(`${BP}/api/admin/complaints`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),

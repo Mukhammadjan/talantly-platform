@@ -16,6 +16,25 @@ const nextConfig = {
     // Deploy hook: har deploy'da bot menu ?v=SHA avto-yangilanadi (spec §8)
     instrumentationHook: true,
   },
+  // HR/Admin paneli (apps/hr, basePath /panel) — bitta domenda proksi.
+  async rewrites() {
+    return [
+      {
+        source: "/panel/:path*",
+        destination: "https://talantly-hr.vercel.app/panel/:path*",
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      { source: "/admin", destination: "/panel/admin", permanent: false },
+      {
+        source: "/admin/:path*",
+        destination: "/panel/admin/:path*",
+        permanent: false,
+      },
+    ];
+  },
   webpack: (config) => {
     // @talantly/shared uses NodeNext ".js" import specifiers for .ts sources
     config.resolve.extensionAlias = {

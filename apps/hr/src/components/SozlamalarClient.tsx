@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useState } from "react";
 
 interface SettingItem {
@@ -43,7 +44,7 @@ export function SozlamalarClient(): JSX.Element {
   const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback((): void => {
-    void fetch("/api/admin/settings")
+    void fetch(`${BP}/api/admin/settings`)
       .then((r) => r.json())
       .then((d: { items?: SettingItem[] }) => {
         const map: Record<string, string> = {};
@@ -60,7 +61,7 @@ export function SozlamalarClient(): JSX.Element {
     if (!values || busyKey) return;
     setBusyKey(key);
     setMsg(null);
-    const res = await fetch("/api/admin/settings", {
+    const res = await fetch(`${BP}/api/admin/settings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key, value: values[key] ?? "" }),
@@ -116,7 +117,7 @@ export function SozlamalarClient(): JSX.Element {
                   onClick={() => {
                     const next = val === "true" ? "false" : "true";
                     setValues({ ...values, [key]: next });
-                    void fetch("/api/admin/settings", {
+                    void fetch(`${BP}/api/admin/settings`, {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ key, value: next }),

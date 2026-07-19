@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useEffect, useRef, useState } from "react";
 
 const BOT_USERNAME =
@@ -27,14 +28,14 @@ export default function LoginPage(): JSX.Element {
   useEffect(() => {
     window.onTelegramAuth = (user) => {
       setStatus("loading");
-      void fetch("/api/auth", {
+      void fetch(`${BP}/api/auth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       })
         .then((res) => {
           if (res.ok) {
-            window.location.href = "/nomzodlar";
+            window.location.href = `${BP}/nomzodlar`;
           } else {
             setStatus("error");
           }
@@ -60,7 +61,7 @@ export default function LoginPage(): JSX.Element {
     <main className="min-h-screen flex items-center justify-center p-6 bg-bg">
       <div className="w-full max-w-[420px] flex flex-col items-center text-center gap-6">
         <img
-          src="/brand/mark.svg"
+          src={`${BP}/brand/mark.svg`}
           alt=""
           width={56}
           height={56}

@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -85,7 +86,7 @@ export function Sidebar({
   return (
     <aside className="w-[240px] shrink-0 bg-ink-1 text-white flex flex-col h-screen sticky top-0">
       <div className="flex items-center gap-2.5 px-5 h-16">
-        <img src="/brand/wordmark-light.svg" alt="Talantly" className="h-5 w-auto" />
+        <img src={`${BP}/brand/wordmark-light.svg`} alt="Talantly" className="h-5 w-auto" />
       </div>
 
       <nav className="flex-1 flex flex-col gap-1 px-3 py-2">

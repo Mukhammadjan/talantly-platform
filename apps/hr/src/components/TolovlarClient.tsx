@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface PayItem {
@@ -41,7 +42,7 @@ export function TolovlarClient(): JSX.Element {
   const [msg, setMsg] = useState<string | null>(null);
 
   const load = useCallback((): void => {
-    void fetch("/api/admin/payments")
+    void fetch(`${BP}/api/admin/payments`)
       .then((r) => r.json())
       .then((d: { items?: PayItem[] }) => setItems(d.items ?? []));
   }, []);
@@ -63,7 +64,7 @@ export function TolovlarClient(): JSX.Element {
     if (!modal || busy) return;
     if (modal.action === "approve" && !bankOk) return;
     setBusy(true);
-    const res = await fetch("/api/admin/payments", {
+    const res = await fetch(`${BP}/api/admin/payments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

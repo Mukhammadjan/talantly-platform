@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 const stroke = {
   fill: "none",
   stroke: "currentColor",
@@ -16,8 +17,8 @@ export function Header({
   companyName: string;
 }): JSX.Element {
   const logout = (): void => {
-    void fetch("/api/logout", { method: "POST" }).then(() => {
-      window.location.href = "/login";
+    void fetch(`${BP}/api/logout`, { method: "POST" }).then(() => {
+      window.location.href = `${BP}/login`;
     });
   };
 

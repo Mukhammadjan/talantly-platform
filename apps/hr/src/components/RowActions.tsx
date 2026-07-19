@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -19,7 +20,7 @@ export function CompanyVerifyToggle({
       disabled={busy}
       onClick={() => {
         setBusy(true);
-        void fetch(`/api/admin/companies/${companyId}`, {
+        void fetch(`${BP}/api/admin/companies/${companyId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "toggle_verified" }),
@@ -56,7 +57,7 @@ export function VacancyStatusToggle({
       disabled={busy}
       onClick={() => {
         setBusy(true);
-        void fetch(`/api/admin/vacancies/${vacancyId}`, {
+        void fetch(`${BP}/api/admin/vacancies/${vacancyId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: active ? "yopilgan" : "faol" }),

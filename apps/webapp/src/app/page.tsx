@@ -1,12 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { hasSession } from "@/lib/auth";
 import { getSavedRole, saveRole, type AppRole } from "@/lib/role";
 import { initTelegram, isInsideTelegram } from "@/lib/telegram";
 import styles from "./page.module.css";
-
-const BOT_LINK = "https://t.me/Talantly_bot";
 
 const HOME: Record<AppRole, string> = {
   talant: "/talant",
@@ -15,20 +14,34 @@ const HOME: Record<AppRole, string> = {
 
 export default function SplashPage(): JSX.Element {
   const router = useRouter();
-  const [outside, setOutside] = useState(false);
 
   useEffect(() => {
     initTelegram();
-    if (!isInsideTelegram()) {
-      setOutside(true);
-      return;
-    }
 
     let live = true;
     const timers: number[] = [];
     const go = (path: string): void => {
       timers.push(window.setTimeout(() => router.replace(path), 700));
     };
+
+    if (!isInsideTelegram()) {
+      // Web versiya: sessiya bo'lsa ilovaga, bo'lmasa Login Widget sahifasiga.
+      void hasSession().then((ok) => {
+        if (!live) return;
+        if (!ok) {
+          go("/kirish");
+          return;
+        }
+        void getSavedRole().then((saved) => {
+          if (!live) return;
+          go(saved ? HOME[saved] : "/welcome");
+        });
+      });
+      return () => {
+        live = false;
+        timers.forEach((t) => window.clearTimeout(t));
+      };
+    }
 
     // Bot tugmasidan kelgan rol (?role=talant|izlovchi) — saqlab kiramiz.
     const param = new URLSearchParams(window.location.search).get("role");
@@ -58,26 +71,6 @@ export default function SplashPage(): JSX.Element {
       />
       <p className={styles.micro}>Tekshirilgan talantlar</p>
 
-      {outside ? (
-        <>
-          <img
-            src="/brand/telegram-qr.svg"
-            alt="Talantly bot QR kodi"
-            width={176}
-            height={176}
-            className={styles.qr}
-          />
-          <a
-            href={BOT_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.cta}
-          >
-            Telegramda oching
-          </a>
-          <p className={styles.hint}>@Talantly_bot</p>
-        </>
-      ) : null}
     </main>
   );
 }

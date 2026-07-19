@@ -7,6 +7,19 @@ if (existsSync(rootEnvPath)) dotenv.config({ path: rootEnvPath });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: "/panel",
+  env: { NEXT_PUBLIC_BASE_PATH: "/panel" },
+  // Eski root URL'lar (talantly-hr.vercel.app/) panelga yo'naltiriladi.
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/panel/nomzodlar",
+        basePath: false,
+        permanent: false,
+      },
+    ];
+  },
   reactStrictMode: true,
   transpilePackages: ["@talantly/shared"],
   webpack: (config) => {

@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export default function AdminLoginPage(): JSX.Element {
     if (busy) return;
     setBusy(true);
     setErr(null);
-    const res = await fetch("/api/admin/login", {
+    const res = await fetch(`${BP}/api/admin/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ login, password }),
@@ -43,7 +44,7 @@ export default function AdminLoginPage(): JSX.Element {
         >
           <div className="flex flex-col items-center gap-3 mb-2">
             <span className="w-14 h-14 rounded-full bg-action-soft border border-line grid place-items-center">
-              <img src="/brand/mark.svg" alt="" className="h-7 w-7" />
+              <img src={`${BP}/brand/mark.svg`} alt="" className="h-7 w-7" />
             </span>
             <h1 className="text-[20px] font-bold text-ink-1">
               Admin panelga kirish
@@ -108,7 +109,7 @@ export default function AdminLoginPage(): JSX.Element {
         />
         <div className="relative flex flex-col items-center gap-4">
           <img
-            src="/brand/wordmark-light.svg"
+            src={`${BP}/brand/wordmark-light.svg`}
             alt="Talantly"
             className="h-12 w-auto"
           />

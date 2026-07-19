@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -130,7 +131,7 @@ export function AdminSidebar(): JSX.Element {
   return (
     <aside className="w-[264px] shrink-0 bg-ink-1 text-white flex flex-col h-screen sticky top-0">
       <div className="flex items-center gap-2.5 px-5 h-[68px]">
-        <img src="/brand/wordmark-light.svg" alt="Talantly" className="h-5 w-auto" />
+        <img src={`${BP}/brand/wordmark-light.svg`} alt="Talantly" className="h-5 w-auto" />
         <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-action bg-white/10 rounded-md px-2 py-1">
           Admin
         </span>
@@ -139,7 +140,7 @@ export function AdminSidebar(): JSX.Element {
       {/* Platforma kartasi — referansdagi org-selector pozitsiyasida */}
       <div className="mx-4 mb-2 rounded-xl bg-white/5 border border-white/10 px-4 py-3.5 flex items-center gap-3">
         <span className="w-9 h-9 rounded-lg bg-white/10 grid place-items-center shrink-0">
-          <img src="/brand/mark.svg" alt="" className="h-5 w-5" />
+          <img src={`${BP}/brand/mark.svg`} alt="" className="h-5 w-5" />
         </span>
         <span className="min-w-0">
           <span className="block text-[14px] font-bold leading-tight">

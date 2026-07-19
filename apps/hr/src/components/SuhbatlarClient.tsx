@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useState } from "react";
 import { DIRECTION_LABELS } from "@/components/admin/ui";
 
@@ -45,10 +46,10 @@ export function SuhbatlarClient(): JSX.Element {
   const [newDt, setNewDt] = useState("");
 
   const load = useCallback((): void => {
-    void fetch("/api/admin/interviews")
+    void fetch(`${BP}/api/admin/interviews`)
       .then((r) => r.json())
       .then((d: { items?: InterviewItem[] }) => setInterviews(d.items ?? []));
-    void fetch("/api/admin/slots")
+    void fetch(`${BP}/api/admin/slots`)
       .then((r) => r.json())
       .then((d: { items?: SlotItem[] }) => setSlots(d.items ?? []));
   }, []);
@@ -59,7 +60,7 @@ export function SuhbatlarClient(): JSX.Element {
   const decide = async (): Promise<void> => {
     if (!modal || busy) return;
     setBusy(true);
-    const res = await fetch("/api/admin/interviews", {
+    const res = await fetch(`${BP}/api/admin/interviews`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -87,7 +88,7 @@ export function SuhbatlarClient(): JSX.Element {
 
   const addSlot = async (): Promise<void> => {
     if (!newDt) return;
-    const res = await fetch("/api/admin/slots", {
+    const res = await fetch(`${BP}/api/admin/slots`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ datetimes: [newDt] }),
@@ -99,7 +100,7 @@ export function SuhbatlarClient(): JSX.Element {
   };
 
   const delSlot = async (id: string): Promise<void> => {
-    await fetch("/api/admin/slots", {
+    await fetch(`${BP}/api/admin/slots`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),

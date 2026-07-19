@@ -1,5 +1,6 @@
 "use client";
 
+import { BP } from "@/lib/bp";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { talentView } from "@talantly/shared";
 import { CandidateCard } from "@/components/CandidateCard";
@@ -57,7 +58,7 @@ export function NomzodlarClient(): JSX.Element {
       const p = new URLSearchParams(qs);
       p.set("offset", String(off));
       try {
-        const res = await fetch(`/api/candidates?${p.toString()}`);
+        const res = await fetch(`${BP}/api/candidates?${p.toString()}`);
         const data = (await res.json()) as { candidates: Candidate[]; total: number };
         setTotal(data.total ?? 0);
         setItems((prev) =>
