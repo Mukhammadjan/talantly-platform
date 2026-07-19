@@ -1,5 +1,4 @@
 import "./globals.css";
-import { OfflineGate } from "@/components/OfflineGate";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
@@ -12,11 +11,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#F5F5F7",
 };
 
+// Root layout — konteynersiz. Mobil Mini App qobig'i (app)/layout.tsx da,
+// keng desktop web qobig'i (web)/layout.tsx da.
 export default function RootLayout({
   children,
 }: {
@@ -30,10 +29,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body>
-        <div className="app"><OfflineGate />
-        {children}</div>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

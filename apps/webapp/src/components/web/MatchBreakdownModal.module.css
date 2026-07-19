@@ -1,0 +1,227 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(23, 23, 27, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-4);
+  animation: fade var(--d-base) var(--e-out);
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--t-white);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-float);
+  padding: var(--s-6);
+  animation: rise var(--d-base) var(--e-out);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+}
+
+.kicker {
+  margin: 0 0 2px;
+  font-size: var(--fs-micro);
+  line-height: var(--lh-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.company {
+  font-weight: var(--fw-medium);
+  color: var(--t-ink-2);
+}
+
+.close {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--t-ink-2);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.close:hover {
+  background: var(--t-fill);
+}
+
+.close:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.scoreRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  padding: var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--t-action-soft);
+  margin-bottom: var(--s-5);
+}
+
+.scoreBig {
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  font-weight: var(--fw-bold);
+  color: var(--t-action-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.scoreLabel {
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin-bottom: var(--s-5);
+}
+
+.barTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-2);
+}
+
+.barLabel {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.barVal {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  height: 8px;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  transition: width var(--d-slow) var(--e-out);
+}
+
+.improve {
+  margin-bottom: var(--s-5);
+}
+
+.improveHead {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.improveGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-3);
+}
+
+.improveCard {
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-bg);
+  border: 1px solid var(--t-line);
+}
+
+.improveTitle {
+  margin: 0 0 var(--s-1);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.improveText {
+  margin: 0;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--t-ink-2);
+}
+
+.cta {
+  width: 100%;
+  height: 52px;
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.cta:hover {
+  background: var(--t-action-press);
+}
+
+.cta:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .improveGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .modal {
+    animation: none;
+  }
+  .fill {
+    transition: none;
+  }
+}

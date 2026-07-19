@@ -97,7 +97,7 @@ export default function VakansiyaYangiPage(): JSX.Element {
           </p>
         </div>
         <div className={styles.cta}>
-          <Button full onClick={() => router.push("/vakansiyalar")}>
+          <Button full onClick={() => router.push("/izlovchi/vakansiyalarim")}>
             Vakansiyalarim
           </Button>
         </div>

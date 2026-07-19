@@ -1,0 +1,39 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 30px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  transition:
+    background var(--d-fast) var(--e-out),
+    box-shadow var(--d-fast) var(--e-out);
+}
+
+.pill:hover {
+  background: var(--t-white);
+  box-shadow: inset 0 0 0 1px var(--t-action);
+}
+
+.pill:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.spark {
+  flex-shrink: 0;
+}
+
+.text {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill {
+    transition: none;
+  }
+}

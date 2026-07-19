@@ -27,13 +27,13 @@ export default function KoproqPage(): JSX.Element {
         full
         icon={<Icon name="plus" size={20} />}
         className={styles.create}
-        onClick={() => go("/vakansiya/yangi")}
+        onClick={() => go("/izlovchi/vakansiya-yangi")}
       >
         Vakansiya yaratish
       </Button>
 
       <div className={styles.group}>
-        <button type="button" className={styles.row} onClick={() => go("/vakansiyalar")}>
+        <button type="button" className={styles.row} onClick={() => go("/izlovchi/vakansiyalarim")}>
           <span className={styles.ricon}>
             <Icon name="briefcase" size={20} />
           </span>

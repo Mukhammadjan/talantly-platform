@@ -1,0 +1,7 @@
+.web {
+  min-height: 100vh;
+  background: var(--t-bg);
+  color: var(--t-ink-1);
+  display: flex;
+  flex-direction: column;
+}

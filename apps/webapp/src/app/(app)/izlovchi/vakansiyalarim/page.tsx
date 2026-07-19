@@ -25,7 +25,7 @@ export default function VakansiyalarPage(): JSX.Element {
       <Button
         full
         icon={<Icon name="plus" size={20} />}
-        onClick={() => router.push("/vakansiya/yangi")}
+        onClick={() => router.push("/izlovchi/vakansiya-yangi")}
       >
         Yangi vakansiya
       </Button>

@@ -1,0 +1,28 @@
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--s-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+}
+
+.value {
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}

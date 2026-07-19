@@ -1,0 +1,79 @@
+.card {
+  display: block;
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition: box-shadow var(--d-fast) var(--e-out);
+}
+
+.card:hover {
+  box-shadow: var(--sh-float);
+}
+
+.card:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin-bottom: var(--s-1);
+}
+
+.company {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seal {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.match {
+  flex-shrink: 0;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--t-action-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  margin: 0 0 2px;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.meta {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.salary {
+  margin: 0;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
