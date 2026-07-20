@@ -211,33 +211,49 @@ async function main(): Promise<void> {
   process.once("SIGINT", () => stop("SIGINT"));
   process.once("SIGTERM", () => stop("SIGTERM"));
 
-  if (webhookDomain) {
-    const path = "/telegram-webhook";
-    const secretToken = createHmac("sha256", config.telegramBotToken)
-      .update("webhook")
-      .digest("hex")
-      .slice(0, 64);
-    const handler = webhookCallback(bot, "http", { secretToken });
-    await bot.init();
-    server = http.createServer((req, res) => {
-      if (req.url === "/healthz") {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end("ok");
-        return;
-      }
-      if (req.method === "POST" && req.url === path) {
-        void handler(req, res).catch((err) => {
-          logger.error({ err }, "webhook handler error");
-          if (!res.headersSent) res.writeHead(200);
-          res.end();
-        });
-        return;
-      }
-      res.writeHead(404);
-      res.end();
+  // /healthz ikkala rejimda ham ochiq: Railway healthcheck long polling'da
+  // ham javob olishi kerak, aks holda deploy "unhealthy" bo'lib qayta-qayta
+  // ishga tushadi.
+  const path = "/telegram-webhook";
+  const secretToken = createHmac("sha256", config.telegramBotToken)
+    .update("webhook")
+    .digest("hex")
+    .slice(0, 64);
+  const handler = webhookDomain
+    ? webhookCallback(bot, "http", { secretToken })
+    : null;
+  if (webhookDomain) await bot.init();
+
+  server = http.createServer((req, res) => {
+    if (req.url === "/healthz") {
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("ok");
+      return;
+    }
+    if (handler && req.method === "POST" && req.url === path) {
+      void handler(req, res).catch((err) => {
+        logger.error({ err }, "webhook handler error");
+        if (!res.headersSent) res.writeHead(200);
+        res.end();
+      });
+      return;
+    }
+    res.writeHead(404);
+    res.end();
+  });
+
+  const port = Number(process.env.PORT ?? 8080);
+  await new Promise<void>((resolve) => {
+    // Lokalda port band bo'lsa bot to'xtamaydi — healthcheck faqat prod'da kerak.
+    server?.once("error", (err) => {
+      logger.warn({ err, port }, "healthcheck server not started");
+      server = null;
+      resolve();
     });
-    const port = Number(process.env.PORT ?? 8080);
-    await new Promise<void>((resolve) => server?.listen(port, resolve));
+    server?.listen(port, resolve);
+  });
+
+  if (webhookDomain) {
     await bot.api.setWebhook(`${webhookDomain}${path}`, {
       secret_token: secretToken,
     });
