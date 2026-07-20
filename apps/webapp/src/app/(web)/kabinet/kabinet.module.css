@@ -1,0 +1,451 @@
+.wrap {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+/* ---- Hero ---- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6);
+  background: var(--t-white);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-raise);
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-display-m);
+  font-weight: var(--fw-bold);
+}
+
+.heroText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.seal {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.heroMeta {
+  margin: var(--s-1) 0 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.editBtn {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 var(--s-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  border-radius: var(--r-full);
+  color: var(--t-ink-1);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  box-shadow: inset 0 0 0 1px var(--t-line-strong);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.editBtn:hover {
+  background: var(--t-fill);
+}
+
+/* ---- Kartalar ---- */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  background: var(--t-white);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-raise);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.statusPill {
+  padding: 4px var(--s-3);
+  border-radius: var(--r-full);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+}
+
+.pillGood {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.pillWarn {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.pillBad {
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+}
+
+.rejected {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+/* ---- Tekshiruv steplari ---- */
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  flex: 1 1 120px;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+}
+
+.stepDot {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-white);
+  color: var(--t-ink-3);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  box-shadow: inset 0 0 0 1px var(--t-line-strong);
+}
+
+.stepLabel {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+}
+
+.stepDone {
+  background: var(--t-verified-soft);
+}
+
+.stepDone .stepDot {
+  background: var(--t-verified);
+  color: var(--t-white);
+  box-shadow: none;
+}
+
+.stepDone .stepLabel {
+  color: var(--t-verified-ink);
+}
+
+.stepCurrent {
+  background: var(--t-action-soft);
+}
+
+.stepCurrent .stepDot {
+  background: var(--t-action);
+  color: var(--t-on-action);
+  box-shadow: none;
+}
+
+.stepCurrent .stepLabel {
+  color: var(--t-action-ink);
+}
+
+/* ---- Statistika ---- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-3);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--s-4);
+  background: var(--t-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-raise);
+}
+
+.statLabel {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.statValue {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Profil ---- */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.skill {
+  padding: 4px var(--s-3);
+  border-radius: var(--r-xs);
+  background: var(--t-fill);
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.about {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.muted {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.inlineLink {
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- Arizalar ---- */
+.badge {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-2);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+}
+
+.appList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.appRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.appRow:hover {
+  background: var(--t-line);
+}
+
+.appMain {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.appTitle {
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-1);
+}
+
+.appMeta {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.appStatus {
+  flex-shrink: 0;
+  padding: 3px var(--s-3);
+  border-radius: var(--r-full);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  background: var(--t-white);
+  color: var(--t-ink-2);
+}
+
+.tone_good {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.tone_bad {
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+}
+
+.tone_info {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+/* ---- Guest + skeleton ---- */
+.centerState {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  padding: var(--s-12);
+  text-align: center;
+}
+
+.guestIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.guestTitle {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.guestText {
+  margin: 0;
+  max-width: 340px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.guestBtn {
+  margin-top: var(--s-2);
+  height: 48px;
+  padding: 0 var(--s-8);
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+}
+
+.guestBtn:hover {
+  background: var(--t-action-press);
+}
+
+.skelHero,
+.skelBlock {
+  border-radius: var(--r-xl);
+  background: var(--t-fill);
+  animation: pulse 1.4s var(--e-out) infinite;
+}
+
+.skelHero {
+  height: 104px;
+}
+
+.skelBlock {
+  height: 220px;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 760px) {
+  .inner {
+    padding: var(--s-4);
+  }
+  .hero {
+    flex-wrap: wrap;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skelHero,
+  .skelBlock {
+    animation: none;
+  }
+}

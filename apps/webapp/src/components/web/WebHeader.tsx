@@ -58,7 +58,7 @@ export function WebHeader(): JSX.Element {
           </button>
           <span className={styles.currency}>UZS · so&apos;m</span>
           {authed ? (
-            <Link href="/talant" className={styles.user}>
+            <Link href="/kabinet" className={styles.user}>
               <span className={styles.avatar} aria-hidden="true">
                 T
               </span>
