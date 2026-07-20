@@ -27,28 +27,33 @@ apps/bot`) plus Chromium, which the CV PDF renderer needs.
 
 ## Variables
 
-Required — the bot exits on boot without them:
+Required — `apps/bot/src/config.ts` throws on boot without them, so the
+service crash-loops until they are set:
 
 ```
 TELEGRAM_BOT_TOKEN
-SUPABASE_V2_URL
-SUPABASE_V2_ANON_KEY
-SUPABASE_V2_SERVICE_ROLE_KEY
-WEBAPP_JWT_SECRET
-ADMIN_TG_ID
-ADMIN_USERNAME
-WEBAPP_URL
+SUPABASE_V2_URL                 falls back to SUPABASE_URL
+SUPABASE_V2_ANON_KEY            falls back to SUPABASE_ANON_KEY
+SUPABASE_V2_SERVICE_ROLE_KEY    falls back to SUPABASE_SERVICE_ROLE_KEY
 ```
 
-Feature-dependent:
+Optional, but each one silently disables a feature when missing:
 
 ```
+WEBAPP_URL               the "Open app" button; without it the Mini App is unreachable from the bot
+ADMIN_TG_ID              admin notifications (new payments, approvals)
+ADMIN_USERNAME           the contact shown by /yordam
 ANTHROPIC_API_KEY        AI CV generation
 PAYMENT_CARD_NUMBER      shown in the manual payment step
 PAYMENT_CARD_OWNER
 PAYMENT_ENABLED          "false" hides the payment step entirely
-CHANNEL_URL              optional channel link in the menu
+CHANNEL_URL              channel link in the menu
 ```
+
+`WEBAPP_JWT_SECRET` is **not** read by the bot runtime — only by the seed and
+test scripts in `apps/bot/src/scripts`. It belongs in the Vercel webapp
+project. Set it here too only if you intend to run those scripts against
+production, and then it must match the webapp value byte for byte.
 
 Deploy-specific:
 
@@ -57,10 +62,6 @@ PORT           Railway injects this; the bot defaults to 8080
 WEBHOOK_URL    only if you front the bot with a custom domain — otherwise
                leave it unset and let RAILWAY_PUBLIC_DOMAIN do the work
 ```
-
-`WEBAPP_JWT_SECRET` **must** be byte-identical to the one in the Vercel
-webapp project. The bot signs Mini App sessions with it and the webapp
-verifies them; a mismatch logs every user out with no visible error.
 
 ## Webhook vs long polling
 
@@ -97,6 +98,9 @@ and no `last_error_message`. Then send `/start` to the bot.
   image shrinks by roughly half.
 - **Changing the bot token** invalidates the derived webhook secret. Redeploy
   after rotating it so `setWebhook` runs again.
+- **`Application not found` from the generated domain** means there is no
+  active deployment yet — the domain resolves before the first successful
+  build. Check the Deployments tab, not the networking settings.
 - Railway restarts on every crash (`restartPolicyType: ALWAYS`). A boot-time
   config error therefore shows up as a restart loop, not a single failure —
   check the deploy logs for the first `Fatal` line.
