@@ -17,8 +17,14 @@ apps/bot`) plus Chromium, which the CV PDF renderer needs.
 ## One-time setup
 
 1. **New project** → *Deploy from GitHub repo* → pick this repo, branch `main`.
+   A service created empty has no source: Deployments stays on *"There is no
+   active deployment"* and the generated domain answers `Application not
+   found`. Attach the repo under **Settings → Source** to fix it.
 2. Railway reads `railway.json` on its own — no build/start command to type.
-   The image is built from `apps/bot/Dockerfile` with the repo root as context.
+   The image is built from `apps/bot/Dockerfile` with the repo root as context,
+   so **leave Root Directory empty** — setting it to `apps/bot` breaks the build.
+   Turn **Wait for CI off**: this repo has no GitHub Actions, so there is no
+   check for Railway to wait on and deploys can hang before they start.
 3. **Settings → Networking → Generate Domain.** This is not optional: it sets
    `RAILWAY_PUBLIC_DOMAIN`, which is what switches the bot into webhook mode.
    Without it the bot falls back to long polling — still functional, but you
