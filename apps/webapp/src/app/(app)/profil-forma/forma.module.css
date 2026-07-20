@@ -98,3 +98,22 @@
   display: flex;
   gap: var(--s-3);
 }
+
+/* ---- Web ramkasi: uch qismli mobil maket (sarlavha·scroll·CTA) o'rniga
+   oddiy hujjat oqimi. Header/footer allaqachon bor. ---- */
+:global(.app--web) .wrap {
+  padding-top: 0;
+  flex: 0 0 auto;
+}
+
+:global(.app--web) .body {
+  flex: 0 0 auto;
+  overflow-y: visible;
+  padding: var(--s-6) 0;
+}
+
+:global(.app--web) .cta {
+  padding: var(--s-5) 0 0;
+  background: transparent;
+  box-shadow: none;
+}

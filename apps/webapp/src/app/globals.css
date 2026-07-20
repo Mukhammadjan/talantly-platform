@@ -69,6 +69,32 @@ body {
   overflow: hidden;
 }
 
+/* ---- Web ramkasi: xuddi shu Mini App ekranlari brauzerda ---- */
+.appWebFrame {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--t-bg, var(--bg));
+}
+
+/* Telegram qat'iy balandligi va overflow yo'qoladi — hujjat odatdagidek
+   scroll bo'ladi, kontent kartaday markazda turadi. */
+.app--web {
+  height: auto;
+  min-height: calc(100dvh - 64px);
+  max-width: 620px;
+  overflow: visible;
+  flex: 1 1 auto;
+}
+
+/* Web'da mobil safe-area va pastki nav uchun ajratilgan joy kerak emas —
+   endi haqiqiy header/footer bor. */
+.app--web .screen {
+  overflow-y: visible;
+  padding-top: var(--s-8);
+  padding-bottom: var(--s-10);
+}
+
 /* Scroll shu yerda; nav va sticky CTA .app ichida absolute.
    Telegram native header (Close/⋮) tagida turadi — safe-area + doimiy
    minimal nafas (--s-5) qo'shamiz, kontent tepaga tiqilib qolmasin. */
