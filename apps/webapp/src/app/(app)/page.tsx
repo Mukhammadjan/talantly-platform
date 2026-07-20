@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { hasSession } from "@/lib/auth";
 import { getSavedRole, saveRole, type AppRole } from "@/lib/role";
 import { initTelegram, isInsideTelegram } from "@/lib/telegram";
 import styles from "./page.module.css";
@@ -25,18 +24,9 @@ export default function SplashPage(): JSX.Element {
     };
 
     if (!isInsideTelegram()) {
-      // Web versiya: sessiya bo'lsa ilovaga, bo'lmasa Login Widget sahifasiga.
-      void hasSession().then((ok) => {
-        if (!live) return;
-        if (!ok) {
-          go("/kirish");
-          return;
-        }
-        void getSavedRole().then((saved) => {
-          if (!live) return;
-          go(saved ? HOME[saved] : "/welcome");
-        });
-      });
+      // Web platforma: talantly.uz to'g'ridan-to'g'ri vakansiyalarga ochiladi
+      // (guest ham erkin ko'radi — landing yo'q, platformaning o'zi).
+      router.replace("/vakansiyalar");
       return () => {
         live = false;
         timers.forEach((t) => window.clearTimeout(t));
