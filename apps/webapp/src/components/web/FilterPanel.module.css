@@ -11,6 +11,21 @@
   border-radius: var(--r-lg);
   background: var(--t-white);
   box-shadow: var(--sh-raise);
+  /* Panel ekrandan baland bo'lsa yopishgach yuqori qismi (AI-saralash)
+     ko'rinmay qolardi — endi panelning o'zi scroll bo'ladi. */
+  max-height: calc(100vh - 88px - var(--s-6));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Ingichka scrollbar — panel ichidagi scroll ko'zga tashlanmasin. */
+.panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel::-webkit-scrollbar-thumb {
+  border-radius: var(--r-full);
+  background: var(--t-line-strong);
 }
 
 .group {
@@ -55,5 +70,7 @@
   .panel {
     position: static;
     width: auto;
+    max-height: none;
+    overflow-y: visible;
   }
 }
