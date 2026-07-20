@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RegisterSheet } from "@/components/web/RegisterSheet";
+import { hasSession } from "@/lib/auth";
 import { Icon, type IconName } from "@/lib/icons";
 import styles from "./ai.module.css";
 
@@ -13,7 +14,8 @@ interface Tool {
   title: string;
   text: string;
   cta: string;
-  action: "register" | "vakansiyalar";
+  /** Kirgan foydalanuvchi shu manzilga o'tadi; null — faqat ro'yxatdan o'tish. */
+  href: string | null;
 }
 
 const TOOLS: Tool[] = [
@@ -23,7 +25,7 @@ const TOOLS: Tool[] = [
     title: "AI CV",
     text: "Xom ma'lumotlaringizdan professional CV. AI siz aytolmagan ko'nikmalaringizni ham topib, ta'kidlaydi.",
     cta: "CV yaratish",
-    action: "register",
+    href: "/profil-forma",
   },
   {
     key: "match",
@@ -31,7 +33,7 @@ const TOOLS: Tool[] = [
     title: "AI-Match",
     text: "Har bir vakansiya sizga qanchalik mos kelishini AI foizda hisoblab, sabablarini ko'rsatadi.",
     cta: "Vakansiyalarni ko'rish",
-    action: "vakansiyalar",
+    href: "/vakansiyalar",
   },
   {
     key: "shaxsiyat",
@@ -39,7 +41,7 @@ const TOOLS: Tool[] = [
     title: "Shaxsiyat testi",
     text: "Ish uslubingiz va arxetipingizni aniqlang — ish beruvchilar sizni to'g'ri tushunsin.",
     cta: "Testni boshlash",
-    action: "register",
+    href: "/shaxsiyat",
   },
   {
     key: "konikma",
@@ -47,17 +49,38 @@ const TOOLS: Tool[] = [
     title: "Ko'nikma testi",
     text: "Yo'nalishingiz bo'yicha bilimingizni onlayn tasdiqlang va tekshirilgan ball oling.",
     cta: "Testni topshirish",
-    action: "register",
+    href: "/konikma",
   },
 ];
 
 export default function AiPage(): JSX.Element {
   const router = useRouter();
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
+  useEffect(() => {
+    let live = true;
+    void hasSession().then((ok) => {
+      if (live) setSignedIn(ok);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  // Kirgan foydalanuvchi vositaga to'g'ridan-to'g'ri o'tadi; mehmonga
+  // ro'yxatdan o'tish yo'riqnomasi ko'rsatiladi.
   const onCta = (t: Tool): void => {
-    if (t.action === "vakansiyalar") router.push("/vakansiyalar");
-    else setRegisterOpen(true);
+    if (!t.href) {
+      setRegisterOpen(true);
+      return;
+    }
+    // Vakansiyalar ro'yxati mehmonga ham ochiq.
+    if (t.href === "/vakansiyalar" || signedIn) {
+      router.push(t.href);
+      return;
+    }
+    setRegisterOpen(true);
   };
 
   return (
