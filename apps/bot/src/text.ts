@@ -303,6 +303,7 @@ export const MENU = {
   profil: "👤 Profilim",
   suhbat: "📅 Suhbat",
   tolov: "💳 To'lov",
+  parol: "🔑 Login-parol",
   bildirishnoma: "🔔 Bildirishnomalar",
   kanal: "📢 Kanalimiz",
   til: "🌍 Til",

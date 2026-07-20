@@ -50,10 +50,12 @@ export function mainMenuKeyboard(): Keyboard {
     .text(MENU.tolov)
     .text(MENU.profil)
     .row()
+    .text(MENU.parol)
     .text(MENU.bildirishnoma)
-    .text(MENU.kanal)
     .row()
+    .text(MENU.kanal)
     .text(MENU.til)
+    .row()
     .text(MENU.yordam);
   return kb.resized().persistent();
 }
