@@ -1,0 +1,148 @@
+.main {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-6);
+}
+
+.hero {
+  margin-bottom: var(--s-5);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sub {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-bottom: var(--s-5);
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  height: 52px;
+  max-width: 520px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-white);
+  color: var(--t-ink-3);
+  box-shadow: var(--sh-raise);
+}
+
+.searchBox:focus-within {
+  box-shadow: var(--sh-focus);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-1);
+  background: transparent;
+}
+
+.input::placeholder {
+  color: var(--t-ink-3);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  height: 38px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  background: var(--t-fill);
+  transition:
+    background var(--d-fast) var(--e-out),
+    color var(--d-fast) var(--e-out);
+}
+
+.chip:hover {
+  color: var(--t-ink-1);
+}
+
+.chipOn {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.chip:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.count {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--s-4);
+}
+
+.skeleton {
+  height: 190px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+  animation: pulse 1.4s var(--e-out) infinite;
+}
+
+.empty {
+  padding: var(--s-12) 0;
+  text-align: center;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 760px) {
+  .wrap {
+    padding: var(--s-4);
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
