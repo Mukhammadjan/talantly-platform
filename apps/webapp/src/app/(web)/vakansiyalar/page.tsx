@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { FilterPanel, type FilterState } from "@/components/web/FilterPanel";
 import { JobCard } from "@/components/web/JobCard";
 import { MatchBreakdownModal } from "@/components/web/MatchBreakdownModal";
@@ -43,18 +43,20 @@ function reasonsFrom(m: MatchResult): string[] {
     .map((f) => `${f.label}: ${f.value}`);
 }
 
-export default function VakansiyalarPage(): JSX.Element {
+function VakansiyalarInner(): JSX.Element {
   const router = useRouter();
+  // Bosh sahifadagi qidiruv/yo'nalish chiplari URL orqali keladi.
+  const params = useSearchParams();
   const [search, setSearch] = useState<SearchState>({
-    query: "",
-    location: "",
-    minSalary: "",
-    sort: "recent",
+    query: params.get("search") ?? "",
+    location: params.get("location") ?? "",
+    minSalary: params.get("minSalary") ?? "",
+    sort: params.get("sort") === "salary" ? "salary" : "recent",
   });
   const [filter, setFilter] = useState<FilterState>({
-    direction: "",
-    level: "",
-    workFormat: "",
+    direction: params.get("direction") ?? "",
+    level: params.get("level") ?? "",
+    workFormat: params.get("workFormat") ?? "",
     aiSort: false,
   });
   const [list, setList] = useState<VacancyView[] | null>(null);
@@ -218,5 +220,14 @@ export default function VakansiyalarPage(): JSX.Element {
         title="AI moslikni ko'rish uchun ro'yxatdan o'ting"
       />
     </>
+  );
+}
+
+// useSearchParams Suspense chegarasini talab qiladi (Next 14).
+export default function VakansiyalarPage(): JSX.Element {
+  return (
+    <Suspense fallback={<div className={styles.main} />}>
+      <VakansiyalarInner />
+    </Suspense>
   );
 }

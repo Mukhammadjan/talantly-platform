@@ -1,0 +1,367 @@
+/* ---- Telegram splash (Mini App yo'naltirishni kutayotgan holat) ---- */
+.splash {
+  flex: 1 1 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+}
+
+.splashLogo {
+  height: 26px;
+  width: auto;
+}
+
+.splashMicro {
+  margin: 0;
+  font-size: var(--fs-micro);
+  line-height: var(--lh-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  color: var(--t-ink-3);
+}
+
+/* ---- Sahifa ---- */
+.page {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-10) var(--s-6) 0;
+}
+
+.h2 {
+  margin: 0 0 var(--s-4);
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.sechead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.sechead .h2 {
+  margin-bottom: var(--s-4);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+  white-space: nowrap;
+}
+
+/* ---- Hero ---- */
+.hero {
+  background: var(--t-white);
+  border-bottom: 1px solid var(--t-line);
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-12) var(--s-6);
+}
+
+.h1 {
+  margin: 0;
+  max-width: 18ch;
+  font-size: var(--fs-display-l);
+  line-height: var(--lh-display-l);
+  letter-spacing: var(--ls-display-l);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.accent {
+  color: var(--t-verified-ink);
+}
+
+.lead {
+  margin: var(--s-3) 0 0;
+  max-width: 60ch;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  color: var(--t-ink-2);
+}
+
+/* ---- Qidiruv ---- */
+.search {
+  margin-top: var(--s-6);
+  display: flex;
+  gap: var(--s-2);
+  max-width: 860px;
+}
+
+.field {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--h-btn);
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.field:focus-within {
+  box-shadow: var(--sh-focus);
+}
+
+.fieldCity {
+  flex: 0 1 220px;
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: var(--fs-body);
+  color: var(--t-ink-1);
+}
+
+.input::placeholder {
+  color: var(--t-ink-3);
+}
+
+.searchBtn {
+  flex-shrink: 0;
+  height: var(--h-btn);
+  padding: 0 var(--s-8);
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.searchBtn:hover {
+  background: var(--t-action-press);
+}
+
+.chips {
+  margin-top: var(--s-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--h-chip);
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  border: 1px solid var(--t-line);
+  background: var(--t-white);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  transition:
+    border-color var(--d-fast) var(--e-out),
+    color var(--d-fast) var(--e-out);
+}
+
+.chip:hover {
+  border-color: var(--t-action);
+  color: var(--t-action-ink);
+}
+
+/* ---- Kartalar ---- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--s-4);
+}
+
+.companies {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--s-4);
+}
+
+.skeleton {
+  height: 220px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+}
+
+.skeletonSm {
+  height: 150px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--s-8) 0;
+  font-size: var(--fs-body);
+  color: var(--t-ink-3);
+}
+
+/* ---- Tekshiruv bosqichlari ---- */
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--s-4);
+}
+
+.step {
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  border: 1px solid var(--t-line);
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+}
+
+.stepTitle {
+  margin: var(--s-3) 0 var(--s-1);
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.stepText {
+  margin: 0;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--t-ink-2);
+}
+
+/* ---- Ish beruvchi CTA ---- */
+.ctaWrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-10) var(--s-6) var(--s-12);
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+  padding: var(--s-8);
+  border-radius: var(--r-xl);
+  background: var(--t-white);
+  border: 1px solid var(--t-line);
+  box-shadow: var(--sh-raise);
+}
+
+.ctaTitle {
+  margin: 0 0 var(--s-2);
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.ctaText {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.ctaBtns {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.ctaPrimary,
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  height: var(--h-btn);
+  padding: 0 var(--s-6);
+  border-radius: var(--r-full);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.ctaPrimary {
+  background: var(--t-action);
+  color: var(--t-on-action);
+}
+
+.ctaPrimary:hover {
+  background: var(--t-action-press);
+}
+
+.ctaGhost {
+  border: 1px solid var(--t-line-strong);
+  color: var(--t-ink-1);
+}
+
+.ctaGhost:hover {
+  background: var(--t-fill);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 860px) {
+  .heroInner {
+    padding: var(--s-8) var(--s-4);
+  }
+  .section {
+    padding: var(--s-8) var(--s-4) 0;
+  }
+  .ctaWrap {
+    padding: var(--s-8) var(--s-4);
+  }
+  .search {
+    flex-wrap: wrap;
+  }
+  .fieldCity {
+    flex: 1 1 100%;
+  }
+  .searchBtn {
+    flex: 1 1 100%;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+  }
+  .cta {
+    padding: var(--s-6);
+  }
+}

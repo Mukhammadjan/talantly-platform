@@ -1,3 +1,4 @@
+import { WebFooter } from "@/components/web/WebFooter";
 import { WebHeader } from "@/components/web/WebHeader";
 import type { ReactNode } from "react";
 import styles from "./web.module.css";
@@ -12,6 +13,7 @@ export default function WebShellLayout({
     <div className={styles.web}>
       <WebHeader />
       {children}
+      <WebFooter />
     </div>
   );
 }
