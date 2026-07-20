@@ -1,14 +1,12 @@
 import { auth } from "@talantly/shared";
 import { hashPassword, verifyPassword } from "@talantly/shared/auth/password";
 import { type Context, Keyboard } from "grammy";
-import { config } from "../config.js";
 import * as authSessions from "../db/authSessionsRepo.js";
 import * as usersRepo from "../db/usersRepo.js";
+import { registeredKeyboard } from "../keyboards.js";
 import { logger } from "../logger.js";
 import {
-  PAROL_ASK_CONTACT,
   PAROL_ASK_FIRST,
-  PAROL_ASK_FIRST_NEW,
   PAROL_ASK_SECOND,
   PAROL_BAD_PHONE,
   PAROL_CONTACT_BUTTON,
@@ -17,27 +15,11 @@ import {
   PAROL_MISMATCH,
   PAROL_PHONE_TAKEN,
   PAROL_TOO_SHORT,
+  PWD_CONTACT_FIRST,
+  REG_CONTACT_PROMPT,
+  REGISTERED_MSG,
   parolDone,
 } from "../text.js";
-
-// WEBAPP_URL ba'zan ?v=SHA (bot menu versioni) bilan keladi — /kirish'ni
-// query'ga yopishtirmaslik uchun faqat toza origin olamiz. Kanonik brend
-// domeni talantly.uz; env faqat talantly.uz origin bo'lsa ishlatiladi.
-function loginUrl(): string {
-  const raw = config.webappUrl;
-  if (raw) {
-    try {
-      const u = new URL(raw);
-      if (u.hostname === "talantly.uz" || u.hostname.endsWith(".talantly.uz")) {
-        return `${u.origin}/kirish`;
-      }
-    } catch {
-      /* noto'g'ri URL — kanonik domenga tushamiz */
-    }
-  }
-  return "https://talantly.uz/kirish";
-}
-const LOGIN_URL = loginUrl();
 
 function contactKeyboard(): Keyboard {
   return new Keyboard()
@@ -46,33 +28,34 @@ function contactKeyboard(): Keyboard {
     .oneTime();
 }
 
-/** /parol — parol o'rnatish/yangilash oqimini boshlaydi. */
-export async function handleParol(ctx: Context): Promise<void> {
+// ==== Level 1: Ro'yxat (rol → raqam). Parol SO'RALMAYDI. ====
+
+/** Rol tanlangach — raqam so'raladi (reg_contact bosqichi). */
+export async function handleRoleChoice(
+  ctx: Context,
+  role: "talant" | "izlovchi",
+): Promise<void> {
   const from = ctx.from;
   if (!from) return;
-
   const user = await usersRepo.upsertByTgId(from.id);
-  if (user.phone) {
-    // Raqam allaqachon bor — to'g'ridan-to'g'ri yangi parol so'raladi.
-    await authSessions.setSession(from.id, "pw1", {});
-    await ctx.reply(PAROL_ASK_FIRST_NEW, {
-      reply_markup: { remove_keyboard: true },
-    });
-    return;
-  }
-
-  await authSessions.setSession(from.id, "contact", {});
-  await ctx.reply(PAROL_ASK_CONTACT, { reply_markup: contactKeyboard() });
+  await usersRepo.updateFields(user.id, { preferred_mode: role });
+  await authSessions.setSession(from.id, "reg_contact", { role });
+  await ctx.reply(REG_CONTACT_PROMPT, { reply_markup: contactKeyboard() });
 }
 
-/** Kontakt — faqat parol oqimida, faqat foydalanuvchining o'z raqami. */
+/**
+ * Kontakt — ro'yxat (reg_contact) YOKI parol oqimi (pwd_contact) uchun.
+ * Faqat foydalanuvchining o'z raqami qabul qilinadi.
+ */
 export async function handleContact(ctx: Context): Promise<void> {
   const from = ctx.from;
   const contact = ctx.message?.contact;
   if (!from || !contact) return;
 
   const session = await authSessions.getSession(from.id);
-  if (!session || session.step !== "contact") return;
+  if (!session || (session.step !== "reg_contact" && session.step !== "pwd_contact")) {
+    return;
+  }
 
   // Begona/ulashilgan kontakt — rad et.
   if (contact.user_id !== from.id) {
@@ -87,7 +70,6 @@ export async function handleContact(ctx: Context): Promise<void> {
   }
 
   const user = await usersRepo.upsertByTgId(from.id);
-  // Raqam boshqa akkauntga tegishli bo'lsa — to'sib qo'y.
   const existing = await usersRepo.findByPhone(phone);
   if (existing && existing.id !== user.id) {
     await authSessions.clearSession(from.id);
@@ -96,16 +78,41 @@ export async function handleContact(ctx: Context): Promise<void> {
     });
     return;
   }
-
   await usersRepo.updateFields(user.id, { phone });
+
+  if (session.step === "reg_contact") {
+    // Ro'yxat TUGADI — parol so'ralmaydi. Mini App + Login-parol tugmasi.
+    const role =
+      typeof session.data.role === "string" ? session.data.role : "talant";
+    await authSessions.clearSession(from.id);
+    await ctx.reply(REGISTERED_MSG, { reply_markup: registeredKeyboard(role) });
+    return;
+  }
+
+  // pwd_contact: raqamsiz eski user /parol bosdi — endi parol so'raymiz.
   await authSessions.setSession(from.id, "pw1", {});
   await ctx.reply(PAROL_ASK_FIRST, { reply_markup: { remove_keyboard: true } });
 }
 
+// ==== Level 2: Login-parol (ixtiyoriy — «🔑 Login-parol olish» yoki /parol). ====
+
+/** Parol oqimini boshlaydi. Raqam bo'lsa darhol parol, aks holda raqam so'raladi. */
+export async function handleParol(ctx: Context): Promise<void> {
+  const from = ctx.from;
+  if (!from) return;
+  const user = await usersRepo.upsertByTgId(from.id);
+  if (user.phone) {
+    await authSessions.setSession(from.id, "pw1", {});
+    await ctx.reply(PAROL_ASK_FIRST, { reply_markup: { remove_keyboard: true } });
+    return;
+  }
+  await authSessions.setSession(from.id, "pwd_contact", {});
+  await ctx.reply(PWD_CONTACT_FIRST, { reply_markup: contactKeyboard() });
+}
+
 /**
- * Parol matnini qayta ishlaydi (parol oqimida bo'lsa true qaytaradi).
- * Har bir parol xabari DARHOL o'chiriladi — chatda ochiq parol qolmaydi.
- * Ochiq parol log'ga HECH QACHON yozilmaydi.
+ * Parol matnini qayta ishlaydi (pw1/pw2 bosqichida bo'lsa true).
+ * Har bir parol xabari DARHOL o'chiriladi — ochiq parol chatda/log'da qolmaydi.
  */
 export async function handleParolText(ctx: Context): Promise<boolean> {
   const from = ctx.from;
@@ -132,7 +139,6 @@ export async function handleParolText(ctx: Context): Promise<boolean> {
       await ctx.reply(check.reason === "empty" ? PAROL_EMPTY : PAROL_TOO_SHORT);
       return true;
     }
-    // Birinchi parol darhol hash bo'ladi — ochiq matn sessiyaga tushmaydi.
     const hash = await hashPassword(text);
     await authSessions.setSession(from.id, "pw2", { hash });
     await ctx.reply(PAROL_ASK_SECOND);
@@ -143,7 +149,7 @@ export async function handleParolText(ctx: Context): Promise<boolean> {
   const hash = typeof session.data.hash === "string" ? session.data.hash : null;
   if (!hash) {
     await authSessions.setSession(from.id, "pw1", {});
-    await ctx.reply(PAROL_ASK_FIRST_NEW);
+    await ctx.reply(PAROL_ASK_FIRST);
     return true;
   }
 
@@ -164,6 +170,6 @@ export async function handleParolText(ctx: Context): Promise<boolean> {
     password_set_at: new Date().toISOString(),
   });
   await authSessions.clearSession(from.id);
-  await ctx.reply(parolDone({ phone: user.phone ?? "", siteUrl: LOGIN_URL }));
+  await ctx.reply(parolDone(user.phone ?? ""));
   return true;
 }

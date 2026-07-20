@@ -1,10 +1,11 @@
 import { InlineKeyboard, Keyboard } from "grammy";
 import { config } from "./config.js";
 import {
+  LOGIN_PWD_LABEL,
   MENU,
+  MINI_APP_OPEN_LABEL,
   PROFILE_BUTTON_LABEL,
   REGISTER_BUTTON_LABEL,
-  REGISTER_WEB_LABEL,
 } from "./text.js";
 
 export function registerKeyboard(): InlineKeyboard | undefined {
@@ -12,28 +13,28 @@ export function registerKeyboard(): InlineKeyboard | undefined {
   return new InlineKeyboard().webApp(REGISTER_BUTTON_LABEL, config.webappUrl);
 }
 
-/** Web ro'yxati (raqam + parol) — «🔐 Ro'yxatdan o'tish» + ilova tugmasi. */
-export function webRegisterKeyboard(): InlineKeyboard {
-  const kb = new InlineKeyboard().text(REGISTER_WEB_LABEL, "reg:start");
-  if (config.webappUrl) {
-    kb.row().webApp("📱 Ilovani ochish", config.webappUrl);
-  }
-  return kb;
-}
-
 export function profileKeyboard(): InlineKeyboard | undefined {
   if (!config.webappUrl) return undefined;
   return new InlineKeyboard().webApp(PROFILE_BUTTON_LABEL, config.webappUrl);
 }
 
-/** Yangi foydalanuvchi uchun rol tanlash — tanlov ilovada saqlanadi. */
-export function roleChoiceKeyboard(): InlineKeyboard | undefined {
-  if (!config.webappUrl) return undefined;
-  const join = config.webappUrl.includes("?") ? "&" : "?";
+/** Yangi foydalanuvchi uchun rol tanlash — callback (keyin raqam so'raladi). */
+export function roleChoiceKeyboard(): InlineKeyboard {
   return new InlineKeyboard()
-    .webApp("👤 Men talantman", `${config.webappUrl}${join}role=talant`)
+    .text("👤 Men talantman", "role:talant")
     .row()
-    .webApp("💼 Ish beruvchiman", `${config.webappUrl}${join}role=izlovchi`);
+    .text("💼 Ish beruvchiman", "role:izlovchi");
+}
+
+/** Ro'yxatdan o'tgandan keyin: Mini App + «🔑 Login-parol olish» (web uchun). */
+export function registeredKeyboard(role: string): InlineKeyboard {
+  const kb = new InlineKeyboard();
+  if (config.webappUrl) {
+    const join = config.webappUrl.includes("?") ? "&" : "?";
+    kb.webApp(MINI_APP_OPEN_LABEL, `${config.webappUrl}${join}role=${role}`).row();
+  }
+  kb.text(LOGIN_PWD_LABEL, "pwd:start");
+  return kb;
 }
 
 /** Doimiy pastki menyu — bot har doim tugmalar bilan boshqariladi. */

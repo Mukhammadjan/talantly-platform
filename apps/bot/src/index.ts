@@ -15,9 +15,10 @@ import {
   handleContact,
   handleParol,
   handleParolText,
+  handleRoleChoice,
 } from "./handlers/parol.js";
 import { handleProfil } from "./handlers/profil.js";
-import { handleStart } from "./handlers/start.js";
+import { handleRoyxat, handleStart } from "./handlers/start.js";
 import { handleSuhbat, handleSuhbatCallback } from "./handlers/suhbat.js";
 import { handlePaymentPhoto, handleTolov } from "./handlers/tolov.js";
 import {
@@ -57,17 +58,28 @@ async function main(): Promise<void> {
   bot.command("holat", safe(handleHolat));
   bot.command("suhbat", safe(handleSuhbat));
   bot.command("tolov", safe(handleTolov));
+  bot.command("royxat", safe(handleRoyxat));
   bot.command("parol", safe(handleParol));
-  bot.command("royxat", safe(handleParol));
   bot.command("yordam", safe(handleYordam));
 
-  // «🔐 Ro'yxatdan o'tish» tugmasi — raqam + parol oqimini boshlaydi.
-  bot.callbackQuery("reg:start", async (ctx) => {
+  // Ro'yxat: rol tanlash → raqam so'raladi (parol SO'RALMAYDI).
+  bot.callbackQuery(/^role:(talant|izlovchi)$/, async (ctx) => {
+    try {
+      await ctx.answerCallbackQuery();
+      const role = ctx.match?.[1] === "izlovchi" ? "izlovchi" : "talant";
+      await handleRoleChoice(ctx, role);
+    } catch (err) {
+      logger.error({ err }, "role callback error");
+    }
+  });
+
+  // «🔑 Login-parol olish» tugmasi — ixtiyoriy parol oqimini boshlaydi.
+  bot.callbackQuery("pwd:start", async (ctx) => {
     try {
       await ctx.answerCallbackQuery();
       await handleParol(ctx);
     } catch (err) {
-      logger.error({ err }, "reg:start callback error");
+      logger.error({ err }, "pwd:start callback error");
     }
   });
   bot.command("baholash", safe(handleBaholash));
@@ -147,12 +159,12 @@ async function main(): Promise<void> {
 
   const publicCommands = [
     { command: "start", description: "Botni ishga tushirish" },
-    { command: "royxat", description: "Ro'yxatdan o'tish (saytga kirish)" },
+    { command: "royxat", description: "Ro'yxatdan o'tish" },
     { command: "holat", description: "Tekshiruv holatim va yo'lim" },
     { command: "profil", description: "Profilim" },
     { command: "suhbat", description: "Suhbat vaqtini band qilish" },
     { command: "tolov", description: "AI CV uchun to'lov" },
-    { command: "parol", description: "Parolni o'zgartirish" },
+    { command: "parol", description: "Login-parol olish (web uchun)" },
     { command: "yordam", description: "Yordam va bog'lanish" },
   ];
   await bot.api.setMyCommands(publicCommands);

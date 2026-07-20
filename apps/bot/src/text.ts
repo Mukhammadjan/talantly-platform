@@ -6,24 +6,21 @@ import {
 
 export const REGISTER_BUTTON_LABEL = "📱 Ro'yxatdan o'tish";
 
-// Web ro'yxati (raqam + parol) — saytga kirish uchun.
-export const REGISTER_WEB_LABEL = "🔐 Ro'yxatdan o'tish";
-export const ROYXAT_PROMPT =
-  "🔐 Saytga (talantly.uz) kirish uchun ro'yxatdan o'ting:\n\n" +
-  "1️⃣ Telefon raqamingizni yuboring\n" +
-  "2️⃣ O'zingiz parol o'ylab toping\n" +
-  "3️⃣ Saytga telefon va shu parol bilan kiring\n\n" +
-  "Boshlash uchun pastdagi tugmani bosing 👇";
-
 export const PROFILE_BUTTON_LABEL = "📱 Profilni ochish";
 
 export const MINI_APP_COMING_SOON = "Mini App tez orada ulanadi.";
 
-// ---- Parol o'rnatish oqimi (AUTH v3) ----
+// ==== Ro'yxat (Level 1: rol + raqam — parol YO'Q) ====
 export const PAROL_CONTACT_BUTTON = "📱 Raqamni yuborish";
-export const PAROL_ASK_CONTACT =
-  "Saytga kirish uchun avval telefon raqamingizni yuboring.\n\n" +
+export const REG_CONTACT_PROMPT =
+  "Ro'yxatni yakunlash uchun telefon raqamingizni ulashing.\n\n" +
   "Pastdagi «📱 Raqamni yuborish» tugmasini bosing.";
+export const REGISTERED_MSG =
+  "✅ Ro'yxatdan o'tdingiz!\n\n" +
+  "Endi ilovadan foydalanishingiz mumkin. Saytga (talantly.uz) kirish uchun " +
+  "login-parol kerak bo'lsa, «🔑 Login-parol olish» tugmasini bosing.";
+export const MINI_APP_OPEN_LABEL = "📱 Ilovani ochish";
+export const LOGIN_PWD_LABEL = "🔑 Login-parol olish (web uchun)";
 export const PAROL_FOREIGN_CONTACT =
   "Bu sizning raqamingiz emas. Iltimos, o'z raqamingizni " +
   "«📱 Raqamni yuborish» tugmasi orqali yuboring.";
@@ -31,23 +28,24 @@ export const PAROL_BAD_PHONE =
   "Raqam formati noto'g'ri. O'zbekiston raqamini yuboring (+998...).";
 export const PAROL_PHONE_TAKEN =
   "Bu raqam allaqachon boshqa akkauntga ulangan. Yordam uchun /yordam.";
+
+// ==== Login-parol (Level 2: ixtiyoriy — «🔑 Login-parol olish» yoki /parol) ====
+export const PWD_CONTACT_FIRST =
+  "Avval telefon raqamingizni ulashing (pastdagi «📱 Raqamni yuborish» tugmasi).";
 export const PAROL_ASK_FIRST =
-  "✅ Raqam qabul qilindi.\n\nEndi parol o'ylab toping (kamida 8 belgi):";
-export const PAROL_ASK_FIRST_NEW =
-  "Yangi parol o'ylab toping (kamida 8 belgi):";
+  "Saytga kirish uchun parol o'ylab toping (kamida 8 belgi):";
+export const PAROL_ASK_SECOND = "Parolni yana bir marta kiriting:";
 export const PAROL_TOO_SHORT =
   "Parol kamida 8 belgidan iborat bo'lishi kerak. Qaytadan kiriting:";
 export const PAROL_EMPTY = "Parol bo'sh bo'lmasin. Qaytadan kiriting:";
-export const PAROL_ASK_SECOND =
-  "Yaxshi. Endi xuddi shu parolni yana bir marta kiriting:";
 export const PAROL_MISMATCH =
   "Parollar mos kelmadi. Boshidan — parol o'ylab toping (kamida 8 belgi):";
 
-export function parolDone(params: { phone: string; siteUrl: string }): string {
+export function parolDone(phone: string): string {
   return (
     "✅ Parol o'rnatildi!\n\n" +
-    `Login (telefon): ${params.phone}\n` +
-    `Sayt: ${params.siteUrl}\n\n` +
+    `Login (telefon): ${phone}\n` +
+    "Sayt: talantly.uz\n\n" +
     "Endi saytga telefon raqamingiz va shu parol bilan kirasiz. " +
     "Parolni hech kimga aytmang."
   );

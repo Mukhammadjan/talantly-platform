@@ -60,9 +60,10 @@ export function RegisterSheet({
         <p className={styles.kicker}>Ro&apos;yxatdan o&apos;tish</p>
         <h2 className={styles.title}>{title}</h2>
         <p className={styles.text}>
-          Talantly&apos;ga kirish uchun Telegram bot orqali ro&apos;yxatdan
-          o&apos;ting: raqamingizni tasdiqlab, o&apos;zingiz parol
-          o&apos;rnatasiz. Keyin shu telefon va parol bilan saytga kirasiz.
+          <strong>@Talantly_bot</strong> ga kiring, telefon raqamingizni ulang.
+          So&apos;ng saytga kirish uchun{" "}
+          <strong>«🔑 Login-parol olish»</strong> tugmasini bosib parol
+          o&apos;rnating. Keyin shu telefon va parol bilan kirasiz.
         </p>
 
         <div className={styles.qrWrap}>

@@ -13,6 +13,7 @@ import {
   handleContact,
   handleParol,
   handleParolText,
+  handleRoleChoice,
 } from "../handlers/parol.js";
 
 const TG_ID = 999500111;
@@ -78,30 +79,46 @@ async function cleanup(): Promise<void> {
 async function main(): Promise<void> {
   await cleanup();
 
-  // 0) /parol — raqamsiz user → kontakt so'raladi.
-  const c0 = new MockCtx();
-  await handleParol(c0.as());
-  const s0 = await authSessions.getSession(TG_ID);
-  check("/parol → 'contact' bosqichi", s0?.step === "contact");
+  // ==== A) RO'YXAT (rol + raqam — PAROL SO'RALMAYDI) ====
+  // A0) rol tanlash → reg_contact.
+  const ra = new MockCtx();
+  await handleRoleChoice(ra.as(), "talant");
+  check(
+    "rol tanlash → 'reg_contact'",
+    (await authSessions.getSession(TG_ID))?.step === "reg_contact",
+  );
 
-  // 1) BEGONA kontakt (user_id boshqa) → rad, raqam saqlanmaydi.
+  // A1) BEGONA kontakt → rad, raqam saqlanmaydi.
   const c1 = new MockCtx();
   c1.setContact(TG_ID + 42, PHONE_RAW);
   await handleContact(c1.as());
-  const afterForeign = await usersRepo.findByTgId(TG_ID);
-  check("begona kontakt rad etildi", afterForeign?.phone == null);
+  check("begona kontakt rad etildi", (await usersRepo.findByTgId(TG_ID))?.phone == null);
   check(
-    "begona kontakt xabari ko'rsatildi",
+    "begona kontakt xabari",
     c1.lastReply().toLowerCase().includes("sizning raqamingiz emas"),
   );
 
-  // 2) O'Z kontakti → raqam saqlanadi, pw1 bosqichi.
+  // A2) O'Z kontakti → RO'YXAT TUGADI (raqam saqlanadi), PAROL SO'RALMAYDI.
   const c2 = new MockCtx();
   c2.setContact(TG_ID, PHONE_RAW);
   await handleContact(c2.as());
-  const afterOwn = await usersRepo.findByTgId(TG_ID);
-  check("o'z raqami E.164 saqlandi", afterOwn?.phone === PHONE_E164);
-  check("pw1 bosqichi", (await authSessions.getSession(TG_ID))?.step === "pw1");
+  check("o'z raqami E.164 saqlandi", (await usersRepo.findByTgId(TG_ID))?.phone === PHONE_E164);
+  check(
+    "ro'yxat tugadi — sessiya tozalandi (parol so'ralmadi)",
+    (await authSessions.getSession(TG_ID)) === null,
+  );
+  check("'Ro'yxatdan o'tdingiz' xabari", c2.lastReply().includes("Ro'yxatdan o'tdingiz"));
+  check(
+    "registratsiyada PAROL so'ralmadi",
+    c2.lastReply().toLowerCase().includes("parol o'ylab") === false,
+  );
+
+  // ==== B) LOGIN-PAROL (ixtiyoriy — user endi raqamli) ====
+  // B0) handleParol → raqam bor → to'g'ridan-to'g'ri pw1 (kontakt so'ralmaydi).
+  const b0 = new MockCtx();
+  await handleParol(b0.as());
+  check("login-parol: pw1 bosqichi (raqam bor)", (await authSessions.getSession(TG_ID))?.step === "pw1");
+  check("pw1 so'rovi parol haqida", b0.lastReply().toLowerCase().includes("parol o'ylab"));
 
   // 3) pw1 juda qisqa parol → qayta so'raladi + xabar o'chirildi.
   const c3 = new MockCtx();
@@ -149,7 +166,9 @@ async function main(): Promise<void> {
   check("oqim sessiyasi tozalandi", (await authSessions.getSession(TG_ID)) === null);
 
   const confirm = c6b.lastReply();
-  check("tasdiqда login (telefon) bor", confirm.includes(PHONE_E164));
+  check("tasdiq: '✅ Parol o'rnatildi!'", confirm.includes("✅ Parol o'rnatildi!"));
+  check("tasdiq: 'Login (telefon): +998...'", confirm.includes(`Login (telefon): ${PHONE_E164}`));
+  check("tasdiq: 'Sayt: talantly.uz'", confirm.includes("Sayt: talantly.uz"));
   check("tasdiqда ochiq PAROL YO'Q", confirm.includes(GOOD_PW) === false);
 
   // 7) verifyPassword: DB hash + to'g'ri parol = true, xato = false.

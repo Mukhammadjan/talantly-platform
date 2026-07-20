@@ -71,9 +71,14 @@ export async function POST(req: Request): Promise<NextResponse> {
     .maybeSingle();
   const user = row as UserRow | null;
 
-  if (!user || !user.password_hash || user.tg_id == null) {
+  if (!user || user.tg_id == null) {
     await logAttempt(false);
     return NextResponse.json({ error: "invalid" }, { status: 401 });
+  }
+  // Raqam ulashgan lekin parol o'rnatmagan — botда "Login-parol olish" kerak.
+  if (!user.password_hash) {
+    await logAttempt(false);
+    return NextResponse.json({ error: "no_password" }, { status: 409 });
   }
   if (user.is_blocked) {
     await logAttempt(false);
