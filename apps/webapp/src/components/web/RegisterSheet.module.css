@@ -22,7 +22,7 @@
   background: var(--t-white);
   border-radius: var(--r-xl);
   box-shadow: var(--sh-sheet);
-  padding: var(--s-7) var(--s-6) var(--s-6);
+  padding: var(--s-8) var(--s-6) var(--s-6);
   animation: rise var(--d-base) var(--e-out);
 }
 
