@@ -4,8 +4,18 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RegisterSheet } from "@/components/web/RegisterSheet";
 import { hasSession, loginWithPassword } from "@/lib/auth";
-import { getSavedRole } from "@/lib/role";
+import { getSavedRole, saveRole, type AppRole } from "@/lib/role";
+import { isInsideTelegram } from "@/lib/telegram";
 import styles from "./kirish.module.css";
+
+// Kirgandan keyingi manzil. Brauzerda — web platforma bo'limlari,
+// Telegram ichida — Mini App hub'lari.
+function homeFor(role: AppRole | null, inTelegram: boolean): string {
+  if (inTelegram) {
+    return role === "talant" ? "/talant" : role === "izlovchi" ? "/izlovchi" : "/welcome";
+  }
+  return role === "talant" ? "/kabinet" : role === "izlovchi" ? "/kompaniyam" : "/";
+}
 
 export default function KirishPage(): JSX.Element {
   const router = useRouter();
@@ -15,17 +25,6 @@ export default function KirishPage(): JSX.Element {
   const [password, setPassword] = useState("");
   const [registerOpen, setRegisterOpen] = useState(false);
 
-  const gotoHub = async (): Promise<void> => {
-    const role = await getSavedRole();
-    router.replace(
-      role === "talant"
-        ? "/talant"
-        : role === "izlovchi"
-          ? "/izlovchi"
-          : "/welcome",
-    );
-  };
-
   const submitPassword = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (busy) return;
@@ -33,7 +32,14 @@ export default function KirishPage(): JSX.Element {
     setErr(null);
     const r = await loginWithPassword(phone, password);
     if (r.ok) {
-      await gotoHub();
+      // Rolni serverdan olamiz (brauzerda localStorage bo'sh bo'lishi mumkin).
+      const fromApi =
+        r.preferredMode === "talant" || r.preferredMode === "izlovchi"
+          ? r.preferredMode
+          : null;
+      if (fromApi) saveRole(fromApi);
+      const role = fromApi ?? (await getSavedRole());
+      router.replace(homeFor(role, isInsideTelegram()));
       return;
     }
     setBusy(false);
@@ -56,13 +62,7 @@ export default function KirishPage(): JSX.Element {
     void hasSession().then((ok) => {
       if (!live || !ok) return;
       void getSavedRole().then((role) => {
-        router.replace(
-          role === "talant"
-            ? "/talant"
-            : role === "izlovchi"
-              ? "/izlovchi"
-              : "/welcome",
-        );
+        router.replace(homeFor(role, isInsideTelegram()));
       });
     });
     return () => {
