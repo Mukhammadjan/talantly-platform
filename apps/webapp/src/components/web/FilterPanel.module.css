@@ -1,6 +1,7 @@
 .panel {
   position: sticky;
-  top: 88px;
+  /* header 64 + sticky qidiruv paneli 123 + nafas 16 */
+  top: calc(var(--h-nav, 64px) + 123px + var(--s-4));
   align-self: start;
   width: 260px;
   flex-shrink: 0;
@@ -13,7 +14,7 @@
   box-shadow: var(--sh-raise);
   /* Panel ekrandan baland bo'lsa yopishgach yuqori qismi (AI-saralash)
      ko'rinmay qolardi — endi panelning o'zi scroll bo'ladi. */
-  max-height: calc(100vh - 88px - var(--s-6));
+  max-height: calc(100vh - var(--h-nav, 64px) - 123px - var(--s-4) - var(--s-6));
   overflow-y: auto;
   overscroll-behavior: contain;
 }

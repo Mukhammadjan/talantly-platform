@@ -10,6 +10,10 @@
   display: flex;
   gap: var(--s-6);
   align-items: flex-start;
+  /* Sticky filtr faqat shu konteyner ichida yopishadi. Vakansiya kam bo'lsa
+     konteyner filtrdan qisqa bo'lib qolar va panel darrov yuqoriga ketardi —
+     min-height uni ekran oxirigacha ushlab turadi. */
+  min-height: calc(100vh - var(--h-nav, 64px) - 123px);
 }
 
 .content {

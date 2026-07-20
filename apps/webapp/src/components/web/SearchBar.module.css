@@ -1,4 +1,9 @@
+/* Header (64px) ostiga yopishadi — scroll paytida qidiruv va filtrlar
+   doim qo'l ostida turadi. */
 .wrap {
+  position: sticky;
+  top: var(--h-nav, 64px);
+  z-index: 20;
   background: var(--t-white);
   border-bottom: 1px solid var(--t-line);
 }
@@ -115,5 +120,13 @@
   }
   .popular {
     padding: 0 var(--s-4) var(--s-3);
+  }
+}
+
+/* Kichik ekranda qidiruv paneli balandroq — yopishtirilsa ekranning yarmini
+   egallaydi, shuning uchun faqat desktopda sticky. */
+@media (max-width: 980px) {
+  .wrap {
+    position: static;
   }
 }
