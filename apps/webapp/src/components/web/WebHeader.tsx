@@ -120,6 +120,14 @@ export function WebHeader(): JSX.Element | null {
                   >
                     <Icon name="briefcase" size={16} /> Mening kompaniyam
                   </Link>
+                  <Link
+                    href="/kompaniyam/vakansiyalar"
+                    className={styles.dropItem}
+                    role="menuitem"
+                    onClick={() => setAccountOpen(false)}
+                  >
+                    <Icon name="doc" size={16} /> Vakansiyalarim
+                  </Link>
                   <button
                     type="button"
                     className={`${styles.dropItem} ${styles.dropDanger}`}

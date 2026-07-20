@@ -1,0 +1,396 @@
+.wrap {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-6) var(--s-12);
+}
+
+/* ---- Sarlavha ---- */
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s-6);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+  margin-bottom: var(--s-2);
+}
+
+.crumb {
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.newBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--h-btn);
+  padding: 0 var(--s-5);
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.newBtn:hover {
+  background: var(--t-action-press);
+}
+
+/* ---- Tablar ---- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--h-chip);
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  border: 1px solid var(--t-line);
+  background: var(--t-white);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  transition:
+    border-color var(--d-fast) var(--e-out),
+    color var(--d-fast) var(--e-out);
+}
+
+.tab:hover {
+  border-color: var(--t-line-strong);
+}
+
+.tabOn {
+  border-color: var(--t-action);
+  color: var(--t-action-ink);
+  background: var(--t-action-soft);
+}
+
+.tabNum {
+  font-variant-numeric: tabular-nums;
+  color: var(--t-ink-3);
+}
+
+.tabOn .tabNum {
+  color: var(--t-action-ink);
+}
+
+/* ---- Ro'yxat ---- */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  border: 1px solid var(--t-line);
+}
+
+.cardMain {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.cardTitle {
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.cardTitle:hover {
+  color: var(--t-action-ink);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 var(--s-2);
+  border-radius: var(--r-xs);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+}
+
+.badgeOn {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.badgeOff {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.badgeDraft {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.meta {
+  margin: var(--s-1) 0 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.salary {
+  margin: var(--s-1) 0 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Arizalar bloki ---- */
+.appsBox {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 96px;
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--t-fill);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.appsBox:hover {
+  background: var(--t-action-soft);
+}
+
+.appsNum {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.appsLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  color: var(--t-ink-3);
+}
+
+.fresh {
+  margin-top: var(--s-1);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  color: var(--t-action-ink);
+}
+
+/* ---- Amallar ---- */
+.cardActions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: var(--s-2);
+}
+
+.actionGhost,
+.actionPrimary {
+  display: inline-flex;
+  align-items: center;
+  height: var(--h-btn-sm);
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.actionGhost {
+  border: 1px solid var(--t-line-strong);
+  color: var(--t-ink-1);
+}
+
+.actionGhost:hover:not(:disabled) {
+  background: var(--t-fill);
+}
+
+.actionPrimary {
+  background: var(--t-action);
+  color: var(--t-on-action);
+}
+
+.actionPrimary:hover:not(:disabled) {
+  background: var(--t-action-press);
+}
+
+.actionGhost:disabled,
+.actionPrimary:disabled {
+  opacity: 0.55;
+}
+
+/* ---- Holatlar ---- */
+.skel {
+  height: 108px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+}
+
+.error {
+  margin: 0 0 var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-sm);
+  background: var(--t-danger-soft);
+  color: var(--t-danger-ink);
+  font-size: var(--fs-caption);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-12) var(--s-6);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  border: 1px solid var(--t-line);
+  text-align: center;
+}
+
+.emptyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.emptyText {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+/* ---- Mehmon holati ---- */
+.centerState {
+  flex: 1 1 auto;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  padding: var(--s-10) var(--s-4);
+  text-align: center;
+}
+
+.guestIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.guestTitle {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.guestText {
+  margin: 0;
+  max-width: 42ch;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.guestBtn {
+  margin-top: var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  height: var(--h-btn);
+  padding: 0 var(--s-6);
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+}
+
+@media (max-width: 720px) {
+  .inner {
+    padding: var(--s-6) var(--s-4) var(--s-10);
+  }
+  .card {
+    gap: var(--s-3);
+  }
+  .appsBox {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--s-2);
+    min-width: 0;
+  }
+  .cardActions {
+    width: 100%;
+  }
+}

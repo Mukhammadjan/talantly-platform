@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { SessionPayload } from "@/lib/server/auth";
 import { requireUser } from "@/lib/server/guard";
 import {
   ensureCompany,
@@ -52,12 +53,61 @@ function toClient(v: VacancyRow): Record<string, unknown> {
   };
 }
 
-/** Faol vakansiyalar (demo toggle bilan). ?id= bilan bitta. */
+/** Ish beruvchining o'z vakansiyalari — har biriga ariza sanog'i bilan. */
+async function listMine(session: SessionPayload): Promise<NextResponse> {
+  const db = getDb();
+  const company = await ensureCompany(session);
+
+  const { data, error } = await db
+    .from("vacancies")
+    .select("*")
+    .eq("company_id", company.id)
+    .order("created_at", { ascending: false })
+    .limit(100);
+  if (error) return NextResponse.json({ error: "db_error" }, { status: 500 });
+
+  const rows = (data ?? []) as unknown as (VacancyRow & {
+    status: string;
+    created_at: string;
+    salary_currency: string;
+  })[];
+
+  // Arizalarni bitta so'rovda olib, vakansiya bo'yicha sanaymiz.
+  const ids = rows.map((r) => r.id);
+  const counts = new Map<string, { total: number; fresh: number }>();
+  if (ids.length > 0) {
+    const { data: reqs } = await db
+      .from("requests")
+      .select("vacancy_id, status")
+      .eq("kind", "talant_qiziqishi")
+      .in("vacancy_id", ids);
+    for (const r of (reqs ?? []) as { vacancy_id: string; status: string }[]) {
+      const c = counts.get(r.vacancy_id) ?? { total: 0, fresh: 0 };
+      c.total += 1;
+      if (r.status === "yangi") c.fresh += 1;
+      counts.set(r.vacancy_id, c);
+    }
+  }
+
+  return NextResponse.json({
+    vacancies: rows.map((v) => ({
+      ...toClient(v),
+      status: v.status,
+      createdAt: v.created_at,
+      applications: counts.get(v.id) ?? { total: 0, fresh: 0 },
+    })),
+  });
+}
+
+/** Faol vakansiyalar (demo toggle bilan). ?id= bilan bitta, ?mine=1 — o'zimniki. */
 export async function GET(req: Request): Promise<NextResponse> {
   const g = await requireUser(req);
   if (!g.ok) return g.res;
 
-  const id = new URL(req.url).searchParams.get("id");
+  const url = new URL(req.url);
+  if (url.searchParams.get("mine") === "1") return listMine(g.session);
+
+  const id = url.searchParams.get("id");
   const db = getDb();
   let query = db
     .from("vacancies")
@@ -89,6 +139,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     salaryTo?: unknown;
     workFormats?: unknown;
     description?: unknown;
+    city?: unknown;
+    district?: unknown;
   };
   try {
     body = (await req.json()) as typeof body;
@@ -121,6 +173,12 @@ export async function POST(req: Request): Promise<NextResponse> {
     : [];
   const description =
     typeof body.description === "string" ? body.description.slice(0, 1500) : null;
+  const city =
+    typeof body.city === "string" && body.city.trim()
+      ? body.city.trim().slice(0, 80)
+      : "Toshkent";
+  const district =
+    typeof body.district === "string" ? body.district.trim().slice(0, 80) : "";
 
   const company = await ensureCompany(session);
 
@@ -146,7 +204,8 @@ export async function POST(req: Request): Promise<NextResponse> {
       salary_from: salaryFrom,
       salary_to: salaryTo,
       description,
-      city: "Toshkent",
+      city,
+      district: district || null,
       work_formats: workFormats,
       status: "faol",
       is_demo: false,

@@ -22,6 +22,7 @@ const COLS: { title: string; links: { href: string; label: string }[] }[] = [
     links: [
       { href: "/nomzodlar", label: "Nomzodlar" },
       { href: "/kompaniyam", label: "Mening kompaniyam" },
+      { href: "/kompaniyam/vakansiyalar", label: "Vakansiyalarim" },
       { href: "/kirish", label: "Kirish" },
     ],
   },

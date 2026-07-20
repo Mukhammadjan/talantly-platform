@@ -88,11 +88,39 @@
   color: var(--t-ink-2);
 }
 
+.heroLinks {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.vakansiyaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--h-btn-sm);
+  padding: 0 var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.vakansiyaLink:hover {
+  background: var(--t-action-press);
+}
+
 .nomzodLink {
   flex-shrink: 0;
   font-size: var(--fs-caption);
   font-weight: var(--fw-semibold);
   color: var(--t-action-ink);
+  white-space: nowrap;
 }
 
 /* ---- Forma karta ---- */

@@ -169,9 +169,17 @@ export default function KompaniyamPage(): JSX.Element {
               </span>
             </div>
           </div>
-          <Link href="/nomzodlar" className={styles.nomzodLink}>
-            Nomzodlar →
-          </Link>
+          <div className={styles.heroLinks}>
+            <Link
+              href="/kompaniyam/vakansiyalar"
+              className={styles.vakansiyaLink}
+            >
+              <Icon name="doc" size={16} /> Vakansiyalarim
+            </Link>
+            <Link href="/nomzodlar" className={styles.nomzodLink}>
+              Nomzodlar →
+            </Link>
+          </div>
         </header>
 
         <form className={styles.card} onSubmit={(e) => void save(e)}>
