@@ -153,9 +153,9 @@ async function main(): Promise<void> {
   check("tasdiqда ochiq PAROL YO'Q", confirm.includes(GOOD_PW) === false);
 
   // 7) verifyPassword: DB hash + to'g'ri parol = true, xato = false.
-  const { auth } = await import("@talantly/shared");
-  const okTrue = await auth.verifyPassword(finalUser!.password_hash!, GOOD_PW);
-  const okFalse = await auth.verifyPassword(finalUser!.password_hash!, "notit");
+  const { verifyPassword } = await import("@talantly/shared/auth/password");
+  const okTrue = await verifyPassword(finalUser!.password_hash!, GOOD_PW);
+  const okFalse = await verifyPassword(finalUser!.password_hash!, "notit");
   check("argon2 verify to'g'ri parol = true", okTrue === true);
   check("argon2 verify xato parol = false", okFalse === false);
 

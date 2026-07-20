@@ -1,4 +1,5 @@
 import { auth } from "@talantly/shared";
+import { hashPassword, verifyPassword } from "@talantly/shared/auth/password";
 import { type Context, Keyboard } from "grammy";
 import { config } from "../config.js";
 import * as authSessions from "../db/authSessionsRepo.js";
@@ -119,7 +120,7 @@ export async function handleParolText(ctx: Context): Promise<boolean> {
       return true;
     }
     // Birinchi parol darhol hash bo'ladi — ochiq matn sessiyaga tushmaydi.
-    const hash = await auth.hashPassword(text);
+    const hash = await hashPassword(text);
     await authSessions.setSession(from.id, "pw2", { hash });
     await ctx.reply(PAROL_ASK_SECOND);
     return true;
@@ -133,7 +134,7 @@ export async function handleParolText(ctx: Context): Promise<boolean> {
     return true;
   }
 
-  const matches = await auth.verifyPassword(hash, text);
+  const matches = await verifyPassword(hash, text);
   if (!matches) {
     await authSessions.setSession(from.id, "pw1", {});
     await ctx.reply(PAROL_MISMATCH);

@@ -1,5 +1,4 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
-import { hash as argonHash, verify as argonVerify } from "@node-rs/argon2";
 import { SignJWT, jwtVerify } from "jose";
 
 // Yagona auth: Mini App (initData) VA Web (Login Widget) bir xil JWT chiqaradi.
@@ -156,19 +155,5 @@ export function validatePasswordStrength(pw: string): PasswordCheck {
   return { ok: true };
 }
 
-/** argon2id hash. Ochiq parol hech qayerda saqlanmaydi — faqat hash. */
-export function hashPassword(password: string): Promise<string> {
-  return argonHash(password);
-}
-
-/** Saqlangan hash'ga parolni solishtiradi. Xato bo'lsa false. */
-export async function verifyPassword(
-  hash: string,
-  password: string,
-): Promise<boolean> {
-  try {
-    return await argonVerify(hash, password);
-  } catch {
-    return false;
-  }
-}
+// hashPassword/verifyPassword (argon2) — "@talantly/shared/auth/password"'da.
+// Barrel ularni RE-EXPORT QILMAYDI (native .node barcha Next build'ni sindiradi).

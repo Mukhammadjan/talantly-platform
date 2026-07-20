@@ -11,6 +11,7 @@
     "./constants": "./src/constants.ts",
     "./db": "./src/db/index.ts",
     "./auth": "./src/auth/index.ts",
+    "./auth/password": "./src/auth/password.ts",
     "./talent-view": "./src/talentView/index.ts",
     "./status-machine": "./src/statusMachine/index.ts"
   },

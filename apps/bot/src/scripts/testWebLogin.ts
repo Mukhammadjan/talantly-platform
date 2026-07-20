@@ -7,6 +7,7 @@
  * Ishga tushirish: tsx apps/bot/src/scripts/testWebLogin.ts
  */
 import { auth, createServiceClient } from "@talantly/shared";
+import { hashPassword } from "@talantly/shared/auth/password";
 import { config } from "../config.js"; // .env yuklaydi (side-effect)
 
 const BASE = process.env.WEB_BASE ?? "http://localhost:3001";
@@ -58,7 +59,7 @@ async function main(): Promise<void> {
   await cleanupAll();
 
   // Seed: bot o'rnatgandek — telefon + argon2 hash.
-  const hash = await auth.hashPassword(PW);
+  const hash = await hashPassword(PW);
   const { data: seeded, error } = await db
     .from("users")
     .insert({

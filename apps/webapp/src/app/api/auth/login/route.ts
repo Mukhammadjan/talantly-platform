@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@talantly/shared";
+import { verifyPassword } from "@talantly/shared/auth/password";
 import { getDb } from "@/lib/server/db";
 
 // argon2 (native) — Node.js runtime shart (edge emas).
@@ -79,7 +80,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "blocked" }, { status: 403 });
   }
 
-  const ok = await auth.verifyPassword(user.password_hash, password);
+  const ok = await verifyPassword(user.password_hash, password);
   await logAttempt(ok);
   if (!ok) {
     return NextResponse.json({ error: "invalid" }, { status: 401 });
