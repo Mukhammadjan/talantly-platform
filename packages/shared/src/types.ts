@@ -15,6 +15,9 @@ export interface UserRow {
   created_at: IsoTimestamp;
   tg_username: string | null;
   preferred_mode: PreferredMode | null;
+  is_blocked: boolean;
+  password_hash: string | null;
+  password_set_at: IsoTimestamp | null;
 }
 
 export interface UserInsert {
@@ -26,6 +29,43 @@ export interface UserInsert {
   created_at?: IsoTimestamp;
   tg_username?: string | null;
   preferred_mode?: PreferredMode | null;
+  is_blocked?: boolean;
+  password_hash?: string | null;
+  password_set_at?: IsoTimestamp | null;
+}
+
+/** Bot parol-o'rnatish oqimi holati (AUTH v3) — restart'da yo'qolmaydi. */
+export interface BotAuthSessionRow {
+  tg_id: number;
+  step: string;
+  data: Record<string, unknown>;
+  expires_at: IsoTimestamp;
+  created_at: IsoTimestamp;
+}
+
+export interface BotAuthSessionInsert {
+  tg_id: number;
+  step: string;
+  data?: Record<string, unknown>;
+  expires_at: IsoTimestamp;
+  created_at?: IsoTimestamp;
+}
+
+/** Web login urinishlari — rate-limit + audit (AUTH v3). */
+export interface LoginAttemptRow {
+  id: Uuid;
+  phone: string;
+  ok: boolean;
+  ip: string | null;
+  created_at: IsoTimestamp;
+}
+
+export interface LoginAttemptInsert {
+  id?: Uuid;
+  phone: string;
+  ok: boolean;
+  ip?: string | null;
+  created_at?: IsoTimestamp;
 }
 
 export type Direction =

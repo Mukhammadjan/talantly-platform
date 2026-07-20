@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { hasSession, setWebToken } from "@/lib/auth";
+import { hasSession, loginWithPassword, setWebToken } from "@/lib/auth";
 import { getSavedRole } from "@/lib/role";
 import styles from "./kirish.module.css";
 
@@ -30,6 +30,41 @@ export default function KirishPage(): JSX.Element {
   const widgetRef = useRef<HTMLDivElement>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const gotoHub = async (): Promise<void> => {
+    const role = await getSavedRole();
+    router.replace(
+      role === "talant"
+        ? "/talant"
+        : role === "izlovchi"
+          ? "/izlovchi"
+          : "/welcome",
+    );
+  };
+
+  const submitPassword = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setErr(null);
+    const r = await loginWithPassword(phone, password);
+    if (r.ok) {
+      await gotoHub();
+      return;
+    }
+    setBusy(false);
+    setErr(
+      r.status === 429
+        ? "Juda ko'p urinish. 15 daqiqadan so'ng qayta urining."
+        : r.status === 403
+          ? "Hisobingiz bloklangan. Administrator bilan bog'laning."
+          : r.status === 400
+            ? "Telefon va parolni to'ldiring."
+            : "Telefon yoki parol xato.",
+    );
+  };
 
   // Sessiya bo'lsa to'g'ri bo'limga.
   useEffect(() => {
@@ -116,22 +151,65 @@ export default function KirishPage(): JSX.Element {
         />
         <h1 className={styles.title}>Platformaga kirish</h1>
         <p className={styles.sub}>
-          Telegram hisobingiz bilan bir bosishda kiring — telefondagi Mini App
-          bilan bitta akkaunt.
+          Telefon raqami va parolingiz bilan kiring. Parolni Telegram botda
+          o&apos;rnatasiz — telefondagi Mini App bilan bitta akkaunt.
         </p>
 
-        <div ref={widgetRef} className={styles.widget} />
-        {busy ? <p className={styles.hint}>Kirilmoqda...</p> : null}
+        <form
+          className={styles.form}
+          onSubmit={(e) => void submitPassword(e)}
+        >
+          <input
+            className={styles.input}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="+998 90 123 45 67"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            aria-label="Telefon raqami"
+          />
+          <input
+            className={styles.input}
+            type="password"
+            autoComplete="current-password"
+            placeholder="Parol"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-label="Parol"
+          />
+          <button type="submit" className={styles.primary} disabled={busy}>
+            {busy ? "Kirilmoqda..." : "Kirish"}
+          </button>
+        </form>
         {err ? <p className={styles.err}>{err}</p> : null}
 
-        <p className={styles.alt}>
-          Telegram ilovasida ochmoqchimisiz?{" "}
+        <p className={styles.forgot}>
+          Parolni unutdingizmi? Botda{" "}
           <a
             href={`https://t.me/${BOT_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            @{BOT_USERNAME}
+            /parol
+          </a>{" "}
+          buyrug&apos;ini yuboring.
+        </p>
+
+        <div className={styles.divider}>
+          <span>yoki</span>
+        </div>
+
+        <div ref={widgetRef} className={styles.widget} />
+
+        <p className={styles.alt}>
+          Akkount yo&apos;qmi?{" "}
+          <a
+            href={`https://t.me/${BOT_USERNAME}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Botda ro&apos;yxatdan o&apos;ting
           </a>
         </p>
       </div>

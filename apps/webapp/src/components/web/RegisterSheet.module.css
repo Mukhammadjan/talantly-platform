@@ -1,0 +1,141 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-4);
+  background: rgba(23, 23, 27, 0.5);
+  animation: fade var(--d-fast) var(--e-out);
+}
+
+.sheet {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-3);
+  background: var(--t-white);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sheet);
+  padding: var(--s-7) var(--s-6) var(--s-6);
+  animation: rise var(--d-base) var(--e-out);
+}
+
+.close {
+  position: absolute;
+  top: var(--s-3);
+  right: var(--s-3);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  color: var(--t-ink-2);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.close:hover {
+  background: var(--t-fill);
+}
+
+.close:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.kicker {
+  margin: 0;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--t-action-ink);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.text {
+  margin: 0;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--t-ink-2);
+}
+
+.qrWrap {
+  padding: var(--s-3);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  box-shadow: inset 0 0 0 1px var(--t-line);
+}
+
+.qr {
+  display: block;
+  width: 148px;
+  height: 148px;
+}
+
+.primary {
+  width: 100%;
+  height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-action);
+  color: var(--t-on-action);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  transition: background var(--d-fast) var(--e-out);
+}
+
+.primary:hover {
+  background: var(--t-action-press);
+}
+
+.primary:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.foot {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.link {
+  color: var(--t-action-ink);
+  font-weight: var(--fw-semibold);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .sheet {
+    animation: none;
+  }
+}

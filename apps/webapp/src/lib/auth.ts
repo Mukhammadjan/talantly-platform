@@ -36,6 +36,35 @@ export function setWebToken(t: string): void {
   }
 }
 
+export interface LoginResult {
+  ok: boolean;
+  status: number;
+  preferredMode?: string | null;
+}
+
+/** Web: telefon + parol bilan kirish. Muvaffaqiyatda token saqlanadi. */
+export async function loginWithPassword(
+  phone: string,
+  password: string,
+): Promise<LoginResult> {
+  try {
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, password }),
+    });
+    if (!res.ok) return { ok: false, status: res.status };
+    const data = (await res.json()) as {
+      token?: string;
+      preferredMode?: string | null;
+    };
+    if (data.token) setWebToken(data.token);
+    return { ok: true, status: 200, preferredMode: data.preferredMode ?? null };
+  } catch {
+    return { ok: false, status: 0 };
+  }
+}
+
 /** Web sessiyadan chiqish. */
 export function clearWebToken(): void {
   token = null;

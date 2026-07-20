@@ -15,6 +15,8 @@ const nextConfig = {
   experimental: {
     // Deploy hook: har deploy'da bot menu ?v=SHA avto-yangilanadi (spec §8)
     instrumentationHook: true,
+    // argon2 native (.node) — webpack bundle qilmasin, runtime'да require qilsin.
+    serverComponentsExternalPackages: ["@node-rs/argon2"],
   },
   // HR/Admin paneli (apps/hr, basePath /panel) — bitta domenda proksi.
   async rewrites() {

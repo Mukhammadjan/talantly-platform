@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { MatchBreakdownModal } from "@/components/web/MatchBreakdownModal";
 import { MatchScoreCard } from "@/components/web/MatchScoreCard";
 import { RecoCard } from "@/components/web/RecoCard";
+import { RegisterSheet } from "@/components/web/RegisterSheet";
 import { StatRow } from "@/components/web/StatRow";
 import { Icon } from "@/lib/icons";
 import { computeMatch, type MatchProfile, type MatchResult } from "@/lib/match";
@@ -43,6 +44,7 @@ export default function VakansiyaDetailPage(): JSX.Element {
   const [notFound, setNotFound] = useState(false);
   const [profile, setProfile] = useState<MatchProfile | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [applied, setApplied] = useState(false);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function VakansiyaDetailPage(): JSX.Element {
 
   const apply = async (): Promise<void> => {
     if (!profile) {
-      router.push("/kirish");
+      setRegisterOpen(true);
       return;
     }
     const res = await authedFetch("/api/vacancies/apply", {
@@ -150,9 +152,15 @@ export default function VakansiyaDetailPage(): JSX.Element {
             >
               {applied ? "✓ Ariza yuborildi" : "Ariza topshirish"}
             </button>
-            <Link href="/kirish" className={styles.ghost}>
+            <button
+              type="button"
+              className={styles.ghost}
+              onClick={() =>
+                profile ? router.push("/talant") : setRegisterOpen(true)
+              }
+            >
               Rezyume yaratish
-            </Link>
+            </button>
           </div>
 
           <StatRow
@@ -205,7 +213,7 @@ export default function VakansiyaDetailPage(): JSX.Element {
             verdict={match?.verdict ?? ""}
             summary={match?.summary ?? ""}
             onViewSuggestions={() =>
-              match ? setModalOpen(true) : router.push("/kirish")
+              match ? setModalOpen(true) : setRegisterOpen(true)
             }
           />
 
@@ -250,6 +258,12 @@ export default function VakansiyaDetailPage(): JSX.Element {
           }}
         />
       ) : null}
+
+      <RegisterSheet
+        open={registerOpen}
+        onClose={() => setRegisterOpen(false)}
+        title="Davom etish uchun ro'yxatdan o'ting"
+      />
     </main>
   );
 }

@@ -10,6 +10,40 @@ export const PROFILE_BUTTON_LABEL = "📱 Profilni ochish";
 
 export const MINI_APP_COMING_SOON = "Mini App tez orada ulanadi.";
 
+// ---- Parol o'rnatish oqimi (AUTH v3) ----
+export const PAROL_CONTACT_BUTTON = "📱 Raqamni yuborish";
+export const PAROL_ASK_CONTACT =
+  "Saytga kirish uchun avval telefon raqamingizni yuboring.\n\n" +
+  "Pastdagi «📱 Raqamni yuborish» tugmasini bosing.";
+export const PAROL_FOREIGN_CONTACT =
+  "Bu sizning raqamingiz emas. Iltimos, o'z raqamingizni " +
+  "«📱 Raqamni yuborish» tugmasi orqali yuboring.";
+export const PAROL_BAD_PHONE =
+  "Raqam formati noto'g'ri. O'zbekiston raqamini yuboring (+998...).";
+export const PAROL_PHONE_TAKEN =
+  "Bu raqam allaqachon boshqa akkauntga ulangan. Yordam uchun /yordam.";
+export const PAROL_ASK_FIRST =
+  "✅ Raqam qabul qilindi.\n\nEndi parol o'ylab toping (kamida 8 belgi):";
+export const PAROL_ASK_FIRST_NEW =
+  "Yangi parol o'ylab toping (kamida 8 belgi):";
+export const PAROL_TOO_SHORT =
+  "Parol kamida 8 belgidan iborat bo'lishi kerak. Qaytadan kiriting:";
+export const PAROL_EMPTY = "Parol bo'sh bo'lmasin. Qaytadan kiriting:";
+export const PAROL_ASK_SECOND =
+  "Yaxshi. Endi xuddi shu parolni yana bir marta kiriting:";
+export const PAROL_MISMATCH =
+  "Parollar mos kelmadi. Boshidan — parol o'ylab toping (kamida 8 belgi):";
+
+export function parolDone(params: { phone: string; siteUrl: string }): string {
+  return (
+    "✅ Parol o'rnatildi!\n\n" +
+    `Login (telefon): ${params.phone}\n` +
+    `Sayt: ${params.siteUrl}\n\n` +
+    "Endi saytga telefon raqamingiz va shu parol bilan kirasiz. " +
+    "Parolni hech kimga aytmang."
+  );
+}
+
 export function welcomeIntro(firstName?: string): string {
   const greeting = firstName
     ? `Assalomu alaykum, ${firstName}! 👋`

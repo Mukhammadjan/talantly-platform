@@ -1,5 +1,5 @@
 import { usersRepo } from "@talantly/shared";
-import type { UserRow } from "@talantly/shared";
+import type { UserInsert, UserRow } from "@talantly/shared";
 import { getSupabase } from "./client.js";
 
 export async function upsertByTgId(tgId: number): Promise<UserRow> {
@@ -12,6 +12,17 @@ export async function findByTgId(tgId: number): Promise<UserRow | null> {
 
 export async function findById(id: string): Promise<UserRow | null> {
   return usersRepo.findById(getSupabase(), id);
+}
+
+export async function findByPhone(phone: string): Promise<UserRow | null> {
+  return usersRepo.findByPhone(getSupabase(), phone);
+}
+
+export async function updateFields(
+  userId: string,
+  fields: Partial<UserInsert>,
+): Promise<UserRow> {
+  return usersRepo.updateFields(getSupabase(), userId, fields);
 }
 
 export async function setBlocked(userId: string, blocked: boolean): Promise<void> {

@@ -1,8 +1,12 @@
 import type {
+  BotAuthSessionInsert,
+  BotAuthSessionRow,
   CompanyInsert,
   CompanyRow,
   CvProfileInsert,
   CvProfileRow,
+  LoginAttemptInsert,
+  LoginAttemptRow,
   InterviewInsert,
   InterviewRow,
   InterviewSlotInsert,
@@ -56,6 +60,8 @@ export type Database = {
         PersonalityQuestionRow,
         PersonalityQuestionInsert
       >;
+      bot_auth_sessions: TableDef<BotAuthSessionRow, BotAuthSessionInsert>;
+      login_attempts: TableDef<LoginAttemptRow, LoginAttemptInsert>;
     };
     Views: { [_ in never]: never };
     Functions: { [_ in never]: never };

@@ -1,4 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { hash as argonHash, verify as argonVerify } from "@node-rs/argon2";
 import { SignJWT, jwtVerify } from "jose";
 
 // Yagona auth: Mini App (initData) VA Web (Login Widget) bir xil JWT chiqaradi.
@@ -124,5 +125,50 @@ export async function verifySessionToken(
     return null;
   } catch {
     return null;
+  }
+}
+
+// ---- Telefon + parol (AUTH v3) ----
+// Yagona tizim: bot parol o'rnatadi, web login shu hash'ni tekshiradi, JWT bir xil.
+
+/**
+ * O'zbek raqamini E.164 (+998XXXXXXXXX) ga keltiradi.
+ * Qabul qiladi: "+998901234567", "998901234567", "901234567",
+ * probellar/tirelar bilan. Noto'g'ri bo'lsa null.
+ */
+export function normalizePhone(raw: string): string | null {
+  const digits = (raw ?? "").replace(/\D/g, "");
+  let d = digits;
+  if (d.length === 9) d = `998${d}`;
+  if (d.length !== 12 || !d.startsWith("998")) return null;
+  return `+${d}`;
+}
+
+export interface PasswordCheck {
+  ok: boolean;
+  reason?: "empty" | "short";
+}
+
+/** Parol siyosati: bo'sh/faqat probel rad, kamida 8 belgi. */
+export function validatePasswordStrength(pw: string): PasswordCheck {
+  if (!pw || pw.trim().length === 0) return { ok: false, reason: "empty" };
+  if (pw.length < 8) return { ok: false, reason: "short" };
+  return { ok: true };
+}
+
+/** argon2id hash. Ochiq parol hech qayerda saqlanmaydi — faqat hash. */
+export function hashPassword(password: string): Promise<string> {
+  return argonHash(password);
+}
+
+/** Saqlangan hash'ga parolni solishtiradi. Xato bo'lsa false. */
+export async function verifyPassword(
+  hash: string,
+  password: string,
+): Promise<boolean> {
+  try {
+    return await argonVerify(hash, password);
+  } catch {
+    return false;
   }
 }

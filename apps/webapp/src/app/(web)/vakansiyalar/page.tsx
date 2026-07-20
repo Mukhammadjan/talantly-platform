@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FilterPanel, type FilterState } from "@/components/web/FilterPanel";
 import { JobCard } from "@/components/web/JobCard";
 import { MatchBreakdownModal } from "@/components/web/MatchBreakdownModal";
+import { RegisterSheet } from "@/components/web/RegisterSheet";
 import { SearchBar, type SearchState } from "@/components/web/SearchBar";
 import { Icon } from "@/lib/icons";
 import { computeMatch, type MatchProfile, type MatchResult } from "@/lib/match";
@@ -59,6 +60,7 @@ export default function VakansiyalarPage(): JSX.Element {
   const [list, setList] = useState<VacancyView[] | null>(null);
   const [profile, setProfile] = useState<MatchProfile | null>(null);
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [modal, setModal] = useState<{
     v: VacancyView;
     m: MatchResult;
@@ -187,7 +189,7 @@ export default function VakansiyalarPage(): JSX.Element {
                     matchReasons={m ? reasonsFrom(m) : undefined}
                     matchQuote={m?.summary}
                     onOpenBreakdown={() =>
-                      m ? setModal({ v, m }) : router.push("/kirish")
+                      m ? setModal({ v, m }) : setRegisterOpen(true)
                     }
                   />
                 ))}
@@ -209,6 +211,12 @@ export default function VakansiyalarPage(): JSX.Element {
           onApply={() => router.push(`/vakansiya/${modal.v.id}`)}
         />
       ) : null}
+
+      <RegisterSheet
+        open={registerOpen}
+        onClose={() => setRegisterOpen(false)}
+        title="AI moslikni ko'rish uchun ro'yxatdan o'ting"
+      />
     </>
   );
 }

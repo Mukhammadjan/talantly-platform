@@ -11,6 +11,11 @@ import {
 } from "./handlers/baholash.js";
 import { handleHolat } from "./handlers/holat.js";
 import { handleMenuText } from "./handlers/menu.js";
+import {
+  handleContact,
+  handleParol,
+  handleParolText,
+} from "./handlers/parol.js";
 import { handleProfil } from "./handlers/profil.js";
 import { handleStart } from "./handlers/start.js";
 import { handleSuhbat, handleSuhbatCallback } from "./handlers/suhbat.js";
@@ -52,6 +57,7 @@ async function main(): Promise<void> {
   bot.command("holat", safe(handleHolat));
   bot.command("suhbat", safe(handleSuhbat));
   bot.command("tolov", safe(handleTolov));
+  bot.command("parol", safe(handleParol));
   bot.command("yordam", safe(handleYordam));
   bot.command("baholash", safe(handleBaholash));
   bot.command("admin", safe(handleAdmin));
@@ -104,10 +110,20 @@ async function main(): Promise<void> {
     }
   });
 
-  // Matn: avval moderator baholash sessiyasi, keyin doimiy menyu tugmalari.
+  // Kontakt — parol o'rnatish oqimida telefon raqami.
+  bot.on("message:contact", async (ctx) => {
+    try {
+      await handleContact(ctx);
+    } catch (err) {
+      logger.error({ err }, "contact handler error");
+    }
+  });
+
+  // Matn: baholash sessiyasi → parol oqimi → doimiy menyu tugmalari.
   bot.on("message:text", async (ctx) => {
     try {
       if (await handleBaholashText(ctx)) return;
+      if (await handleParolText(ctx)) return;
       await handleMenuText(ctx);
     } catch (err) {
       logger.error({ err }, "text handler error");
@@ -124,6 +140,7 @@ async function main(): Promise<void> {
     { command: "profil", description: "Profilim" },
     { command: "suhbat", description: "Suhbat vaqtini band qilish" },
     { command: "tolov", description: "AI CV uchun to'lov" },
+    { command: "parol", description: "Saytga kirish uchun parol o'rnatish" },
     { command: "yordam", description: "Yordam va bog'lanish" },
   ];
   await bot.api.setMyCommands(publicCommands);

@@ -79,6 +79,24 @@ export async function findByAuthUid(
   return (data as UserRow | null) ?? null;
 }
 
+export async function findByPhone(
+  client: TalantlyClient,
+  phone: string,
+): Promise<UserRow | null> {
+  const { data, error } = await client
+    .from("users")
+    .select("*")
+    .eq("phone", phone)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `usersRepo.findByPhone failed: ${error.message} (code=${error.code ?? "unknown"})`,
+    );
+  }
+  return (data as UserRow | null) ?? null;
+}
+
 export async function findById(
   client: TalantlyClient,
   id: string,
