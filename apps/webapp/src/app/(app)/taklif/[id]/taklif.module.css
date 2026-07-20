@@ -189,3 +189,90 @@
   background: var(--t-fill);
   color: var(--t-ink-2);
 }
+
+/* ---- Real API bilan qo'shilgan bo'laklar ---- */
+.vStatus {
+  margin-left: var(--s-2);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-full);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+}
+
+.vOn {
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+}
+
+.vOff {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.vDraft {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+/* Karta sarlavhasi endi alohida tugma (qolgan qismi interaktiv emas). */
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  text-align: left;
+  color: var(--t-ink-3);
+}
+
+.note {
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-sm);
+  background: var(--t-fill);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--t-ink-2);
+}
+
+/* Nomzod bo'yicha keyingi qadam — segment tugmalar. */
+.steps {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--r-full);
+  background: var(--t-fill);
+}
+
+.step {
+  flex: 1 1 0;
+  height: 34px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-3);
+  white-space: nowrap;
+}
+
+.step:disabled {
+  opacity: 0.6;
+}
+
+.stepOn {
+  background: var(--t-white);
+  color: var(--t-action-ink);
+  box-shadow: var(--sh-raise);
+}
+
+.skelTitle {
+  height: 28px;
+  width: 60%;
+  margin-bottom: var(--s-4);
+  border-radius: var(--r-sm);
+  background: var(--t-fill);
+}
+
+.skelCard {
+  height: 160px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+}

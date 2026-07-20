@@ -48,9 +48,37 @@
   font-weight: var(--fw-semibold);
 }
 
+.badgeOff {
+  background: var(--t-fill);
+  color: var(--t-ink-3);
+}
+
+.badgeDraft {
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
 .cat {
   font-size: var(--fs-caption);
   color: var(--t-ink-3);
+}
+
+.skel {
+  height: 132px;
+  border-radius: var(--r-lg);
+  background: var(--t-fill);
+}
+
+.emptyWrap {
+  margin-top: var(--s-6);
+}
+
+.statNew {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--t-action-ink);
 }
 
 .salary {

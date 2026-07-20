@@ -11,11 +11,11 @@ import { EmptyState } from "@/components/EmptyState";
 import { Sheet } from "@/components/Sheet";
 import { Icon } from "@/lib/icons";
 import { api } from "@/lib/api";
-import { SENT_VACANCIES } from "@/mock/data";
 import { DIRECTION_LABELS, LEVEL_LABELS, formatSalary } from "@/lib/labels";
 import { haptic, initTelegram } from "@/lib/telegram";
 import type { Candidate } from "@/lib/types";
 import { useBackButton } from "@/lib/useBackButton";
+import { fetchMyVacancies, type MyVacancy } from "@/lib/vacancyMe";
 import styles from "./nomzod.module.css";
 
 const CARD_NUMBER = "8600 1234 5678 9012";
@@ -30,7 +30,8 @@ export default function NomzodDetailPage(): JSX.Element {
   const [sent, setSent] = useState(false);
   const [copied, setCopied] = useState(false);
   const [offer, setOffer] = useState(false);
-  const [pickVac, setPickVac] = useState(SENT_VACANCIES[0]?.id ?? "");
+  const [myVacancies, setMyVacancies] = useState<MyVacancy[]>([]);
+  const [pickVac, setPickVac] = useState("");
   const [offerSent, setOfferSent] = useState(false);
   const [demoMsg, setDemoMsg] = useState(false);
   const [sending, setSending] = useState(false);
@@ -67,6 +68,13 @@ export default function NomzodDetailPage(): JSX.Element {
     });
     void api.getCompanyStatus().then((st) => {
       if (live && st) setSubActive(st.subscriptionActive);
+    });
+    // Taklif faqat faol vakansiyaga biriktiriladi.
+    void fetchMyVacancies().then((vs) => {
+      if (!live || !vs) return;
+      const active = vs.filter((v) => v.status === "faol");
+      setMyVacancies(active);
+      setPickVac(active[0]?.id ?? "");
     });
     return () => {
       live = false;
@@ -270,7 +278,7 @@ export default function NomzodDetailPage(): JSX.Element {
           loading={sending}
           onClick={() => {
             setSending(true);
-            void api.sendRequest(c.id).then((r) => {
+            void api.sendRequest(c.id, pickVac || undefined).then((r) => {
               setSending(false);
               if (!r.ok) {
                 haptic("error");
@@ -296,31 +304,40 @@ export default function NomzodDetailPage(): JSX.Element {
 
       <Sheet open={offer} onClose={() => setOffer(false)} title="Vakansiyani tanlang">
         <div className={styles.offerList}>
-          {SENT_VACANCIES.map((v) => {
-            const on = pickVac === v.id;
-            return (
-              <button
-                key={v.id}
-                type="button"
-                className={`${styles.offerRow} ${on ? styles.offerOn : ""}`}
-                onClick={() => {
-                  haptic("light");
-                  setPickVac(v.id);
-                }}
-              >
-                <span className={`${styles.radio} ${on ? styles.radioOn : ""}`}>
-                  {on ? <Icon name="check" size={12} /> : null}
-                </span>
-                <span className={styles.offerTexts}>
-                  <span className={styles.offerTitle}>{v.title}</span>
-                  <span className={styles.offerSalary}>
-                    {formatSalary(v.salaryFrom).replace(" so'm", "")} –{" "}
-                    {formatSalary(v.salaryTo)}
+          {myVacancies.length === 0 ? (
+            <p className={styles.offerEmpty}>
+              Faol vakansiyangiz yo&apos;q. Taklif vakansiyasiz ham yuboriladi.
+            </p>
+          ) : (
+            myVacancies.map((v) => {
+              const on = pickVac === v.id;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  className={`${styles.offerRow} ${on ? styles.offerOn : ""}`}
+                  onClick={() => {
+                    haptic("light");
+                    setPickVac(v.id);
+                  }}
+                >
+                  <span className={`${styles.radio} ${on ? styles.radioOn : ""}`}>
+                    {on ? <Icon name="check" size={12} /> : null}
                   </span>
-                </span>
-              </button>
-            );
-          })}
+                  <span className={styles.offerTexts}>
+                    <span className={styles.offerTitle}>{v.title}</span>
+                    <span className={styles.offerSalary}>
+                      {!v.salaryFrom && !v.salaryTo
+                        ? "Kelishilgan"
+                        : v.salaryFrom && v.salaryTo
+                          ? `${formatSalary(v.salaryFrom).replace(" so'm", "")} – ${formatSalary(v.salaryTo)}`
+                          : formatSalary((v.salaryFrom ?? v.salaryTo) as number)}
+                    </span>
+                  </span>
+                </button>
+              );
+            })
+          )}
         </div>
         <Button
           full

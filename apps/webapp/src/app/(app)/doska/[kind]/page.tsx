@@ -8,9 +8,10 @@ import { EmptyState } from "@/components/EmptyState";
 import { Sheet } from "@/components/Sheet";
 import { Icon } from "@/lib/icons";
 import { formatSalary } from "@/lib/labels";
-import { SENT_VACANCIES } from "@/mock/data";
+
 import { haptic, initTelegram } from "@/lib/telegram";
 import { useBackButton } from "@/lib/useBackButton";
+import { fetchMyVacancies, type MyVacancy } from "@/lib/vacancyMe";
 import styles from "./doska.module.css";
 
 type Kind = "arizalar" | "suhbatlar" | "takliflar" | "saqlangan";
@@ -72,9 +73,17 @@ export default function DoskaKindPage(): JSX.Element {
   const [timeFor, setTimeFor] = useState<string | null>(null);
   const [chosenTime, setChosenTime] = useState<Record<string, string>>({});
   const [slot, setSlot] = useState("18-iyul · 10:00");
+  const [myVacancies, setMyVacancies] = useState<MyVacancy[] | null>(null);
 
   useEffect(() => {
     initTelegram();
+    let live = true;
+    void fetchMyVacancies().then((v) => {
+      if (live) setMyVacancies(v ?? []);
+    });
+    return () => {
+      live = false;
+    };
   }, []);
   useBackButton(() => router.push("/izlovchi/profil"));
 
@@ -281,7 +290,7 @@ export default function DoskaKindPage(): JSX.Element {
       {/* YUBORILGAN TAKLIFLAR — vakansiya bo'yicha guruhlangan */}
       {kind === "takliflar" && (
         <div className={styles.list}>
-          {SENT_VACANCIES.map((v) => (
+          {(myVacancies ?? []).map((v) => (
             <button
               key={v.id}
               type="button"
@@ -292,18 +301,22 @@ export default function DoskaKindPage(): JSX.Element {
               }}
             >
               <span className={styles.head}>
-                <Avatar name={v.company} size={40} />
+                <Avatar name={v.title} size={40} />
                 <span className={styles.htext}>
-                  <span className={styles.company}>{v.company}</span>
+                  <span className={styles.company}>
+                    {v.status === "faol" ? "Faol" : v.status === "qoralama" ? "Qoralama" : "Yopilgan"}
+                  </span>
                   <span className={styles.vtitle}>{v.title}</span>
                 </span>
               </span>
-              <span className={styles.salary}>{formatSalary(v.salaryFrom)}dan</span>
+              <span className={styles.salary}>
+                {v.salaryFrom ? `${formatSalary(v.salaryFrom)}dan` : "Kelishilgan"}
+              </span>
               <span className={styles.loc}>
-                {v.date} · {v.district}
+                {[v.city, v.district].filter(Boolean).join(", ")}
               </span>
               <div className={styles.sentBox}>
-                Yuborilgan: <b>{v.candidates.length} nomzodga</b>
+                Arizalar: <b>{v.applications.total} nomzoddan</b>
               </div>
             </button>
           ))}
@@ -313,6 +326,12 @@ export default function DoskaKindPage(): JSX.Element {
       {/* Bo'sh holat himoyasi */}
       {kind === "arizalar" && ARIZALAR.length === 0 && (
         <EmptyState icon={<Icon name="doc" size={24} />} title="Hozircha ariza yo'q" />
+      )}
+      {kind === "takliflar" && myVacancies !== null && myVacancies.length === 0 && (
+        <EmptyState
+          icon={<Icon name="doc" size={24} />}
+          title="Hali vakansiya joylamagansiz"
+        />
       )}
 
       <Sheet

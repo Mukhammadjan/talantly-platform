@@ -1,7 +1,6 @@
 import type {
   Application,
   Candidate,
-  SentVacancy,
   TalentSnapshot,
   Vacancy,
   Zone,
@@ -104,62 +103,6 @@ export const CANDIDATES: Candidate[] = [
 ];
 
 // Yuborilgan takliflar — vakansiya bo'yicha guruhlangan (kompaniya → N nomzod).
-export const SENT_VACANCIES: SentVacancy[] = [
-  {
-    id: "v1",
-    company: "Tashkent City Mall",
-    title: "Xavfsizlik xodimi",
-    category: "Internet, IT, telekom, aloqa",
-    salaryFrom: 3000000,
-    salaryTo: 6000000,
-    experience: "1-3 yil",
-    employment: "To'liq bandlik",
-    date: "14.01.2023",
-    district: "Mirobod tumani, Toshkent",
-    candidates: [
-      { cid: "c2", name: "Shoxrux Shavqiev", role: "UI/UX dizayner", age: 37, exp: 5, status: "accepted", verified: true },
-      { cid: "c1", name: "Yahyo Mashrabov", role: "UI/UX dizayner", age: 37, exp: 5, status: "declined", verified: false },
-      { cid: "c3", name: "Abdusattor Mirpulatov", role: "UI/UX dizayner", age: 37, exp: 5, status: "accepted", verified: false },
-      { cid: "c1", name: "Zafar Olimov", role: "UI/UX dizayner", age: 37, exp: 5, status: "accepted", verified: false },
-      { cid: "c2", name: "Xusniddin Usmanov", role: "UI/UX dizayner", age: 37, exp: 5, status: "declined", verified: true },
-    ],
-  },
-  {
-    id: "v2",
-    company: "Tashkent City Mall",
-    title: "Rahbar shaxsiy haydovchisi",
-    category: "Transport, logistika",
-    salaryFrom: 6000000,
-    salaryTo: 8000000,
-    experience: "3-5 yil",
-    employment: "To'liq bandlik",
-    date: "14.01.2023",
-    district: "Mirobod tumani, Toshkent",
-    candidates: [
-      { cid: "c1", name: "Sardor Aliyev", role: "Haydovchi", age: 34, exp: 8, status: "accepted", verified: true },
-      { cid: "c2", name: "Otabek Yo'ldoshev", role: "Haydovchi", age: 40, exp: 12, status: "pending", verified: false },
-      { cid: "c3", name: "Jamshid Qodirov", role: "Haydovchi", age: 31, exp: 6, status: "declined", verified: false },
-    ],
-  },
-  {
-    id: "v3",
-    company: "Tashkent City Mall",
-    title: "Sotuvchi-konsultant",
-    category: "Savdo, sotuv",
-    salaryFrom: 4000000,
-    salaryTo: 7000000,
-    experience: "1-3 yil",
-    employment: "To'liq bandlik",
-    date: "14.01.2023",
-    district: "Mirobod tumani, Toshkent",
-    candidates: [
-      { cid: "c3", name: "Nilufar Saidova", role: "Sotuvchi", age: 24, exp: 2, status: "accepted", verified: true },
-      { cid: "c1", name: "Malika Rasulova", role: "Sotuvchi", age: 26, exp: 3, status: "accepted", verified: false },
-    ],
-  },
-];
-
-// Talant ko'radigan vakansiyalar (v2 seed'ga mos demo).
 export const VACANCIES: Vacancy[] = [
   {
     id: "vc1",

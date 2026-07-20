@@ -6,9 +6,10 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Icon } from "@/lib/icons";
 import { formatSalary } from "@/lib/labels";
-import { SENT_VACANCIES } from "@/mock/data";
+
 import { haptic, initTelegram } from "@/lib/telegram";
 import { useBackButton } from "@/lib/useBackButton";
+import { fetchMyVacancies, type MyVacancy } from "@/lib/vacancyMe";
 import styles from "./kompaniya.module.css";
 
 const COMPANY = {
@@ -25,13 +26,22 @@ type Tab = "info" | "vacancies";
 export default function KompaniyaPage(): JSX.Element {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("info");
+  const [vacancies, setVacancies] = useState<MyVacancy[] | null>(null);
 
   useEffect(() => {
     initTelegram();
+    let live = true;
+    void fetchMyVacancies().then((v) => {
+      if (live) setVacancies(v ?? []);
+    });
+    return () => {
+      live = false;
+    };
   }, []);
   useBackButton(() => router.push("/izlovchi/koproq"));
 
-  const totalCand = SENT_VACANCIES.reduce((n, v) => n + v.candidates.length, 0);
+  const vlist = vacancies ?? [];
+  const totalCand = vlist.reduce((n, v) => n + v.applications.total, 0);
 
   return (
     <main className="screen">
@@ -47,7 +57,7 @@ export default function KompaniyaPage(): JSX.Element {
 
       <div className={styles.stats}>
         <div className={styles.stat}>
-          <span className={styles.statNum}>{SENT_VACANCIES.length}</span>
+          <span className={styles.statNum}>{vlist.length}</span>
           <span className={styles.statLabel}>Vakansiya</span>
         </div>
         <div className={styles.stat}>
@@ -73,7 +83,7 @@ export default function KompaniyaPage(): JSX.Element {
           className={`${styles.tab} ${tab === "vacancies" ? styles.tabOn : ""}`}
           onClick={() => setTab("vacancies")}
         >
-          Vakansiyalar ({SENT_VACANCIES.length})
+          Vakansiyalar ({vlist.length})
         </button>
       </div>
 
@@ -108,28 +118,40 @@ export default function KompaniyaPage(): JSX.Element {
         </>
       ) : (
         <div className={styles.vlist}>
-          {SENT_VACANCIES.map((v) => (
-            <button
-              key={v.id}
-              type="button"
-              className={styles.vcard}
-              onClick={() => {
-                haptic("light");
-                router.push(`/taklif/${v.id}`);
-              }}
-            >
-              <div className={styles.vtop}>
-                <span className={styles.vtitle}>{v.title}</span>
-                <Icon name="chevron" size={18} className={styles.vchev} />
-              </div>
-              <span className={styles.vsalary}>
-                {formatSalary(v.salaryFrom).replace(" so'm", "")} – {formatSalary(v.salaryTo)}
-              </span>
-              <span className={styles.vmeta}>
-                <Icon name="users" size={14} /> {v.candidates.length} nomzod
-              </span>
-            </button>
-          ))}
+          {vlist.length === 0 ? (
+            <p className={styles.vempty}>
+              {vacancies === null
+                ? "Yuklanmoqda..."
+                : "Hali vakansiya joylamagansiz."}
+            </p>
+          ) : (
+            vlist.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                className={styles.vcard}
+                onClick={() => {
+                  haptic("light");
+                  router.push(`/taklif/${v.id}`);
+                }}
+              >
+                <div className={styles.vtop}>
+                  <span className={styles.vtitle}>{v.title}</span>
+                  <Icon name="chevron" size={18} className={styles.vchev} />
+                </div>
+                <span className={styles.vsalary}>
+                  {!v.salaryFrom && !v.salaryTo
+                    ? "Kelishilgan"
+                    : v.salaryFrom && v.salaryTo
+                      ? `${formatSalary(v.salaryFrom).replace(" so'm", "")} – ${formatSalary(v.salaryTo)}`
+                      : formatSalary((v.salaryFrom ?? v.salaryTo) as number)}
+                </span>
+                <span className={styles.vmeta}>
+                  <Icon name="users" size={14} /> {v.applications.total} nomzod
+                </span>
+              </button>
+            ))
+          )}
         </div>
       )}
     </main>

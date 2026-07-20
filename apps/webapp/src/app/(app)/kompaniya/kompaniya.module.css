@@ -180,3 +180,13 @@
   font-size: var(--fs-caption);
   color: var(--t-ink-2);
 }
+
+.vempty {
+  margin: 0;
+  padding: var(--s-6) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+  text-align: center;
+}

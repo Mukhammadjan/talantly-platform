@@ -91,32 +91,6 @@ export interface Candidate {
 }
 
 /** Yuborilgan taklif — bitta vakansiya, ko'p nomzodga yuborilgan. */
-export type SentStatus = "accepted" | "declined" | "pending";
-
-export interface SentVacancyCandidate {
-  cid: string;
-  name: string;
-  role: string;
-  age: number;
-  exp: number;
-  status: SentStatus;
-  verified: boolean;
-}
-
-export interface SentVacancy {
-  id: string;
-  company: string;
-  title: string;
-  category: string;
-  salaryFrom: number;
-  salaryTo: number;
-  experience: string;
-  employment: string;
-  date: string;
-  district: string;
-  candidates: SentVacancyCandidate[];
-}
-
 export interface Zone {
   district: string;
   count: number;
