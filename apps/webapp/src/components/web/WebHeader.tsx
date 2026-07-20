@@ -12,7 +12,7 @@ const NAV = [
   { href: "/vakansiyalar", label: "Vakansiyalar" },
   { href: "/kompaniyalar", label: "Kompaniyalar" },
   { href: "/ai", label: "AI vositalar" },
-  { href: "/panel", label: "Ish beruvchilarga" },
+  { href: "/nomzodlar", label: "Nomzodlar" },
 ];
 
 export function WebHeader(): JSX.Element {
