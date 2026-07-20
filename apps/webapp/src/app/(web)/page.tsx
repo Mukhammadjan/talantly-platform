@@ -70,6 +70,8 @@ function postedAgo(iso: string): string {
 
 export default function HomePage(): JSX.Element {
   const router = useRouter();
+  // null = hali aniqlanmagan. SSR web mazmunini beradi (SEO), Telegram
+  // aniqlangach splash'ga o'tadi — so'rovlar esa faqat web'da boshlanadi.
   const [inTelegram, setInTelegram] = useState<boolean | null>(null);
   const [query, setQuery] = useState("");
   const [city, setCity] = useState("");
@@ -108,8 +110,8 @@ export default function HomePage(): JSX.Element {
     void fetchMatchProfile().then(setProfile);
   }, [inTelegram]);
 
-  if (inTelegram !== false) {
-    // Splash: Telegramda yo'naltirish kutilmoqda (SSR'da ham shu ko'rinadi).
+  if (inTelegram === true) {
+    // Splash: Telegramda hub'ga yo'naltirish kutilmoqda.
     return (
       <main className={styles.splash}>
         <img

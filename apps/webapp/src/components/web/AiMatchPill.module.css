@@ -2,8 +2,11 @@
   display: inline-flex;
   align-items: center;
   gap: var(--s-1);
-  height: 30px;
+  min-height: 30px;
   padding: 0 var(--s-3);
+  /* Tor kartada matn o'ralib qirqilmasin — pill butunligicha qoladi. */
+  white-space: nowrap;
+  flex-shrink: 0;
   border-radius: var(--r-full);
   background: var(--t-action-soft);
   color: var(--t-action-ink);
