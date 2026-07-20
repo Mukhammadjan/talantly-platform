@@ -10,7 +10,37 @@
 }
 
 .hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
   margin-bottom: var(--s-5);
+}
+
+.myCompany {
+  flex-shrink: 0;
+  height: 44px;
+  padding: 0 var(--s-4);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  border-radius: var(--r-full);
+  color: var(--t-ink-1);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition: box-shadow var(--d-fast) var(--e-out);
+}
+
+.myCompany:hover {
+  box-shadow: var(--sh-float);
+}
+
+@media (max-width: 640px) {
+  .hero {
+    flex-direction: column;
+  }
 }
 
 .title {

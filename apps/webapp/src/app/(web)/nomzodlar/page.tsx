@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { CandidateCard } from "@/components/web/CandidateCard";
 import { Icon } from "@/lib/icons";
@@ -44,11 +45,16 @@ export default function NomzodlarPage(): JSX.Element {
     <main className={styles.main}>
       <div className={styles.wrap}>
         <header className={styles.hero}>
-          <h1 className={styles.title}>Nomzodlar</h1>
-          <p className={styles.sub}>
-            Tekshirilgan talantlar — ko&apos;nikma bali, arxetip va yo&apos;nalish
-            bilan.
-          </p>
+          <div>
+            <h1 className={styles.title}>Nomzodlar</h1>
+            <p className={styles.sub}>
+              Tekshirilgan talantlar — ko&apos;nikma bali, arxetip va
+              yo&apos;nalish bilan.
+            </p>
+          </div>
+          <Link href="/kompaniyam" className={styles.myCompany}>
+            <Icon name="briefcase" size={16} /> Mening kompaniyam
+          </Link>
         </header>
 
         <div className={styles.controls}>
