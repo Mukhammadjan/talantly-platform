@@ -20,11 +20,24 @@ import {
   parolDone,
 } from "../text.js";
 
-const SITE_BASE = (config.webappUrl ?? "https://talantly.uz").replace(
-  /\/+$/,
-  "",
-);
-const LOGIN_URL = `${SITE_BASE}/kirish`;
+// WEBAPP_URL ba'zan ?v=SHA (bot menu versioni) bilan keladi — /kirish'ni
+// query'ga yopishtirmaslik uchun faqat toza origin olamiz. Kanonik brend
+// domeni talantly.uz; env faqat talantly.uz origin bo'lsa ishlatiladi.
+function loginUrl(): string {
+  const raw = config.webappUrl;
+  if (raw) {
+    try {
+      const u = new URL(raw);
+      if (u.hostname === "talantly.uz" || u.hostname.endsWith(".talantly.uz")) {
+        return `${u.origin}/kirish`;
+      }
+    } catch {
+      /* noto'g'ri URL — kanonik domenga tushamiz */
+    }
+  }
+  return "https://talantly.uz/kirish";
+}
+const LOGIN_URL = loginUrl();
 
 function contactKeyboard(): Keyboard {
   return new Keyboard()
