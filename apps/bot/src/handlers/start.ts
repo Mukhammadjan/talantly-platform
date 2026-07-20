@@ -9,10 +9,12 @@ import {
   mainMenuKeyboard,
   registerKeyboard,
   roleChoiceKeyboard,
+  webRegisterKeyboard,
 } from "../keyboards.js";
 import {
   MINI_APP_COMING_SOON,
   ROLE_PROMPT,
+  ROYXAT_PROMPT,
   WELCOME_ROADMAP,
   deepLinkGreeting,
   returningGreeting,
@@ -69,6 +71,11 @@ async function sendRolePrompt(ctx: CommandContext<Context>): Promise<void> {
   }
 }
 
+/** Web ro'yxati (raqam + parol) — saytga kirish uchun asosiy oqim. */
+async function sendRegisterWeb(ctx: CommandContext<Context>): Promise<void> {
+  await ctx.reply(ROYXAT_PROMPT, { reply_markup: webRegisterKeyboard() });
+}
+
 export async function handleStart(
   ctx: CommandContext<Context>,
 ): Promise<void> {
@@ -110,5 +117,6 @@ export async function handleStart(
   }
 
   await sendWelcome(ctx, startCaption(from.first_name));
+  await sendRegisterWeb(ctx);
   await sendRolePrompt(ctx);
 }

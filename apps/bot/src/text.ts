@@ -6,6 +6,15 @@ import {
 
 export const REGISTER_BUTTON_LABEL = "📱 Ro'yxatdan o'tish";
 
+// Web ro'yxati (raqam + parol) — saytga kirish uchun.
+export const REGISTER_WEB_LABEL = "🔐 Ro'yxatdan o'tish";
+export const ROYXAT_PROMPT =
+  "🔐 Saytga (talantly.uz) kirish uchun ro'yxatdan o'ting:\n\n" +
+  "1️⃣ Telefon raqamingizni yuboring\n" +
+  "2️⃣ O'zingiz parol o'ylab toping\n" +
+  "3️⃣ Saytga telefon va shu parol bilan kiring\n\n" +
+  "Boshlash uchun pastdagi tugmani bosing 👇";
+
 export const PROFILE_BUTTON_LABEL = "📱 Profilni ochish";
 
 export const MINI_APP_COMING_SOON = "Mini App tez orada ulanadi.";

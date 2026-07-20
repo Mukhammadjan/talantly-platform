@@ -58,7 +58,18 @@ async function main(): Promise<void> {
   bot.command("suhbat", safe(handleSuhbat));
   bot.command("tolov", safe(handleTolov));
   bot.command("parol", safe(handleParol));
+  bot.command("royxat", safe(handleParol));
   bot.command("yordam", safe(handleYordam));
+
+  // «🔐 Ro'yxatdan o'tish» tugmasi — raqam + parol oqimini boshlaydi.
+  bot.callbackQuery("reg:start", async (ctx) => {
+    try {
+      await ctx.answerCallbackQuery();
+      await handleParol(ctx);
+    } catch (err) {
+      logger.error({ err }, "reg:start callback error");
+    }
+  });
   bot.command("baholash", safe(handleBaholash));
   bot.command("admin", safe(handleAdmin));
   bot.command("tolovlar", safe(handleTolovlar));
@@ -136,11 +147,12 @@ async function main(): Promise<void> {
 
   const publicCommands = [
     { command: "start", description: "Botni ishga tushirish" },
+    { command: "royxat", description: "Ro'yxatdan o'tish (saytga kirish)" },
     { command: "holat", description: "Tekshiruv holatim va yo'lim" },
     { command: "profil", description: "Profilim" },
     { command: "suhbat", description: "Suhbat vaqtini band qilish" },
     { command: "tolov", description: "AI CV uchun to'lov" },
-    { command: "parol", description: "Saytga kirish uchun parol o'rnatish" },
+    { command: "parol", description: "Parolni o'zgartirish" },
     { command: "yordam", description: "Yordam va bog'lanish" },
   ];
   await bot.api.setMyCommands(publicCommands);

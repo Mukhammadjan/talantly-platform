@@ -1,10 +1,24 @@
 import { InlineKeyboard, Keyboard } from "grammy";
 import { config } from "./config.js";
-import { MENU, PROFILE_BUTTON_LABEL, REGISTER_BUTTON_LABEL } from "./text.js";
+import {
+  MENU,
+  PROFILE_BUTTON_LABEL,
+  REGISTER_BUTTON_LABEL,
+  REGISTER_WEB_LABEL,
+} from "./text.js";
 
 export function registerKeyboard(): InlineKeyboard | undefined {
   if (!config.webappUrl) return undefined;
   return new InlineKeyboard().webApp(REGISTER_BUTTON_LABEL, config.webappUrl);
+}
+
+/** Web ro'yxati (raqam + parol) — «🔐 Ro'yxatdan o'tish» + ilova tugmasi. */
+export function webRegisterKeyboard(): InlineKeyboard {
+  const kb = new InlineKeyboard().text(REGISTER_WEB_LABEL, "reg:start");
+  if (config.webappUrl) {
+    kb.row().webApp("📱 Ilovani ochish", config.webappUrl);
+  }
+  return kb;
 }
 
 export function profileKeyboard(): InlineKeyboard | undefined {
