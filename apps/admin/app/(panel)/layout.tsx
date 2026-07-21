@@ -5,11 +5,15 @@ import { NavLink } from "@/components/NavLink";
 import {
   IconBuilding,
   IconCalendar,
+  IconCard,
   IconChart,
   IconDashboard,
+  IconFlag,
+  IconHistory,
   IconInbox,
   IconMatch,
   IconQuestion,
+  IconSettings,
   IconUsers,
 } from "@/components/icons";
 import { signOut } from "@/app/login/actions";
@@ -27,11 +31,15 @@ const NAV: NavItem[] = [
   { href: "/dashboard", label: "Boshqaruv", icon: <IconDashboard />, adminOnly: true },
   { href: "/talantlar", label: "Talantlar", icon: <IconUsers /> },
   { href: "/izlovchilar", label: "Kompaniyalar", icon: <IconBuilding /> },
+  { href: "/tolovlar", label: "To'lovlar", icon: <IconCard /> },
   { href: "/sorovlar", label: "So'rovlar", icon: <IconInbox /> },
   { href: "/suhbatlar", label: "Suhbatlar", icon: <IconCalendar /> },
+  { href: "/shikoyatlar", label: "Shikoyatlar", icon: <IconFlag /> },
   { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch />, adminOnly: true },
   { href: "/savollar", label: "Savollar", icon: <IconQuestion />, adminOnly: true },
   { href: "/statistika", label: "Statistika", icon: <IconChart />, adminOnly: true },
+  { href: "/sozlamalar", label: "Sozlamalar", icon: <IconSettings />, adminOnly: true },
+  { href: "/audit", label: "Audit", icon: <IconHistory />, adminOnly: true },
 ];
 
 export default async function PanelLayout({

@@ -83,3 +83,39 @@ export function IconChart() {
     </svg>
   );
 }
+
+export function IconCard() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <rect x="3" y="5.5" width="18" height="13" rx="2.5" />
+      <path d="M3 9.5h18M6.5 14.5h4" />
+    </svg>
+  );
+}
+
+export function IconFlag() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <path d="M5 21V4" />
+      <path d="M5 4.5c3-1.5 6 1.5 9 0v8c-3 1.5-6-1.5-9 0" />
+    </svg>
+  );
+}
+
+export function IconSettings() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8" />
+    </svg>
+  );
+}
+
+export function IconHistory() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8" />
+      <path d="M3.5 4v4h4M12 7.5V12l3 2" />
+    </svg>
+  );
+}
