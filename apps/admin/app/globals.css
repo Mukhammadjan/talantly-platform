@@ -2,22 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* VK Sans Display — yagona shrift (webapp bilan bir xil). */
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Light.otf") format("opentype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-DemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "VK Sans Display";
+  src: url("/fonts/VKSansDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ============ DESIGN TOKENS v2 (light + grotesk) ============ */
 :root {
-  --cream: #fbf6f0;
-  --surface: #ffffff;
-  --orange: #f26430;
-  --orange-deep: #f0530a;
-  --orange-light: #ff8a3d;
-  --orange-tint: rgba(242, 100, 48, 0.06);
-  --green: #2fb86b;
-  --green-deep: #1f9e58;
-  --green-tint: rgba(47, 184, 107, 0.1);
-  --red: #d64545;
-  --red-tint: rgba(214, 69, 69, 0.08);
-  --ink: #191512;
-  --ink-soft: #6b625b;
-  --ink-faint: rgba(107, 98, 91, 0.55);
-  --line: #eae2d8;
+  --bg: #f5f5f7; /* sahifa foni */
+  --surface: #ffffff; /* karta, panel */
+  --surface-2: #f1f1f4; /* inset chip/avatar/track */
+  --line: #e3e3e9; /* chegara, ajratgich */
+  --line-strong: #d2d2da; /* input chegarasi */
+
+  --ink: #17171b; /* asosiy matn/sarlavha */
+  --ink-soft: #5b5b66; /* ikkilamchi matn */
+  --ink-faint: #8e8e99; /* dekor / nofaol */
+
+  --orange: #f26430; /* YUZA: tugma, faol */
+  --orange-deep: #d74f1f; /* hover/press */
+  --orange-ink: #b8431a; /* MATN/IKONKA (5.45:1) */
+  --orange-tint: #fdede6; /* faol fon */
+
+  --green: #1f9e58; /* YUZA: verified muhr */
+  --green-ink: #157a42; /* verified matn/ikonka */
+  --green-tint: #e7f5ed;
+
+  --red: #d93a34;
+  --red-ink: #b3241f;
+  --red-tint: #fcebea;
+
+  --gold-ink: #8a6d1f;
+  --gold-tint: #f7efd9;
 }
 
 html,
@@ -26,46 +69,113 @@ body {
 }
 
 body {
-  background: var(--cream);
+  background: var(--bg);
   color: var(--ink);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+  font-family: "VK Sans Display", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
 }
 
 @layer components {
+  /* ---- Tipografika ---- */
   .label-caps {
-    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-soft;
+    @apply text-[11px] font-bold uppercase tracking-[0.08em] text-ink-faint;
   }
+  .page-title {
+    @apply text-[22px] font-bold tracking-[-0.01em] text-ink;
+  }
+  .section-title {
+    @apply text-[15px] font-bold text-ink;
+  }
+
+  /* ---- Inputs ---- */
   .input-base {
-    @apply w-full rounded-input border border-line bg-surface px-4 py-3 text-[14px] text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-orange;
+    @apply w-full rounded-input border border-line-strong bg-surface px-4 py-3 text-[14px] text-ink outline-none transition-all placeholder:text-ink-faint focus:border-orange focus:ring-4 focus:ring-orange/15;
   }
+  .select-base {
+    @apply w-full appearance-none rounded-input border border-line-strong bg-surface px-4 py-2.5 text-[14px] text-ink outline-none transition-all focus:border-orange focus:ring-4 focus:ring-orange/15;
+  }
+
+  /* ---- Buttons ---- */
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-orange px-5 py-2.5 text-[14px] font-semibold text-white transition-colors hover:bg-orange-deep active:scale-[0.98] disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-btn bg-orange px-5 py-2.5 text-[14px] font-bold text-white shadow-btn transition-all hover:bg-orange-deep hover:-translate-y-px active:translate-y-0 disabled:pointer-events-none disabled:opacity-50;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-full border border-line bg-surface px-4 py-2 text-[13px] font-medium text-ink-soft transition-colors hover:border-orange hover:text-orange;
+    @apply inline-flex items-center justify-center gap-1.5 rounded-btn border border-line bg-surface px-4 py-2 text-[13px] font-semibold text-ink-soft transition-colors hover:border-line-strong hover:text-ink;
   }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-btn bg-red-tint px-4 py-2 text-[13px] font-bold text-red-ink transition-colors hover:bg-red hover:text-white;
+  }
+  .btn-soft {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-btn bg-orange-tint px-4 py-2 text-[13px] font-bold text-orange-ink transition-colors hover:bg-orange hover:text-white;
+  }
+
+  /* ---- Cards ---- */
   .card {
+    @apply rounded-card border border-line bg-surface shadow-raise;
+  }
+  .card-flat {
     @apply rounded-card border border-line bg-surface;
   }
+
+  /* ---- Status badges ---- */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-semibold;
+  }
+  .badge-green {
+    @apply bg-green-tint text-green-ink;
+  }
+  .badge-orange {
+    @apply bg-orange-tint text-orange-ink;
+  }
+  .badge-red {
+    @apply bg-red-tint text-red-ink;
+  }
+  .badge-gray {
+    @apply bg-surface-2 text-ink-soft;
+  }
+  .badge-gold {
+    @apply bg-gold-tint text-gold-ink;
+  }
+
+  /* ---- Table ---- */
+  .t-head {
+    @apply text-[11px] font-bold uppercase tracking-[0.06em] text-ink-faint;
+  }
+  .t-row {
+    @apply border-t border-line transition-colors hover:bg-surface-2/60;
+  }
 }
 
+/* ---- Skeleton ---- */
 @keyframes shimmer {
   0% {
-    opacity: 0.55;
-  }
-  50% {
-    opacity: 1;
+    background-position: 200% 0;
   }
   100% {
-    opacity: 0.55;
+    background-position: -200% 0;
   }
 }
-
 .skeleton {
-  animation: shimmer 1.4s ease-in-out infinite;
-  background: var(--line);
-  border-radius: 8px;
+  background: linear-gradient(
+    100deg,
+    var(--surface-2) 30%,
+    #f7f7fa 50%,
+    var(--surface-2) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

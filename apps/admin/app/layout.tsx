@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata = {
-  title: "talantly admin",
-  description: "talantly admin panel",
+  title: "Talantly — Boshqaruv paneli",
+  description: "Talantly admin va moderator boshqaruv paneli",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
