@@ -23,31 +23,40 @@ const HOME: Record<AppRole, string> = {
   izlovchi: "/izlovchi",
 };
 
-const DIRECTIONS: { key: string; label: string; icon: IconName }[] = [
-  { key: "dasturlash", label: "Dasturlash", icon: "board" },
-  { key: "dizayn", label: "Dizayn", icon: "sparkle" },
-  { key: "marketing", label: "Marketing", icon: "globe" },
-  { key: "sotuv", label: "Sotuv", icon: "briefcase" },
-  { key: "data", label: "Data", icon: "grid" },
-  { key: "boshqa", label: "Boshqa", icon: "star" },
+const DIRECTIONS: {
+  key: string;
+  label: string;
+  icon: IconName;
+  blurb: string;
+}[] = [
+  { key: "dasturlash", label: "Dasturlash", icon: "board", blurb: "Frontend · backend · mobil" },
+  { key: "dizayn", label: "Dizayn", icon: "sparkle", blurb: "UI/UX · grafik · mahsulot" },
+  { key: "marketing", label: "Marketing", icon: "globe", blurb: "SMM · kontent · targeting" },
+  { key: "sotuv", label: "Sotuv", icon: "briefcase", blurb: "B2B/B2C savdo" },
+  { key: "data", label: "Data", icon: "grid", blurb: "Tahlil · analitika" },
+  { key: "boshqa", label: "Boshqa", icon: "star", blurb: "Qolgan yo'nalishlar" },
 ];
 
-const STEPS: { title: string; text: string }[] = [
+const PILLARS: { icon: IconName; title: string; text: string }[] = [
   {
+    icon: "doc",
     title: "AI profil",
-    text: "Sun'iy intellekt ma'lumotlaringizdan professional CV va profil yig'adi.",
+    text: "Sun'iy intellekt xom ma'lumotdan professional CV va profil yig'adi.",
   },
   {
+    icon: "check",
     title: "Bilim testi",
-    text: "Yo'nalishingiz bo'yicha 10 savollik test — bilimingiz raqamda.",
+    text: "Yo'nalishingiz bo'yicha test — bilimingiz raqamda tasdiqlanadi.",
   },
   {
+    icon: "chat",
     title: "Jonli suhbat",
-    text: "Moderator bilan suhbat: muloqot, motivatsiya va xarakter baholanadi.",
+    text: "Moderator bilan suhbat: muloqot, motivatsiya va xarakter.",
   },
   {
-    title: "Tekshirilgan profil",
-    text: "Yashil «Tekshirilgan» belgisi bilan kompaniyalarga ko'rinasiz.",
+    icon: "star",
+    title: "Tekshirilgan belgi",
+    text: "Yashil «Tekshirilgan» badge bilan kompaniyalarga ko'rinasiz.",
   },
 ];
 
@@ -135,56 +144,121 @@ export function HomeClient(): JSX.Element {
 
   return (
     <main className={styles.page}>
-      {/* ---- Hero + qidiruv ---- */}
+      {/* ---- Split hero: chapda sarlavha+qidiruv, o'ngda mahsulot ko'rinishi ---- */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <h1 className={styles.h1}>
-            Tajribasiz emas — <span className={styles.accent}>tekshirilgan</span>
-          </h1>
-          <p className={styles.lead}>
-            O&apos;zbekistondagi birinchi tekshirilgan amaliyot platformasi.
-            Talantlar bilim testi va jonli suhbatdan o&apos;tadi — kompaniyalar
-            tayyor nomzodni oladi.
-          </p>
+          <div className={styles.heroLeft}>
+            <span className={styles.badge}>
+              <Icon name="check" size={14} /> O&apos;zbekistonda #1 tekshirilgan
+              amaliyot
+            </span>
+            <h1 className={styles.h1}>
+              Tajribasiz emas —{" "}
+              <span className={styles.accent}>tekshirilgan</span>
+            </h1>
+            <p className={styles.lead}>
+              Talantlar bilim testi va jonli suhbatdan o&apos;tadi. Kompaniyalar
+              tayyor, ishonchli nomzodni oladi — AI moslik foizi bilan.
+            </p>
 
-          <form className={styles.search} onSubmit={submitSearch} role="search">
-            <label className={styles.field}>
-              <Icon name="search" size={18} />
-              <input
-                className={styles.input}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Kasb, lavozim yoki kompaniya"
-                aria-label="Qidiruv so'rovi"
-              />
-            </label>
-            <label className={`${styles.field} ${styles.fieldCity}`}>
-              <Icon name="pin" size={18} />
-              <input
-                className={styles.input}
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Shahar"
-                aria-label="Shahar"
-              />
-            </label>
-            <button type="submit" className={styles.searchBtn}>
-              Topish
-            </button>
-          </form>
+            <form
+              className={styles.search}
+              onSubmit={submitSearch}
+              role="search"
+            >
+              <label className={styles.field}>
+                <Icon name="search" size={18} />
+                <input
+                  className={styles.input}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Kasb, lavozim yoki kompaniya"
+                  aria-label="Qidiruv so'rovi"
+                />
+              </label>
+              <label className={`${styles.field} ${styles.fieldCity}`}>
+                <Icon name="pin" size={18} />
+                <input
+                  className={styles.input}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="Shahar"
+                  aria-label="Shahar"
+                />
+              </label>
+              <button type="submit" className={styles.searchBtn}>
+                Topish
+              </button>
+            </form>
 
-          <div className={styles.chips}>
-            {DIRECTIONS.map((d) => (
-              <Link
-                key={d.key}
-                href={`/vakansiyalar?direction=${d.key}`}
-                className={styles.chip}
-              >
-                <Icon name={d.icon} size={16} />
-                {d.label}
-              </Link>
-            ))}
+            <div className={styles.popular}>
+              <span className={styles.popularLabel}>Ommabop:</span>
+              {DIRECTIONS.slice(0, 4).map((d) => (
+                <Link
+                  key={d.key}
+                  href={`/vakansiyalar?direction=${d.key}`}
+                  className={styles.popChip}
+                >
+                  {d.label}
+                </Link>
+              ))}
+            </div>
           </div>
+
+          {/* O'ng: brendlangan mahsulot ko'rinishi (illyustratsiya). */}
+          <div className={styles.heroArt} aria-hidden="true">
+            <div className={styles.artCard}>
+              <div className={styles.artTop}>
+                <span className={styles.artAvatar}>K</span>
+                <div className={styles.artNameWrap}>
+                  <span className={styles.artName}>
+                    Kamola O.
+                    <span className={styles.artSeal}>
+                      <Icon name="check" size={10} />
+                    </span>
+                  </span>
+                  <span className={styles.artRole}>Frontend dasturchi</span>
+                </div>
+              </div>
+              <div className={styles.artChips}>
+                <span className={styles.artChip}>React</span>
+                <span className={styles.artChip}>TypeScript</span>
+                <span className={styles.artChip}>UI</span>
+              </div>
+              <div className={styles.artMatch}>
+                <Icon name="sparkle" size={14} />
+                AI Moslik: <span className="num">92%</span>
+              </div>
+            </div>
+            <div className={styles.artBadge}>
+              <Icon name="check" size={16} /> Tekshirildi
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---- Kategoriya plitkalari ---- */}
+      <section className={styles.section}>
+        <div className={styles.sechead}>
+          <h2 className={styles.h2}>Yo&apos;nalishlar</h2>
+          <Link href="/kasblar" className={styles.more}>
+            Barcha kasblar <Icon name="chevron" size={16} />
+          </Link>
+        </div>
+        <div className={styles.tiles}>
+          {DIRECTIONS.map((d) => (
+            <Link
+              key={d.key}
+              href={`/vakansiyalar?direction=${d.key}`}
+              className={styles.tile}
+            >
+              <span className={styles.tileIcon}>
+                <Icon name={d.icon} size={22} />
+              </span>
+              <span className={styles.tileName}>{d.label}</span>
+              <span className={styles.tileBlurb}>{d.blurb}</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -236,18 +310,29 @@ export function HomeClient(): JSX.Element {
         )}
       </section>
 
-      {/* ---- Qanday ishlaydi ---- */}
-      <section className={styles.section}>
-        <h2 className={styles.h2}>Tekshiruv qanday o&apos;tadi</h2>
-        <ol className={styles.steps}>
-          {STEPS.map((s, i) => (
-            <li key={s.title} className={styles.step}>
-              <span className={`${styles.stepNum} num`}>{i + 1}</span>
-              <h3 className={styles.stepTitle}>{s.title}</h3>
-              <p className={styles.stepText}>{s.text}</p>
-            </li>
-          ))}
-        </ol>
+      {/* ---- Nega Talantly? (4 bosqichli tekshiruv) ---- */}
+      <section className={styles.trustWrap}>
+        <div className={styles.trust}>
+          <div className={styles.trustHead}>
+            <h2 className={styles.h2}>Nega Talantly?</h2>
+            <p className={styles.trustLead}>
+              Har bir talant 4 bosqichli tekshiruvdan o&apos;tadi — kompaniya
+              tavakkal qilmaydi.
+            </p>
+          </div>
+          <ol className={styles.pillars}>
+            {PILLARS.map((p, i) => (
+              <li key={p.title} className={styles.pillar}>
+                <span className={styles.pillarIcon}>
+                  <Icon name={p.icon} size={20} />
+                </span>
+                <span className={`${styles.pillarNum} num`}>{i + 1}</span>
+                <h3 className={styles.pillarTitle}>{p.title}</h3>
+                <p className={styles.pillarText}>{p.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
       {/* ---- Kompaniyalar ---- */}
@@ -291,9 +376,9 @@ export function HomeClient(): JSX.Element {
           <div>
             <h2 className={styles.ctaTitle}>Ish beruvchimisiz?</h2>
             <p className={styles.ctaText}>
-              Tekshirilgan nomzodlar bazasini ko&apos;ring va to&apos;g&apos;ridan-to&apos;g&apos;ri
-              bog&apos;laning. To&apos;lov faqat sinov muddati muvaffaqiyatli
-              tugagach.
+              Tekshirilgan nomzodlar bazasini ko&apos;ring va
+              to&apos;g&apos;ridan-to&apos;g&apos;ri bog&apos;laning. To&apos;lov
+              faqat sinov muddati muvaffaqiyatli tugagach.
             </p>
           </div>
           <div className={styles.ctaBtns}>

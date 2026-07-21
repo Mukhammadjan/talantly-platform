@@ -51,10 +51,6 @@
   gap: var(--s-4);
 }
 
-.sechead .h2 {
-  margin-bottom: var(--s-4);
-}
-
 .more {
   display: inline-flex;
   align-items: center;
@@ -65,7 +61,7 @@
   white-space: nowrap;
 }
 
-/* ---- Hero ---- */
+/* ---- Split hero ---- */
 .hero {
   background: var(--t-white);
   border-bottom: 1px solid var(--t-line);
@@ -75,11 +71,32 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--s-12) var(--s-6);
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: var(--s-10);
+  align-items: center;
+}
+
+.heroLeft {
+  min-width: 0;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 28px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--t-verified-soft);
+  color: var(--t-verified-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
 }
 
 .h1 {
-  margin: 0;
-  max-width: 18ch;
+  margin: var(--s-4) 0 0;
+  max-width: 16ch;
   font-size: var(--fs-display-l);
   line-height: var(--lh-display-l);
   letter-spacing: var(--ls-display-l);
@@ -93,7 +110,7 @@
 
 .lead {
   margin: var(--s-3) 0 0;
-  max-width: 60ch;
+  max-width: 46ch;
   font-size: var(--fs-headline);
   line-height: var(--lh-headline);
   color: var(--t-ink-2);
@@ -104,7 +121,6 @@
   margin-top: var(--s-6);
   display: flex;
   gap: var(--s-2);
-  max-width: 860px;
 }
 
 .field {
@@ -125,7 +141,7 @@
 }
 
 .fieldCity {
-  flex: 0 1 220px;
+  flex: 0 1 180px;
 }
 
 .input {
@@ -145,7 +161,7 @@
 .searchBtn {
   flex-shrink: 0;
   height: var(--h-btn);
-  padding: 0 var(--s-8);
+  padding: 0 var(--s-6);
   border-radius: var(--r-full);
   background: var(--t-action);
   color: var(--t-on-action);
@@ -158,17 +174,23 @@
   background: var(--t-action-press);
 }
 
-.chips {
-  margin-top: var(--s-5);
+/* ---- Ommabop teglar ---- */
+.popular {
+  margin-top: var(--s-4);
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--s-2);
 }
 
-.chip {
+.popularLabel {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-3);
+}
+
+.popChip {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-2);
   height: var(--h-chip);
   padding: 0 var(--s-4);
   border-radius: var(--r-full);
@@ -182,15 +204,184 @@
     color var(--d-fast) var(--e-out);
 }
 
-.chip:hover {
+.popChip:hover {
   border-color: var(--t-action);
   color: var(--t-action-ink);
+}
+
+/* ---- Hero illyustratsiya (mahsulot ko'rinishi) ---- */
+.heroArt {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.artCard {
+  width: 100%;
+  max-width: 360px;
+  padding: var(--s-5);
+  border-radius: var(--r-xl);
+  background: var(--t-white);
+  box-shadow: var(--sh-float);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.artTop {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.artAvatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-title);
+}
+
+.artNameWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.artName {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.artSeal {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+}
+
+.artRole {
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.artChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.artChip {
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-xs);
+  background: var(--t-fill);
+  font-size: var(--fs-caption);
+  color: var(--t-ink-2);
+}
+
+.artMatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  align-self: flex-start;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-full);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.artBadge {
+  position: absolute;
+  right: var(--s-4);
+  bottom: calc(-1 * var(--s-3));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--t-verified);
+  color: var(--t-white);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  box-shadow: var(--sh-float);
+}
+
+/* ---- Kategoriya plitkalari ---- */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--s-4);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition:
+    box-shadow var(--d-fast) var(--e-out),
+    transform var(--d-fast) var(--e-out);
+}
+
+.tile:hover {
+  box-shadow: var(--sh-float);
+  transform: translateY(-2px);
+}
+
+.tile:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.tileIcon {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.tileName {
+  margin-top: var(--s-1);
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.tileBlurb {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--t-ink-2);
 }
 
 /* ---- Kartalar ---- */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--s-4);
 }
 
@@ -219,8 +410,34 @@
   color: var(--t-ink-3);
 }
 
-/* ---- Tekshiruv bosqichlari ---- */
-.steps {
+/* ---- Nega Talantly? (ishonch bandi) ---- */
+.trustWrap {
+  margin-top: var(--s-10);
+  background: var(--t-white);
+  border-top: 1px solid var(--t-line);
+  border-bottom: 1px solid var(--t-line);
+}
+
+.trust {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-12) var(--s-6);
+}
+
+.trustHead {
+  text-align: center;
+  margin-bottom: var(--s-8);
+}
+
+.trustLead {
+  margin: var(--s-2) auto 0;
+  max-width: 52ch;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  color: var(--t-ink-2);
+}
+
+.pillars {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -229,27 +446,35 @@
   gap: var(--s-4);
 }
 
-.step {
+.pillar {
+  position: relative;
   padding: var(--s-5);
   border-radius: var(--r-lg);
-  background: var(--t-white);
-  border: 1px solid var(--t-line);
+  background: var(--t-bg);
 }
 
-.stepNum {
+.pillarIcon {
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--r-full);
+  border-radius: var(--r-sm);
   background: var(--t-action-soft);
   color: var(--t-action-ink);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-bold);
 }
 
-.stepTitle {
+.pillarNum {
+  position: absolute;
+  top: var(--s-5);
+  right: var(--s-5);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-line-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.pillarTitle {
   margin: var(--s-3) 0 var(--s-1);
   font-size: var(--fs-headline);
   line-height: var(--lh-headline);
@@ -257,7 +482,7 @@
   color: var(--t-ink-1);
 }
 
-.stepText {
+.pillarText {
   margin: 0;
   font-size: var(--fs-caption);
   line-height: var(--lh-caption);
@@ -339,12 +564,25 @@
 }
 
 /* ---- Responsive ---- */
-@media (max-width: 860px) {
+@media (max-width: 900px) {
   .heroInner {
-    padding: var(--s-8) var(--s-4);
+    grid-template-columns: 1fr;
+    gap: var(--s-8);
+    padding: var(--s-10) var(--s-4);
+  }
+  /* Kichik ekranda mahsulot kartasi sarlavhadan keyin, markazda. */
+  .heroArt {
+    order: 2;
+  }
+  .h1,
+  .lead {
+    max-width: none;
   }
   .section {
     padding: var(--s-8) var(--s-4) 0;
+  }
+  .trust {
+    padding: var(--s-10) var(--s-4);
   }
   .ctaWrap {
     padding: var(--s-8) var(--s-4);
