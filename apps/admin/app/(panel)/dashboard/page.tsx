@@ -43,6 +43,28 @@ export default async function DashboardPage() {
   const activeRequests = requests.filter((r) => r.status !== "yopildi");
   const urgentCompanies = companies.filter((c) => c.urgency === "hoziroq");
 
+  // Kutayotgan ishlar (navbat qisqa ko'rinishi — §3.1).
+  const [{ count: pendingPayments }, { count: openComplaints }] =
+    await Promise.all([
+      client
+        .from("payments")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "kutilmoqda"),
+      client
+        .from("complaints")
+        .select("id", { count: "exact", head: true })
+        .neq("status", "hal_qilindi"),
+    ]);
+  const reviewQueue = talents.filter((t) =>
+    ["cv_tayyor", "test_otgan", "suhbat_belgilangan"].includes(t.status),
+  ).length;
+
+  const queues = [
+    { label: "Tekshiruv navbati", value: reviewQueue, href: "/tekshiruv" },
+    { label: "To'lov tasdiqlash", value: pendingPayments ?? 0, href: "/tolovlar" },
+    { label: "Ochiq shikoyatlar", value: openComplaints ?? 0, href: "/shikoyatlar" },
+  ];
+
   // Cumulative funnel: everyone at stage N has passed all earlier stages.
   // tolov_kutilmoqda counts as malumot_toldirilgan; rad_etilgan is excluded.
   const stageIndex = (status: TalentStatus): number => {
@@ -95,6 +117,33 @@ export default async function DashboardPage() {
           </Link>
         ))}
       </div>
+
+      <section className="mb-6">
+        <p className="label-caps mb-2">Kutayotgan ishlar</p>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {queues.map((q) => (
+            <Link
+              key={q.href}
+              href={q.href}
+              className="card flex items-center justify-between p-5 transition-transform hover:-translate-y-0.5"
+            >
+              <span className="text-[14px] font-semibold text-ink">
+                {q.label}
+              </span>
+              <span
+                className={`flex items-center gap-2 text-[24px] font-bold ${
+                  q.value > 0 ? "text-orange-ink" : "text-ink-faint"
+                }`}
+              >
+                {q.value}
+                {q.value > 0 ? (
+                  <span className="h-2 w-2 rounded-full bg-orange" />
+                ) : null}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <section className="card p-5 shadow-soft">
