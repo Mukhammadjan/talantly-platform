@@ -85,6 +85,12 @@ export function FilterPanel({
         ) : null}
       </div>
 
+      {/* AI-saralash — tepada (toggle, filled tugma emas). */}
+      <AiSmartToggle
+        checked={state.aiSort}
+        onChange={(c) => onChange({ aiSort: c })}
+      />
+
       <Group
         title="Yo'nalish"
         options={DIRECTIONS}
@@ -102,12 +108,6 @@ export function FilterPanel({
         options={FORMATS}
         selected={state.workFormat}
         onSelect={(v) => onChange({ workFormat: v })}
-      />
-
-      {/* AI-saralash — eng pastda (bitta-filled qoidasi: toggle, tugma emas). */}
-      <AiSmartToggle
-        checked={state.aiSort}
-        onChange={(c) => onChange({ aiSort: c })}
       />
     </aside>
   );
