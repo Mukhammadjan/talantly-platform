@@ -1,11 +1,74 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { saveCompanyNotes, setCompanyStatus } from "./actions";
+import {
+  saveCompanyInn,
+  saveCompanyNotes,
+  setCompanyStatus,
+  setCompanyVerified,
+} from "./actions";
 
 interface Option {
   value: string;
   label: string;
+}
+
+/** STIR (INN) + "Tekshirilgan kompaniya" belgisi (§3.3). */
+export function CompanyVerify({
+  companyId,
+  isVerified,
+  inn,
+}: {
+  companyId: string;
+  isVerified: boolean;
+  inn: string | null;
+}) {
+  const [pending, startTransition] = useTransition();
+
+  const saveInn = (value: string): void => {
+    if ((value.trim() || null) === (inn ?? null)) return;
+    const fd = new FormData();
+    fd.set("companyId", companyId);
+    fd.set("inn", value);
+    startTransition(async () => {
+      await saveCompanyInn(fd);
+    });
+  };
+
+  const toggle = (): void => {
+    const fd = new FormData();
+    fd.set("companyId", companyId);
+    fd.set("verified", isVerified ? "false" : "true");
+    startTransition(async () => {
+      await setCompanyVerified(fd);
+    });
+  };
+
+  return (
+    <div className="grid gap-1.5">
+      <input
+        defaultValue={inn ?? ""}
+        placeholder="STIR"
+        inputMode="numeric"
+        disabled={pending}
+        onBlur={(e) => saveInn(e.target.value)}
+        className="input-base num w-[130px] py-1.5 text-[13px]"
+      />
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={pending}
+        className={
+          isVerified
+            ? "badge badge-green cursor-pointer"
+            : "btn-ghost px-3 py-1 text-[12px]"
+        }
+        title={isVerified ? "Belgini olib tashlash" : "Tekshirilgan deb belgilash"}
+      >
+        {isVerified ? "✓ Tekshirilgan" : "Tekshirish"}
+      </button>
+    </div>
+  );
 }
 
 export function CompanyStatusSelect({

@@ -12,7 +12,7 @@ import {
 } from "@/lib/labels";
 import { getServiceClient } from "@/lib/supabase/service";
 import { FilterBar, type FilterDef } from "../talantlar/FilterBar";
-import { CompanyStatusSelect, NotesCell } from "./RowControls";
+import { CompanyStatusSelect, CompanyVerify, NotesCell } from "./RowControls";
 
 export const dynamic = "force-dynamic";
 
@@ -95,6 +95,7 @@ export default async function IzlovchilarPage({
               <th className="label-caps px-4 py-3.5">Kimlar kerak</th>
               <th className="label-caps px-4 py-3.5">Muddat</th>
               <th className="label-caps px-4 py-3.5">Status</th>
+              <th className="label-caps px-4 py-3.5">STIR / Tekshiruv</th>
               <th className="label-caps w-[220px] px-4 py-3.5">Izohlar</th>
               <th className="label-caps px-4 py-3.5 text-right">Sana</th>
             </tr>
@@ -102,7 +103,7 @@ export default async function IzlovchilarPage({
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center">
+                <td colSpan={9} className="px-4 py-12 text-center">
                   <p className="text-[14px] font-medium text-ink-soft">
                     Izlovchilar topilmadi
                   </p>
@@ -168,6 +169,13 @@ export default async function IzlovchilarPage({
                       companyId={company.id}
                       status={company.status}
                       options={statusOptions}
+                    />
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <CompanyVerify
+                      companyId={company.id}
+                      isVerified={company.is_verified}
+                      inn={company.inn}
                     />
                   </td>
                   <td className="px-4 py-3.5">

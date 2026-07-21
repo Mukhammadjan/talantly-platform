@@ -339,6 +339,8 @@ export interface CompanyRow {
   directions_needed: string[] | null;
   needed_level: NeededLevel | null;
   urgency: Urgency | null;
+  is_verified: boolean;
+  inn: string | null;
 }
 
 export interface CompanyInsert {
@@ -360,6 +362,8 @@ export interface CompanyInsert {
   directions_needed?: string[] | null;
   needed_level?: NeededLevel | null;
   urgency?: Urgency | null;
+  is_verified?: boolean;
+  inn?: string | null;
 }
 
 export type RequestKind = "kompaniya_sorovi" | "talant_qiziqishi";
