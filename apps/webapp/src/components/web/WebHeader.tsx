@@ -11,6 +11,7 @@ import styles from "./WebHeader.module.css";
 const NAV = [
   { href: "/", label: "Asosiy" },
   { href: "/vakansiyalar", label: "Vakansiyalar" },
+  { href: "/kasblar", label: "Kasblar" },
   { href: "/kompaniyalar", label: "Kompaniyalar" },
   { href: "/ai", label: "AI vositalar" },
   { href: "/nomzodlar", label: "Nomzodlar" },

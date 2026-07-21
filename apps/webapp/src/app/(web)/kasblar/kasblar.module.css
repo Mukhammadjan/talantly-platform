@@ -1,0 +1,153 @@
+.main {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--s-10) var(--s-6) var(--s-12);
+}
+
+/* ---- Hero ---- */
+.hero {
+  text-align: center;
+  margin-bottom: var(--s-8);
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: var(--fs-micro);
+  line-height: var(--lh-micro);
+  letter-spacing: var(--ls-micro);
+  text-transform: uppercase;
+  font-weight: var(--fw-bold);
+  color: var(--t-action-ink);
+}
+
+.h1 {
+  margin: var(--s-3) 0 0;
+  font-size: var(--fs-display-l);
+  line-height: var(--lh-display-l);
+  letter-spacing: var(--ls-display-l);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.lead {
+  margin: var(--s-3) auto 0;
+  max-width: 56ch;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  color: var(--t-ink-2);
+}
+
+/* ---- Kartalar ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--t-white);
+  box-shadow: var(--sh-raise);
+  transition:
+    box-shadow var(--d-fast) var(--e-out),
+    transform var(--d-fast) var(--e-out);
+}
+
+.card:hover {
+  box-shadow: var(--sh-float);
+  transform: translateY(-2px);
+}
+
+.card:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
+.iconTile {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-sm);
+  background: var(--t-action-soft);
+  color: var(--t-action-ink);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.cardName {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: var(--ls-title);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
+.cardBlurb {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--t-ink-2);
+}
+
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin-top: auto;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--t-line);
+  color: var(--t-action-ink);
+}
+
+.count {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--t-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Jami ---- */
+.totalNote {
+  margin: var(--s-8) 0 0;
+  text-align: center;
+  font-size: var(--fs-body);
+  color: var(--t-ink-2);
+}
+
+.totalNum {
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.allLink {
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
+}
+
+.allLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .inner {
+    padding: var(--s-8) var(--s-4) var(--s-10);
+  }
+}

@@ -8,6 +8,7 @@ const BASE = "https://talantly.uz";
 const STATIC: { path: string; priority: number; freq: "daily" | "weekly" }[] = [
   { path: "/", priority: 1, freq: "daily" },
   { path: "/vakansiyalar", priority: 0.9, freq: "daily" },
+  { path: "/kasblar", priority: 0.8, freq: "weekly" },
   { path: "/kompaniyalar", priority: 0.8, freq: "weekly" },
   { path: "/nomzodlar", priority: 0.7, freq: "daily" },
   { path: "/ai", priority: 0.6, freq: "weekly" },
