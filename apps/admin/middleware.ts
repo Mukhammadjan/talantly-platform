@@ -4,6 +4,8 @@ import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/session";
 // Admin-only yo'llar — moderator kelsa haqiqiy 403 (UI'da yashirish yetarli emas).
 const ADMIN_ONLY = [
   "/dashboard",
+  "/foydalanuvchilar",
+  "/moderatorlar",
   "/moslashtirish",
   "/savollar",
   "/statistika",

@@ -14,6 +14,8 @@ import {
   IconMatch,
   IconQuestion,
   IconSettings,
+  IconShield,
+  IconUserList,
   IconUsers,
 } from "@/components/icons";
 import { signOut } from "@/app/login/actions";
@@ -35,6 +37,8 @@ const NAV: NavItem[] = [
   { href: "/sorovlar", label: "So'rovlar", icon: <IconInbox /> },
   { href: "/suhbatlar", label: "Suhbatlar", icon: <IconCalendar /> },
   { href: "/shikoyatlar", label: "Shikoyatlar", icon: <IconFlag /> },
+  { href: "/foydalanuvchilar", label: "Foydalanuvchilar", icon: <IconUserList />, adminOnly: true },
+  { href: "/moderatorlar", label: "Moderatorlar", icon: <IconShield />, adminOnly: true },
   { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch />, adminOnly: true },
   { href: "/savollar", label: "Savollar", icon: <IconQuestion />, adminOnly: true },
   { href: "/statistika", label: "Statistika", icon: <IconChart />, adminOnly: true },

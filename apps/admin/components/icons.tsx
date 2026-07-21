@@ -119,3 +119,22 @@ export function IconHistory() {
     </svg>
   );
 }
+
+export function IconUserList() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <circle cx="7.5" cy="8" r="3" />
+      <path d="M3 19c0-2.5 2-4.5 4.5-4.5S12 16.5 12 19" />
+      <path d="M15.5 8.5h5M15.5 13h5M15.5 17.5h5" />
+    </svg>
+  );
+}
+
+export function IconShield() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <path d="M12 3.5 5 6v5.5c0 4.2 2.9 7.4 7 8.5 4.1-1.1 7-4.3 7-8.5V6z" />
+      <path d="M9.3 12l1.9 1.9 3.5-3.6" />
+    </svg>
+  );
+}
