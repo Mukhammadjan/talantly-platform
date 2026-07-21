@@ -136,3 +136,32 @@
   background: var(--t-danger-soft);
   color: var(--t-danger-ink);
 }
+
+/* ---- Web ramkasi: keng ekranda savol kattaroq, variantlar 2 ustunda ---- */
+:global(.app--web) .q {
+  font-size: var(--fs-display-m);
+  line-height: var(--lh-display-m);
+  letter-spacing: var(--ls-display-m);
+  text-align: center;
+  margin-bottom: var(--s-6);
+}
+
+:global(.app--web) .opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+}
+
+:global(.app--web) .opt {
+  min-height: 64px;
+  padding: var(--s-4) var(--s-5);
+  align-items: center;
+  display: flex;
+  font-size: var(--fs-headline);
+}
+
+@media (max-width: 620px) {
+  :global(.app--web) .opts {
+    grid-template-columns: 1fr;
+  }
+}
