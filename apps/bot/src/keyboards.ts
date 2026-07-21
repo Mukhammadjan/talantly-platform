@@ -40,10 +40,6 @@ export function registeredKeyboard(role: string): InlineKeyboard {
 /** Doimiy pastki menyu — bot har doim tugmalar bilan boshqariladi. */
 export function mainMenuKeyboard(): Keyboard {
   const kb = new Keyboard();
-  // Yuqorida to'liq kenglikdagi ilova (web_app) tugmasi.
-  if (config.webappUrl) {
-    kb.webApp(MENU.ilova, config.webappUrl).row();
-  }
   kb.text(MENU.holat)
     .text(MENU.suhbat)
     .row()
