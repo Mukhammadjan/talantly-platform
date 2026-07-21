@@ -130,6 +130,15 @@ export function IconUserList() {
   );
 }
 
+export function IconQueue() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>
+      <path d="M4 6.5h11M4 12h11M4 17.5h6" />
+      <path d="M17.5 16l1.5 1.5 3-3" />
+    </svg>
+  );
+}
+
 export function IconShield() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" {...stroke}>

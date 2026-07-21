@@ -89,7 +89,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     { userId: user.id, role: user.role },
     serverEnv.jwtSecret,
   );
-  const landing = user.role === "admin" ? "/dashboard" : "/talantlar";
+  const landing = user.role === "admin" ? "/dashboard" : "/tekshiruv";
   const res = NextResponse.json({ ok: true, redirect: landing });
   res.cookies.set(ADMIN_COOKIE, token, adminCookieOptions());
   return res;

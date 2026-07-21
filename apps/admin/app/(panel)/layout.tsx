@@ -13,6 +13,7 @@ import {
   IconInbox,
   IconMatch,
   IconQuestion,
+  IconQueue,
   IconSettings,
   IconShield,
   IconUserList,
@@ -31,12 +32,13 @@ interface NavItem {
 // haqiqiy himoya middleware (403) + har action'da requireRole/requirePanel.
 const NAV: NavItem[] = [
   { href: "/dashboard", label: "Boshqaruv", icon: <IconDashboard />, adminOnly: true },
-  { href: "/talantlar", label: "Talantlar", icon: <IconUsers /> },
+  { href: "/tekshiruv", label: "Tekshiruv navbati", icon: <IconQueue /> },
   { href: "/izlovchilar", label: "Kompaniyalar", icon: <IconBuilding /> },
   { href: "/tolovlar", label: "To'lovlar", icon: <IconCard /> },
   { href: "/sorovlar", label: "So'rovlar", icon: <IconInbox /> },
   { href: "/suhbatlar", label: "Suhbatlar", icon: <IconCalendar /> },
   { href: "/shikoyatlar", label: "Shikoyatlar", icon: <IconFlag /> },
+  { href: "/talantlar", label: "Talantlar", icon: <IconUsers />, adminOnly: true },
   { href: "/foydalanuvchilar", label: "Foydalanuvchilar", icon: <IconUserList />, adminOnly: true },
   { href: "/moderatorlar", label: "Moderatorlar", icon: <IconShield />, adminOnly: true },
   { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch />, adminOnly: true },

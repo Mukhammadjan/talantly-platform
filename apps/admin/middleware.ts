@@ -4,6 +4,7 @@ import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/session";
 // Admin-only yo'llar — moderator kelsa haqiqiy 403 (UI'da yashirish yetarli emas).
 const ADMIN_ONLY = [
   "/dashboard",
+  "/talantlar",
   "/foydalanuvchilar",
   "/moderatorlar",
   "/moslashtirish",
@@ -14,7 +15,7 @@ const ADMIN_ONLY = [
 ];
 
 function roleLanding(role: string): string {
-  return role === "admin" ? "/dashboard" : "/talantlar";
+  return role === "admin" ? "/dashboard" : "/tekshiruv";
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
