@@ -22,6 +22,12 @@ const nextConfig = {
       ...config.resolve.extensionAlias,
       ".js": [".ts", ".tsx", ".js"],
     };
+    // "@/" alias'ni aniq beramiz — Vercel monorepo build'ida tsconfig-paths
+    // aniqlanishi ishonchsiz (webapp ham shunday qiladi). "@" → apps/admin ildizi.
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": fileURLToPath(new URL(".", import.meta.url)),
+    };
     return config;
   },
 };
