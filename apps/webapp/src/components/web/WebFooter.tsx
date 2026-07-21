@@ -41,7 +41,7 @@ export function WebFooter(): JSX.Element | null {
       <div className={styles.inner}>
         <div className={styles.brandCol}>
           <img
-            src="/assets/brand/talantly-wordmark-light.svg"
+            src="/assets/brand/talantly-wordmark-dark.svg"
             alt="Talantly"
             className={styles.logo}
           />

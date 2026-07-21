@@ -30,11 +30,10 @@ const DIRECTIONS: {
   icon: IconName;
   blurb: string;
 }[] = [
-  { key: "dasturlash", label: "Dasturlash", icon: "board", blurb: "Frontend · backend · mobil · full-stack" },
+  { key: "dasturlash", label: "Dasturlash", icon: "board", blurb: "Frontend · backend · mobil" },
   { key: "dizayn", label: "Dizayn", icon: "sparkle", blurb: "UI/UX · grafik · mahsulot" },
   { key: "marketing", label: "Marketing", icon: "globe", blurb: "SMM · kontent · targeting" },
   { key: "sotuv", label: "Sotuv", icon: "briefcase", blurb: "B2B/B2C savdo · akkaunt" },
-  { key: "data", label: "Data", icon: "grid", blurb: "Tahlil · analitika · hisobot" },
   { key: "boshqa", label: "Boshqa", icon: "star", blurb: "Qolgan yo'nalishlar" },
 ];
 
@@ -208,17 +207,16 @@ export function HomeClient(): JSX.Element {
           <div className={styles.heroLeft}>
             <span className={styles.badge}>
               <span className={styles.badgeDot} aria-hidden="true" />
-              O&apos;zbekistonda #1 tekshirilgan amaliyot
+              O&apos;zbekistonda #1 tekshirilgan talant platformasi
             </span>
             <h1 className={styles.h1}>
-              Tajribasiz emas —{" "}
-              <span className={styles.accent}>tekshirilgan.</span>
-              <br />
-              Salohiyatingizni dunyoga ko&apos;rsating.
+              Tajriba talab qilinmaydi —{" "}
+              <span className={styles.accent}>tekshiruv</span> yetarli.
             </h1>
             <p className={styles.lead}>
-              Talantlar bilim testi va jonli suhbatdan o&apos;tadi. Kompaniyalar
-              tayyor, ishonchli nomzodni oladi — AI moslik foizi bilan.
+              Bilim testi va jonli suhbatdan o&apos;ting — AI sizga professional
+              profil yig&apos;ib beradi. Kompaniyalar sizni ishga tayyor,
+              ishonchli nomzod sifatida ko&apos;radi.
             </p>
 
             <form
@@ -232,7 +230,7 @@ export function HomeClient(): JSX.Element {
                   className={styles.input}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Kasb, lavozim yoki kompaniya"
+                  placeholder="Qidiruv"
                   aria-label="Qidiruv so'rovi"
                 />
               </label>
@@ -308,13 +306,7 @@ export function HomeClient(): JSX.Element {
         </div>
         <div className={styles.bento}>
           {DIRECTIONS.map((d, i) => (
-            <Reveal
-              key={d.key}
-              delay={i * 60}
-              className={`${styles.tileWrap} ${
-                i === 0 || i === 4 ? styles.tileWide : ""
-              }`}
-            >
+            <Reveal key={d.key} delay={i * 60} className={styles.tileWrap}>
               <Link
                 href={`/vakansiyalar?direction=${d.key}`}
                 className={styles.tile}

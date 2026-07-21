@@ -1,29 +1,7 @@
 .footer {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
   margin-top: auto;
-  border-top: 1px solid color-mix(in srgb, var(--t-action) 40%, var(--t-ink-1));
-  background: linear-gradient(
-    160deg,
-    var(--t-action-press),
-    color-mix(in srgb, var(--t-action-press) 55%, var(--t-ink-1))
-  );
-  color: var(--t-white);
-}
-.footer::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: -160px;
-  right: -60px;
-  width: 420px;
-  height: 420px;
-  border-radius: var(--r-full);
-  background: color-mix(in srgb, var(--t-glow-amber) 45%, transparent);
-  filter: blur(80px);
-  opacity: 0.4;
-  pointer-events: none;
+  border-top: 1px solid var(--t-line);
+  background: var(--t-white);
 }
 
 .inner {
@@ -52,16 +30,13 @@
   margin: 0;
   font-size: var(--fs-caption);
   line-height: var(--lh-caption);
-  color: color-mix(in srgb, var(--t-white) 82%, transparent);
+  color: var(--t-ink-2);
 }
 
 .botLink {
   font-size: var(--fs-caption);
-  font-weight: var(--fw-bold);
-  color: var(--t-white);
-}
-.botLink:hover {
-  text-decoration: underline;
+  font-weight: var(--fw-semibold);
+  color: var(--t-action-ink);
 }
 
 .col {
@@ -76,17 +51,17 @@
   font-weight: var(--fw-bold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--t-white) 60%, transparent);
+  color: var(--t-ink-3);
 }
 
 .link {
   font-size: var(--fs-caption);
-  color: color-mix(in srgb, var(--t-white) 82%, transparent);
+  color: var(--t-ink-2);
   transition: color var(--d-fast) var(--e-out);
 }
 
 .link:hover {
-  color: var(--t-white);
+  color: var(--t-action-ink);
 }
 
 .bottom {
@@ -97,12 +72,12 @@
   align-items: center;
   gap: var(--s-2);
   font-size: var(--fs-caption);
-  color: color-mix(in srgb, var(--t-white) 70%, transparent);
-  border-top: 1px solid color-mix(in srgb, var(--t-white) 18%, transparent);
+  color: var(--t-ink-3);
+  border-top: 1px solid var(--t-line);
 }
 
 .dot {
-  color: color-mix(in srgb, var(--t-white) 45%, transparent);
+  color: var(--t-line-strong);
 }
 
 @media (max-width: 760px) {

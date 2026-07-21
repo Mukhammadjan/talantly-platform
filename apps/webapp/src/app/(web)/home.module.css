@@ -481,14 +481,11 @@
    ============================================================ */
 .bento {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--s-4);
 }
 .tileWrap {
   display: flex;
-}
-.tileWide {
-  grid-column: span 2;
 }
 .tile {
   position: relative;
@@ -932,14 +929,13 @@
     height: 360px;
     order: -1;
   }
-  .bento,
+  .bento {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .cards,
   .companies,
   .pillars {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .tileWide {
-    grid-column: span 2;
   }
 }
 
@@ -969,14 +965,13 @@
   .searchBtn {
     flex: 1 1 100%;
   }
-  .bento,
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .cards,
   .companies,
   .pillars {
     grid-template-columns: 1fr;
-  }
-  .tileWide {
-    grid-column: span 1;
   }
   .cta {
     padding: var(--s-8) var(--s-5);
