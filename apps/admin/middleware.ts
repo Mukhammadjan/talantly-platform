@@ -1,47 +1,54 @@
-import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/session";
+
+// Admin-only yo'llar — moderator kelsa haqiqiy 403 (UI'da yashirish yetarli emas).
+const ADMIN_ONLY = ["/dashboard", "/moslashtirish", "/savollar", "/statistika"];
+
+function roleLanding(role: string): string {
+  return role === "admin" ? "/dashboard" : "/talantlar";
+}
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-  // Public tokenized share pages for companies — no session required
-  if (request.nextUrl.pathname.startsWith("/ulashish")) {
-    return NextResponse.next({ request });
-  }
+  const { pathname } = request.nextUrl;
 
-  let response = NextResponse.next({ request });
+  // Tokenli ochiq share sahifalari — sessiya shart emas.
+  if (pathname.startsWith("/ulashish")) return NextResponse.next();
 
-  const supabase = createServerClient(
-    process.env.SUPABASE_URL ?? "",
-    process.env.SUPABASE_ANON_KEY ?? "",
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          for (const { name, value } of cookiesToSet) {
-            request.cookies.set(name, value);
-          }
-          response = NextResponse.next({ request });
-          for (const { name, value, options } of cookiesToSet) {
-            response.cookies.set(name, value, options);
-          }
-        },
-      },
-    },
-  );
+  // API route'lar auth'ni O'ZI bajaradi (redirect emas, JSON 401/403).
+  if (pathname.startsWith("/api")) return NextResponse.next();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const secret = process.env.WEBAPP_JWT_SECRET ?? "";
+  const token = request.cookies.get(ADMIN_COOKIE)?.value;
+  const claims = token && secret ? await verifyAdminToken(token, secret) : null;
+  const isPanelUser =
+    claims && (claims.role === "admin" || claims.role === "moderator");
 
-  const isLoginPage = request.nextUrl.pathname.startsWith("/login");
-  if (!user && !isLoginPage) {
+  const isLogin = pathname.startsWith("/login");
+
+  if (!isPanelUser) {
+    if (isLogin) return NextResponse.next();
     return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (user && isLoginPage) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+
+  // Kirgan foydalanuvchi login sahifasiga bormaydi.
+  if (isLogin) {
+    return NextResponse.redirect(
+      new URL(roleLanding(claims.role), request.url),
+    );
   }
-  return response;
+
+  // Admin-only yo'l + moderator → 403 (server darajasida, curl bilan ko'rinadi).
+  if (
+    claims.role !== "admin" &&
+    ADMIN_ONLY.some((p) => pathname === p || pathname.startsWith(`${p}/`))
+  ) {
+    return new NextResponse("403 — Ruxsat yo'q (faqat admin)", {
+      status: 403,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

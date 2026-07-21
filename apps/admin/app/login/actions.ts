@@ -1,35 +1,10 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getAuthClient } from "@/lib/supabase/auth";
-
-export interface LoginState {
-  error: string | null;
-}
-
-export async function signIn(
-  _prev: LoginState,
-  formData: FormData,
-): Promise<LoginState> {
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
-  if (!email || !password) {
-    return { error: "Email va parolni kiriting." };
-  }
-
-  const supabase = getAuthClient();
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  if (error) {
-    return { error: "Email yoki parol noto'g'ri." };
-  }
-  redirect("/dashboard");
-}
+import { ADMIN_COOKIE } from "@/lib/session";
 
 export async function signOut(): Promise<void> {
-  const supabase = getAuthClient();
-  await supabase.auth.signOut();
+  cookies().delete(ADMIN_COOKIE);
   redirect("/login");
 }

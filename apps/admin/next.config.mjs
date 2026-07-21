@@ -12,6 +12,10 @@ if (existsSync(rootEnvPath)) {
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@talantly/shared"],
+  experimental: {
+    // argon2 native (.node) — webpack bundle qilmasin, runtime'da require qilsin.
+    serverComponentsExternalPackages: ["@node-rs/argon2"],
+  },
   webpack: (config) => {
     // @talantly/shared uses NodeNext ".js" import specifiers for .ts sources
     config.resolve.extensionAlias = {

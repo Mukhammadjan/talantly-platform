@@ -11,7 +11,9 @@ export default function LoginPage({
   const initialError =
     searchParams.xato === "huquq"
       ? "Bu hisobda admin panelga kirish huquqi yo'q."
-      : null;
+      : searchParams.xato === "muzlatilgan"
+        ? "Hisob muzlatilgan. Administrator bilan bog'laning."
+        : null;
 
   return (
     <main className="grid min-h-screen place-items-center p-6">

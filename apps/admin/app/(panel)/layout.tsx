@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { requireAdmin } from "@/lib/auth";
+import { requirePanel } from "@/lib/auth";
 import { Logo } from "@/components/Logo";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -14,15 +14,24 @@ import {
 } from "@/components/icons";
 import { signOut } from "@/app/login/actions";
 
-const NAV = [
-  { href: "/dashboard", label: "Boshqaruv", icon: <IconDashboard /> },
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ReactNode;
+  adminOnly?: boolean;
+}
+
+// Rol-asosli navigatsiya. Moderator adminOnly elementlarni UMUMAN ko'rmaydi;
+// haqiqiy himoya middleware (403) + har action'da requireRole/requirePanel.
+const NAV: NavItem[] = [
+  { href: "/dashboard", label: "Boshqaruv", icon: <IconDashboard />, adminOnly: true },
   { href: "/talantlar", label: "Talantlar", icon: <IconUsers /> },
-  { href: "/izlovchilar", label: "Izlovchilar", icon: <IconBuilding /> },
+  { href: "/izlovchilar", label: "Kompaniyalar", icon: <IconBuilding /> },
   { href: "/sorovlar", label: "So'rovlar", icon: <IconInbox /> },
   { href: "/suhbatlar", label: "Suhbatlar", icon: <IconCalendar /> },
-  { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch /> },
-  { href: "/savollar", label: "Savollar", icon: <IconQuestion /> },
-  { href: "/statistika", label: "Statistika", icon: <IconChart /> },
+  { href: "/moslashtirish", label: "Moslashtirish", icon: <IconMatch />, adminOnly: true },
+  { href: "/savollar", label: "Savollar", icon: <IconQuestion />, adminOnly: true },
+  { href: "/statistika", label: "Statistika", icon: <IconChart />, adminOnly: true },
 ];
 
 export default async function PanelLayout({
@@ -30,12 +39,15 @@ export default async function PanelLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await requireAdmin();
+  const { user } = await requirePanel();
+  const isAdmin = user.role === "admin";
+  const items = NAV.filter((n) => isAdmin || !n.adminOnly);
+  const roleLabel = isAdmin ? "Admin" : "Moderator";
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-1">
-      {NAV.map((item) => (
-        <NavLink key={item.href} {...item} />
+      {items.map((item) => (
+        <NavLink key={item.href} href={item.href} label={item.label} icon={item.icon} />
       ))}
     </nav>
   );
@@ -43,10 +55,10 @@ export default async function PanelLayout({
   const account = (
     <div className="flex items-center justify-between gap-2 border-t border-line pt-4">
       <div className="min-w-0">
-        <p className="truncate text-[13px] font-semibold text-ink">
-          {session.user.role === "admin" ? "Admin" : "Moderator"}
+        <p className="truncate text-[13px] font-semibold text-ink">{roleLabel}</p>
+        <p className="truncate text-[12px] text-ink-faint">
+          {user.phone ?? user.tg_username ?? "—"}
         </p>
-        <p className="truncate text-[12px] text-ink-faint">{session.email}</p>
       </div>
       <form action={signOut}>
         <button type="submit" className="btn-ghost shrink-0">
@@ -74,8 +86,8 @@ export default async function PanelLayout({
           </form>
         </div>
         <div className="mt-3 flex gap-1 overflow-x-auto">
-          {NAV.map((item) => (
-            <NavLink key={item.href} {...item} />
+          {items.map((item) => (
+            <NavLink key={item.href} href={item.href} label={item.label} icon={item.icon} />
           ))}
         </div>
       </div>

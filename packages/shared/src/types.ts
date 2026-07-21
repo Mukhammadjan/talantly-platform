@@ -6,6 +6,9 @@ export type UserRole = "talent" | "moderator" | "admin";
 
 export type PreferredMode = "talant" | "izlovchi";
 
+/** Soft-delete holati (§4): admin muzlatadi; login/feed faqat 'active'. */
+export type AccountStatus = "active" | "frozen";
+
 export interface UserRow {
   id: Uuid;
   tg_id: number | null;
@@ -18,6 +21,10 @@ export interface UserRow {
   is_blocked: boolean;
   password_hash: string | null;
   password_set_at: IsoTimestamp | null;
+  account_status: AccountStatus;
+  frozen_at: IsoTimestamp | null;
+  frozen_by: Uuid | null;
+  freeze_reason: string | null;
 }
 
 export interface UserInsert {
