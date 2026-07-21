@@ -2,8 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 30;
-  background: var(--t-white);
-  border-bottom: 1px solid var(--t-line);
+  background: color-mix(in srgb, var(--t-white) 72%, transparent);
+  backdrop-filter: saturate(1.4) blur(16px);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
+  border-bottom: 1px solid color-mix(in srgb, var(--t-line) 70%, transparent);
 }
 
 .inner {

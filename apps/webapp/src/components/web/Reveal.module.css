@@ -1,0 +1,18 @@
+/* Sukut bo'yicha ko'rinadi (no-JS / SSR xavfsiz). JS mount'da data-reveal qo'yadi. */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--d-slow) var(--e-out),
+    transform var(--d-slow) var(--e-out);
+}

@@ -26,6 +26,9 @@
   --t-action-soft:#FDEDE6;  /* tanlangan karta va tile foni */
   --t-on-action:#FFFFFF;
 
+  /* ---------- DEKORATIV GLOW — faqat ambient effekt (matn/UI EMAS) ---------- */
+  --t-glow-amber:#F2A83A;    /* iliq amber — hero/CTA/footer radial glow */
+
   /* ---------- VERIFIED — faqat tekshiruv ---------- */
   --t-verified:#1F9E58;     /* FAQAT YUZA: muhr, katta grafik */
   --t-verified-ink:#157A42; /* 5.39:1 oq fonda, 4.80:1 soft fonda — badge matni/ikonkasi */

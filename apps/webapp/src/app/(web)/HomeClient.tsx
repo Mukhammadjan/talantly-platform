@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CompanyCard } from "@/components/web/CompanyCard";
 import { JobCard } from "@/components/web/JobCard";
+import { Reveal } from "@/components/web/Reveal";
 import { Icon, type IconName } from "@/lib/icons";
 import { computeMatch, type MatchProfile } from "@/lib/match";
 import { fetchCompanies, type CompanyView } from "@/lib/companies";
@@ -29,12 +30,24 @@ const DIRECTIONS: {
   icon: IconName;
   blurb: string;
 }[] = [
-  { key: "dasturlash", label: "Dasturlash", icon: "board", blurb: "Frontend · backend · mobil" },
+  { key: "dasturlash", label: "Dasturlash", icon: "board", blurb: "Frontend · backend · mobil · full-stack" },
   { key: "dizayn", label: "Dizayn", icon: "sparkle", blurb: "UI/UX · grafik · mahsulot" },
   { key: "marketing", label: "Marketing", icon: "globe", blurb: "SMM · kontent · targeting" },
-  { key: "sotuv", label: "Sotuv", icon: "briefcase", blurb: "B2B/B2C savdo" },
-  { key: "data", label: "Data", icon: "grid", blurb: "Tahlil · analitika" },
+  { key: "sotuv", label: "Sotuv", icon: "briefcase", blurb: "B2B/B2C savdo · akkaunt" },
+  { key: "data", label: "Data", icon: "grid", blurb: "Tahlil · analitika · hisobot" },
   { key: "boshqa", label: "Boshqa", icon: "star", blurb: "Qolgan yo'nalishlar" },
+];
+
+const PROFILES: {
+  initial: string;
+  name: string;
+  role: string;
+  skills: string[];
+  match: number;
+}[] = [
+  { initial: "K", name: "Kamola O.", role: "UI/UX Dizayner", skills: ["Figma", "UI", "Prototip"], match: 92 },
+  { initial: "J", name: "Jasur T.", role: "Frontend Dasturchi", skills: ["React", "TypeScript"], match: 88 },
+  { initial: "M", name: "Malika S.", role: "SMM Marketolog", skills: ["Kontent", "Targeting"], match: 90 },
 ];
 
 const PILLARS: { icon: IconName; title: string; text: string }[] = [
@@ -77,6 +90,46 @@ function postedAgo(iso: string): string {
   return `${Math.floor(days / 7)} hafta oldin`;
 }
 
+// Profil kartasi — hero o'ng ustunidagi avto-oqim uchun.
+function ProfileMini({
+  p,
+}: {
+  p: (typeof PROFILES)[number];
+}): JSX.Element {
+  return (
+    <div className={styles.pcard}>
+      <div className={styles.pcTop}>
+        <span className={styles.pcAvatar}>{p.initial}</span>
+        <span className={styles.pcId}>
+          <span className={styles.pcName}>
+            {p.name}
+            <span className={styles.pcSeal}>
+              <Icon name="check" size={10} />
+            </span>
+          </span>
+          <span className={styles.pcRole}>{p.role}</span>
+        </span>
+      </div>
+      <div className={styles.pcChips}>
+        {p.skills.map((s) => (
+          <span key={s} className={styles.pcChip}>
+            {s}
+          </span>
+        ))}
+      </div>
+      <div className={styles.pcMatch}>
+        <span className={styles.pcMatchLabel}>
+          <Icon name="sparkle" size={13} /> AI Moslik
+        </span>
+        <span className={`${styles.pcMatchVal} num`}>{p.match}%</span>
+      </div>
+      <div className={styles.pcBar} aria-hidden="true">
+        <span className={styles.pcBarFill} style={{ width: `${p.match}%` }} />
+      </div>
+    </div>
+  );
+}
+
 export function HomeClient(): JSX.Element {
   const router = useRouter();
   // null = hali aniqlanmagan. SSR web mazmunini beradi (SEO), Telegram
@@ -115,7 +168,7 @@ export function HomeClient(): JSX.Element {
   useEffect(() => {
     if (inTelegram !== false) return;
     void fetchVacancies({ sort: "recent" }).then((v) => setJobs(v.slice(0, 6)));
-    void fetchCompanies().then((c) => setCompanies(c.slice(0, 4)));
+    void fetchCompanies().then((c) => setCompanies(c.slice(0, 6)));
     void fetchMatchProfile().then(setProfile);
   }, [inTelegram]);
 
@@ -142,19 +195,26 @@ export function HomeClient(): JSX.Element {
     router.push(qs ? `/vakansiyalar?${qs}` : "/vakansiyalar");
   };
 
+  // Marquee uchun ikki nusxa — uzluksiz aylanish.
+  const profileStream = [...PROFILES, ...PROFILES];
+
   return (
     <main className={styles.page}>
-      {/* ---- Split hero: chapda sarlavha+qidiruv, o'ngda mahsulot ko'rinishi ---- */}
+      {/* ============ HERO — split + ambient glow ============ */}
       <section className={styles.hero}>
+        <div className={styles.glowA} aria-hidden="true" />
+        <div className={styles.glowB} aria-hidden="true" />
         <div className={styles.heroInner}>
           <div className={styles.heroLeft}>
             <span className={styles.badge}>
-              <Icon name="check" size={14} /> O&apos;zbekistonda #1 tekshirilgan
-              amaliyot
+              <span className={styles.badgeDot} aria-hidden="true" />
+              O&apos;zbekistonda #1 tekshirilgan amaliyot
             </span>
             <h1 className={styles.h1}>
               Tajribasiz emas —{" "}
-              <span className={styles.accent}>tekshirilgan</span>
+              <span className={styles.accent}>tekshirilgan.</span>
+              <br />
+              Salohiyatingizni dunyoga ko&apos;rsating.
             </h1>
             <p className={styles.lead}>
               Talantlar bilim testi va jonli suhbatdan o&apos;tadi. Kompaniyalar
@@ -203,69 +263,83 @@ export function HomeClient(): JSX.Element {
                 </Link>
               ))}
             </div>
+
+            <ul className={styles.trustRow}>
+              <li>
+                <span className={`${styles.trustNum} num`}>4</span> bosqichli
+                tekshiruv
+              </li>
+              <li>
+                <span className={`${styles.trustNum} num`}>AI</span> moslik foizi
+              </li>
+              <li>
+                <span className={styles.trustSeal}>
+                  <Icon name="check" size={12} />
+                </span>{" "}
+                Tekshirilgan belgi
+              </li>
+            </ul>
           </div>
 
-          {/* O'ng: brendlangan mahsulot ko'rinishi (illyustratsiya). */}
+          {/* O'ng: avto-oqadigan profil kartalari (marquee). */}
           <div className={styles.heroArt} aria-hidden="true">
-            <div className={styles.artCard}>
-              <div className={styles.artTop}>
-                <span className={styles.artAvatar}>K</span>
-                <div className={styles.artNameWrap}>
-                  <span className={styles.artName}>
-                    Kamola O.
-                    <span className={styles.artSeal}>
-                      <Icon name="check" size={10} />
-                    </span>
-                  </span>
-                  <span className={styles.artRole}>Frontend dasturchi</span>
-                </div>
-              </div>
-              <div className={styles.artChips}>
-                <span className={styles.artChip}>React</span>
-                <span className={styles.artChip}>TypeScript</span>
-                <span className={styles.artChip}>UI</span>
-              </div>
-              <div className={styles.artMatch}>
-                <Icon name="sparkle" size={14} />
-                AI Moslik: <span className="num">92%</span>
-              </div>
+            <div className={styles.stream}>
+              {profileStream.map((p, i) => (
+                <ProfileMini key={`${p.name}-${i}`} p={p} />
+              ))}
             </div>
-            <div className={styles.artBadge}>
-              <Icon name="check" size={16} /> Tekshirildi
-            </div>
+            <span className={styles.artBadge}>
+              <Icon name="check" size={15} /> Tekshirildi
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ---- Kategoriya plitkalari ---- */}
+      {/* ============ YO'NALISHLAR — bento ============ */}
       <section className={styles.section}>
         <div className={styles.sechead}>
-          <h2 className={styles.h2}>Yo&apos;nalishlar</h2>
+          <div>
+            <span className={styles.kicker}>Yo&apos;nalishlar</span>
+            <h2 className={styles.h2}>Sizga mos sohani tanlang</h2>
+          </div>
           <Link href="/kasblar" className={styles.more}>
             Barcha kasblar <Icon name="chevron" size={16} />
           </Link>
         </div>
-        <div className={styles.tiles}>
-          {DIRECTIONS.map((d) => (
-            <Link
+        <div className={styles.bento}>
+          {DIRECTIONS.map((d, i) => (
+            <Reveal
               key={d.key}
-              href={`/vakansiyalar?direction=${d.key}`}
-              className={styles.tile}
+              delay={i * 60}
+              className={`${styles.tileWrap} ${
+                i === 0 || i === 4 ? styles.tileWide : ""
+              }`}
             >
-              <span className={styles.tileIcon}>
-                <Icon name={d.icon} size={22} />
-              </span>
-              <span className={styles.tileName}>{d.label}</span>
-              <span className={styles.tileBlurb}>{d.blurb}</span>
-            </Link>
+              <Link
+                href={`/vakansiyalar?direction=${d.key}`}
+                className={styles.tile}
+              >
+                <span className={styles.tileIcon}>
+                  <Icon name={d.icon} size={22} />
+                </span>
+                <span className={styles.tileName}>{d.label}</span>
+                <span className={styles.tileBlurb}>{d.blurb}</span>
+                <span className={styles.tileGo} aria-hidden="true">
+                  <Icon name="arrow" size={16} />
+                </span>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* ---- Yangi vakansiyalar ---- */}
+      {/* ============ YANGI VAKANSIYALAR ============ */}
       <section className={styles.section}>
         <div className={styles.sechead}>
-          <h2 className={styles.h2}>Yangi vakansiyalar</h2>
+          <div>
+            <span className={styles.kicker}>Yangi imkoniyatlar</span>
+            <h2 className={styles.h2}>So&apos;nggi vakansiyalar</h2>
+          </div>
           <Link href="/vakansiyalar" className={styles.more}>
             Barchasi <Icon name="chevron" size={16} />
           </Link>
@@ -280,65 +354,71 @@ export function HomeClient(): JSX.Element {
           <p className={styles.empty}>Hozircha ochiq vakansiya yo&apos;q.</p>
         ) : (
           <div className={styles.cards}>
-            {jobs.map((v) => {
+            {jobs.map((v, i) => {
               const m = computeMatch(profile, toMatchVacancy(v));
               return (
-                <JobCard
-                  key={v.id}
-                  id={v.id}
-                  company={v.company}
-                  verified={v.verified}
-                  logoUrl={v.logoUrl}
-                  title={v.title}
-                  employment="To'liq stavka"
-                  location={[v.city, v.district].filter(Boolean).join(", ")}
-                  workMode={
-                    v.workFormats.map((w) => FORMAT_LABEL[w] ?? w).join(", ") ||
-                    "Ofis"
-                  }
-                  description={v.description[0] ?? ""}
-                  salaryMin={v.salaryFrom}
-                  salaryMax={v.salaryTo}
-                  currency="so'm"
-                  postedAgo={postedAgo(v.createdAt)}
-                  matchPercent={m?.percent ?? null}
-                  onOpenBreakdown={() => router.push(`/vakansiya/${v.id}`)}
-                />
+                <Reveal key={v.id} delay={(i % 3) * 70}>
+                  <JobCard
+                    id={v.id}
+                    company={v.company}
+                    verified={v.verified}
+                    logoUrl={v.logoUrl}
+                    title={v.title}
+                    employment="To'liq stavka"
+                    location={[v.city, v.district].filter(Boolean).join(", ")}
+                    workMode={
+                      v.workFormats.map((w) => FORMAT_LABEL[w] ?? w).join(", ") ||
+                      "Ofis"
+                    }
+                    description={v.description[0] ?? ""}
+                    salaryMin={v.salaryFrom}
+                    salaryMax={v.salaryTo}
+                    currency="so'm"
+                    postedAgo={postedAgo(v.createdAt)}
+                    matchPercent={m?.percent ?? null}
+                    onOpenBreakdown={() => router.push(`/vakansiya/${v.id}`)}
+                  />
+                </Reveal>
               );
             })}
           </div>
         )}
       </section>
 
-      {/* ---- Nega Talantly? (4 bosqichli tekshiruv) ---- */}
+      {/* ============ NEGA TALANTLY? — 4 bosqich ============ */}
       <section className={styles.trustWrap}>
+        <div className={styles.glowC} aria-hidden="true" />
         <div className={styles.trust}>
           <div className={styles.trustHead}>
-            <h2 className={styles.h2}>Nega Talantly?</h2>
+            <span className={styles.kickerLight}>Ishonch qanday quriladi</span>
+            <h2 className={styles.h2Light}>Nega aynan Talantly?</h2>
             <p className={styles.trustLead}>
               Har bir talant 4 bosqichli tekshiruvdan o&apos;tadi — kompaniya
-              tavakkal qilmaydi.
+              tavakkal qilmaydi, siz esa tayyor ishonch bilan chiqasiz.
             </p>
           </div>
-          <ol className={styles.pillars}>
+          <div className={styles.pillars}>
             {PILLARS.map((p, i) => (
-              <li key={p.title} className={styles.pillar}>
+              <Reveal key={p.title} delay={i * 90} className={styles.pillar}>
+                <span className={`${styles.pillarNum} num`}>0{i + 1}</span>
                 <span className={styles.pillarIcon}>
-                  <Icon name={p.icon} size={20} />
+                  <Icon name={p.icon} size={22} />
                 </span>
-                <span className={`${styles.pillarNum} num`}>{i + 1}</span>
                 <h3 className={styles.pillarTitle}>{p.title}</h3>
                 <p className={styles.pillarText}>{p.text}</p>
-              </li>
+              </Reveal>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      {/* ---- Kompaniyalar ---- */}
+      {/* ============ TEKSHIRILGAN KOMPANIYALAR — marquee ============ */}
       <section className={styles.section}>
         <div className={styles.sechead}>
-          <h2 className={styles.h2}>Tekshirilgan kompaniyalar</h2>
+          <div>
+            <span className={styles.kicker}>Ishonch panelida</span>
+            <h2 className={styles.h2}>Tekshirilgan kompaniyalar</h2>
+          </div>
           <Link href="/kompaniyalar" className={styles.more}>
             Barchasi <Icon name="chevron" size={16} />
           </Link>
@@ -352,44 +432,73 @@ export function HomeClient(): JSX.Element {
         ) : companies.length === 0 ? (
           <p className={styles.empty}>Kompaniyalar tez orada qo&apos;shiladi.</p>
         ) : (
-          <div className={styles.companies}>
-            {companies.map((c) => (
-              <CompanyCard
-                key={c.id}
-                id={c.id}
-                name={c.name}
-                verified={c.verified}
-                logoUrl={c.logoUrl}
-                activity={c.activity}
-                city={c.city}
-                directions={c.directions}
-                openVacancies={c.openVacancies}
-              />
-            ))}
-          </div>
+          <>
+            <div className={styles.marquee} aria-hidden="true">
+              <div className={styles.marqueeTrack}>
+                {[...companies, ...companies].map((c, i) => (
+                  <span key={`${c.id}-${i}`} className={styles.logoChip}>
+                    {c.logoUrl ? (
+                      <img src={c.logoUrl} alt="" className={styles.logoImg} />
+                    ) : (
+                      <span className={styles.logoFallback}>
+                        {c.name.charAt(0)}
+                      </span>
+                    )}
+                    <span className={styles.logoName}>{c.name}</span>
+                    {c.verified ? (
+                      <span className={styles.logoSeal}>
+                        <Icon name="check" size={11} />
+                      </span>
+                    ) : null}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className={styles.companies}>
+              {companies.slice(0, 3).map((c) => (
+                <CompanyCard
+                  key={c.id}
+                  id={c.id}
+                  name={c.name}
+                  verified={c.verified}
+                  logoUrl={c.logoUrl}
+                  activity={c.activity}
+                  city={c.city}
+                  directions={c.directions}
+                  openVacancies={c.openVacancies}
+                />
+              ))}
+            </div>
+          </>
         )}
       </section>
 
-      {/* ---- Ish beruvchilar uchun CTA ---- */}
-      <section className={styles.ctaWrap}>
-        <div className={styles.cta}>
-          <div>
-            <h2 className={styles.ctaTitle}>Ish beruvchimisiz?</h2>
-            <p className={styles.ctaText}>
-              Tekshirilgan nomzodlar bazasini ko&apos;ring va
-              to&apos;g&apos;ridan-to&apos;g&apos;ri bog&apos;laning. To&apos;lov
-              faqat sinov muddati muvaffaqiyatli tugagach.
-            </p>
+      {/* ============ ISH BERUVCHILAR CTA ============ */}
+      <section className={styles.section}>
+        <Reveal>
+          <div className={styles.cta}>
+            <div className={styles.ctaGlow} aria-hidden="true" />
+            <div className={styles.ctaBody}>
+              <span className={styles.ctaKicker}>Ish beruvchilar uchun</span>
+              <h2 className={styles.ctaTitle}>
+                Tekshirilgan nomzodni tavakkalsiz oling
+              </h2>
+              <p className={styles.ctaText}>
+                Tayyor talantlar bazasini ko&apos;ring va to&apos;g&apos;ridan-
+                to&apos;g&apos;ri bog&apos;laning. To&apos;lov faqat sinov muddati
+                muvaffaqiyatli tugagach.
+              </p>
+            </div>
+            <div className={styles.ctaBtns}>
+              <Link href="/nomzodlar" className={styles.ctaPrimary}>
+                Nomzodlarni ko&apos;rish
+              </Link>
+              <Link href="/kompaniyam" className={styles.ctaGhost}>
+                Kompaniya profili
+              </Link>
+            </div>
           </div>
-          <div className={styles.ctaBtns}>
-            <Link href="/nomzodlar" className={styles.ctaPrimary}>
-              Nomzodlarni ko&apos;rish
-            </Link>
-            <Link href="/kompaniyam" className={styles.ctaGhost}>
-              Kompaniya profili
-            </Link>
-          </div>
-        </div>
+        </Reveal>
       </section>
     </main>
   );
