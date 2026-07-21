@@ -50,8 +50,25 @@
   flex-direction: column;
 }
 
+/* Panel sarlavhasi: "Filtr" + "Tozalash" bir qatorda, ostida ajratgich. */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--t-line);
+}
+
+.headTitle {
+  margin: 0;
+  font-size: var(--fs-headline);
+  line-height: var(--lh-headline);
+  font-weight: var(--fw-bold);
+  color: var(--t-ink-1);
+}
+
 .reset {
-  align-self: flex-start;
   font-size: var(--fs-caption);
   font-weight: var(--fw-semibold);
   color: var(--t-action-ink);

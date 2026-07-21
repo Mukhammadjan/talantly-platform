@@ -89,16 +89,6 @@
   background: var(--t-fill);
 }
 
-.currency {
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-semibold);
-  color: var(--t-ink-2);
-  padding: var(--s-1) var(--s-3);
-  border-radius: var(--r-full);
-  background: var(--t-fill);
-  white-space: nowrap;
-}
-
 .account {
   position: relative;
 }
@@ -220,10 +210,7 @@
   .nav {
     display: none;
   }
-  .currency {
-    display: none;
-  }
-  .burger {
+    .burger {
     display: inline-flex;
   }
   .mobileNav {

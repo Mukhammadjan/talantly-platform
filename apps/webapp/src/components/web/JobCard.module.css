@@ -6,11 +6,14 @@
   border-radius: var(--r-lg);
   background: var(--t-white);
   box-shadow: var(--sh-raise);
-  transition: box-shadow var(--d-fast) var(--e-out);
+  transition:
+    box-shadow var(--d-fast) var(--e-out),
+    transform var(--d-fast) var(--e-out);
 }
 
 .card:hover {
   box-shadow: var(--sh-float);
+  transform: translateY(-2px);
 }
 
 .top {
@@ -66,6 +69,31 @@
   color: var(--t-white);
 }
 
+.bookmark {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin: -6px -6px -6px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  color: var(--t-ink-3);
+  transition:
+    color var(--d-fast) var(--e-out),
+    background var(--d-fast) var(--e-out);
+}
+
+.bookmark:hover {
+  background: var(--t-fill);
+  color: var(--t-ink-1);
+}
+
+.bookmark:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+}
+
 .posted {
   flex-shrink: 0;
   font-size: var(--fs-caption);
@@ -113,14 +141,15 @@
   overflow: hidden;
 }
 
+/* Salary (chapda) + "N kun oldin" (o'ngda), yuqorida ajratgich chiziq. */
 .foot {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--s-2) var(--s-3);
+  gap: var(--s-3);
   margin-top: auto;
-  padding-top: var(--s-1);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--t-line);
 }
 
 .salary {
@@ -130,8 +159,15 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* AI-match pill — karta pastida to'liq kenglikda. */
 .pillWrap {
   position: relative;
+  display: block;
+}
+
+.pillWrap button {
+  width: 100%;
+  justify-content: center;
 }
 
 /* Popover: karta hover yoki pill fokusda ko'rinadi */

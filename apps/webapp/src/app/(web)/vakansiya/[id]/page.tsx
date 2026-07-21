@@ -25,6 +25,21 @@ const FORMAT_LABEL: Record<string, string> = {
   aralash: "Aralash",
 };
 
+const DIRECTION_LABEL: Record<string, string> = {
+  dasturlash: "Dasturlash",
+  dizayn: "Dizayn",
+  marketing: "Marketing",
+  sotuv: "Sotuv",
+  data: "Data",
+  boshqa: "Boshqa",
+};
+
+const LEVEL_LABEL: Record<string, string> = {
+  intern: "Intern",
+  mutaxassis: "Mutaxassis",
+  ikkalasi: "Intern / Mutaxassis",
+};
+
 function money(min: number | null, max: number | null, cur = "so'm"): string {
   const f = (n: number): string => n.toLocaleString("ru-RU");
   if (!min && !max) return "Kelishilgan";
@@ -165,10 +180,18 @@ export default function VakansiyaDetailPage(): JSX.Element {
 
           <StatRow
             items={[
-              { label: "Daraja", value: v.level === "mutaxassis" ? "Mutaxassis" : v.level === "ikkalasi" ? "Barcha" : "Intern" },
-              { label: "Format", value: v.workFormats.length ? String(v.workFormats.length) : "1" },
-              { label: "Joylashuv", value: v.city },
-              { label: "Yo'nalish", value: v.direction },
+              { label: "Daraja", value: LEVEL_LABEL[v.level] ?? "Intern" },
+              { label: "Ish turi", value: "To'liq stavka" },
+              {
+                label: "Ish formati",
+                value:
+                  v.workFormats.map((w) => FORMAT_LABEL[w] ?? w).join(", ") ||
+                  "Ofis",
+              },
+              {
+                label: "Yo'nalish",
+                value: DIRECTION_LABEL[v.direction] ?? v.direction,
+              },
             ]}
           />
 

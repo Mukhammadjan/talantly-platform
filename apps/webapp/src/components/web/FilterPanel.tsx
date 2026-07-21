@@ -66,12 +66,25 @@ export function FilterPanel({
   state: FilterState;
   onChange: (next: Partial<FilterState>) => void;
 }): JSX.Element {
+  const hasActive = Boolean(state.direction || state.level || state.workFormat);
+
   return (
     <aside className={styles.panel} aria-label="Filtrlar">
-      <AiSmartToggle
-        checked={state.aiSort}
-        onChange={(c) => onChange({ aiSort: c })}
-      />
+      <div className={styles.head}>
+        <p className={styles.headTitle}>Filtr</p>
+        {hasActive ? (
+          <button
+            type="button"
+            className={styles.reset}
+            onClick={() =>
+              onChange({ direction: "", level: "", workFormat: "" })
+            }
+          >
+            Tozalash
+          </button>
+        ) : null}
+      </div>
+
       <Group
         title="Yo'nalish"
         options={DIRECTIONS}
@@ -90,17 +103,12 @@ export function FilterPanel({
         selected={state.workFormat}
         onSelect={(v) => onChange({ workFormat: v })}
       />
-      {state.direction || state.level || state.workFormat ? (
-        <button
-          type="button"
-          className={styles.reset}
-          onClick={() =>
-            onChange({ direction: "", level: "", workFormat: "" })
-          }
-        >
-          Filtrlarni tozalash
-        </button>
-      ) : null}
+
+      {/* AI-saralash — eng pastda (bitta-filled qoidasi: toggle, tugma emas). */}
+      <AiSmartToggle
+        checked={state.aiSort}
+        onChange={(c) => onChange({ aiSort: c })}
+      />
     </aside>
   );
 }

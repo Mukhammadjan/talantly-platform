@@ -86,7 +86,6 @@ export function WebHeader(): JSX.Element | null {
         </nav>
 
         <div className={styles.right}>
-          <span className={styles.currency}>UZS · so&apos;m</span>
           {authed ? (
             <div className={styles.account} ref={accountRef}>
               <button

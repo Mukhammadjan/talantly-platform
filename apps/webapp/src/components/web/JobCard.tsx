@@ -56,7 +56,13 @@ export function JobCard(props: JobCardProps): JSX.Element {
             </span>
           ) : null}
         </span>
-        <span className={styles.posted}>{props.postedAgo}</span>
+        <button
+          type="button"
+          className={styles.bookmark}
+          aria-label="Saqlash"
+        >
+          <Icon name="bookmark" size={18} />
+        </button>
       </div>
 
       <h3 className={styles.title}>
@@ -77,16 +83,21 @@ export function JobCard(props: JobCardProps): JSX.Element {
         <span className={`${styles.salary} num`}>
           {money(props.salaryMin, props.salaryMax, props.currency)}
         </span>
-        <span className={styles.pillWrap}>
-          <AiMatchPill percent={props.matchPercent} onClick={props.onOpenBreakdown} />
-          {hasPopover ? (
-            <MatchPopover
-              reasons={props.matchReasons ?? []}
-              quote={props.matchQuote ?? ""}
-            />
-          ) : null}
-        </span>
+        <span className={styles.posted}>{props.postedAgo}</span>
       </div>
+
+      <span className={styles.pillWrap}>
+        <AiMatchPill
+          percent={props.matchPercent}
+          onClick={props.onOpenBreakdown}
+        />
+        {hasPopover ? (
+          <MatchPopover
+            reasons={props.matchReasons ?? []}
+            quote={props.matchQuote ?? ""}
+          />
+        ) : null}
+      </span>
     </article>
   );
 }

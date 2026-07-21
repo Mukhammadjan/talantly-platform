@@ -76,22 +76,43 @@ export async function GET(
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
-  // O'xshash tavsiyalar: bir yo'nalish, o'zidan boshqa, faol.
-  let recoQ = db
+  // O'xshash tavsiyalar: avval bir yo'nalish, yetmasa boshqa faol vakansiyalar
+  // bilan to'ldiramiz (sidebar bo'sh qolmasin). O'zidan boshqa, faol.
+  const RECO_SELECT =
+    "id, title, direction, level, salary_from, salary_to, salary_currency, description, city, district, work_formats, is_demo, created_at, companies(name, is_verified, logo_url)";
+  const hideDemo = !(await showDemo());
+  const RECO_LIMIT = 4;
+
+  const sameDirQ = db
     .from("vacancies")
-    .select(
-      "id, title, direction, level, salary_from, salary_to, salary_currency, description, city, district, work_formats, is_demo, created_at, companies(name, is_verified, logo_url)",
-    )
+    .select(RECO_SELECT)
     .eq("status", "faol")
     .eq("direction", v.direction)
     .neq("id", v.id)
     .order("created_at", { ascending: false })
-    .limit(4);
-  if (!(await showDemo())) recoQ = recoQ.eq("is_demo", false);
-  const { data: recoData } = await recoQ;
-  const recommendations = ((recoData ?? []) as unknown as VacancyRow[]).map(
-    view,
-  );
+    .limit(RECO_LIMIT);
+  const { data: sameDir } = await (hideDemo
+    ? sameDirQ.eq("is_demo", false)
+    : sameDirQ);
+
+  const recoRows = [...((sameDir ?? []) as unknown as VacancyRow[])];
+
+  if (recoRows.length < RECO_LIMIT) {
+    const excludeIds = [v.id, ...recoRows.map((r) => r.id)];
+    const fillQ = db
+      .from("vacancies")
+      .select(RECO_SELECT)
+      .eq("status", "faol")
+      .not("id", "in", `(${excludeIds.join(",")})`)
+      .order("created_at", { ascending: false })
+      .limit(RECO_LIMIT - recoRows.length);
+    const { data: fill } = await (hideDemo
+      ? fillQ.eq("is_demo", false)
+      : fillQ);
+    recoRows.push(...((fill ?? []) as unknown as VacancyRow[]));
+  }
+
+  const recommendations = recoRows.map(view);
 
   return NextResponse.json({ vacancy: view(v), recommendations });
 }

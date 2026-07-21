@@ -4,7 +4,7 @@
 }
 
 .grid {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: var(--s-6);
   display: flex;
@@ -73,7 +73,8 @@
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* 280px min — keng ekranda 3 ustun sig'sin (300px filtr yonida 2 ga tushardi). */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--s-4);
 }
 

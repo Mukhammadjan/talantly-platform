@@ -20,7 +20,7 @@ export function AiMatchPill({
       aria-label={
         percent != null
           ? `AI moslik ${percent} foiz, batafsil`
-          : "AI moslikni ko'rish uchun kiring"
+          : "Moslikni ko'rish uchun kiring"
       }
     >
       <Icon name="sparkle" size={14} className={styles.spark} />
@@ -29,7 +29,7 @@ export function AiMatchPill({
           AI Moslik: <span className="num">{percent}%</span>
         </span>
       ) : (
-        <span className={styles.text}>AI moslikni ko&apos;rish</span>
+        <span className={styles.text}>Moslikni ko&apos;rish — kiring</span>
       )}
     </button>
   );
