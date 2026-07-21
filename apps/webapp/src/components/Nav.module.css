@@ -49,3 +49,9 @@
   background: var(--t-action);
   color: var(--t-on-action);
 }
+
+/* Web ramkasida yuqorida WebHeader navigatsiya beradi — mobil pill kerak emas
+   (u absolute bo'lgani uchun cho'zilgan sahifada o'rtada osilib qolardi). */
+:global(.app--web) .nav {
+  display: none;
+}

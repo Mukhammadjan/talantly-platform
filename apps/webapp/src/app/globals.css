@@ -92,6 +92,7 @@ body {
 .app--web .screen {
   overflow-y: visible;
   padding-top: var(--s-8);
+  /* Pastki mobil nav yashiringan — u uchun ajratilgan 96px joy kerak emas. */
   padding-bottom: var(--s-10);
 }
 
