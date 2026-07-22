@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { hasSession } from "@/lib/auth";
+import { ImageUpload } from "@/components/ImageUpload";
 import {
   type MyCompany,
   fetchMyCompany,
@@ -33,6 +34,7 @@ export default function KompaniyamPage(): JSX.Element {
   const [subActive, setSubActive] = useState(false);
   const [verified, setVerified] = useState(false);
 
+  const [logo, setLogo] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [activity, setActivity] = useState("");
   const [city, setCity] = useState("");
@@ -67,6 +69,7 @@ export default function KompaniyamPage(): JSX.Element {
         if (!live) return;
         if (d) {
           fill(d.company);
+          setLogo(d.company.logoUrl ?? null);
           setSubActive(d.subscriptionActive);
         }
         setLoaded(true);
@@ -144,9 +147,7 @@ export default function KompaniyamPage(): JSX.Element {
     <main className={styles.wrap}>
       <div className={styles.inner}>
         <header className={styles.hero}>
-          <span className={styles.logo} aria-hidden="true">
-            {(name || "K").charAt(0).toUpperCase()}
-          </span>
+          <ImageUpload kind="logo" initialUrl={logo} label="Logotip" />
           <div className={styles.heroText}>
             <h1 className={styles.title}>
               {name || "Kompaniya"}
