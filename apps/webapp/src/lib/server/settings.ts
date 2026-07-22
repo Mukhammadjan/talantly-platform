@@ -11,10 +11,14 @@ export async function getSetting(key: string): Promise<string | null> {
   return (data as { value: string } | null)?.value ?? null;
 }
 
-/** show_demo_data — fail-open true (demo ko'rinadi). */
+/**
+ * show_demo_data — fail-CLOSED: demolar faqat sozlama ANIQ "true" bo'lsa
+ * ko'rinadi. Sozlama yo'q/bo'sh/noaniq bo'lsa mini app va webda demo
+ * ko'rsatilmaydi (asosiy yuzalarda faqat real ma'lumot).
+ */
 export async function showDemo(): Promise<boolean> {
   const v = await getSetting("show_demo_data");
-  return (v ?? "true").trim().toLowerCase() === "true";
+  return (v ?? "false").trim().toLowerCase() === "true";
 }
 
 export async function getSettingInt(
