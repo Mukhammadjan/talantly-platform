@@ -106,6 +106,30 @@ export function Queue({ initial }: { initial: Candidate[] }) {
     });
   };
 
+  // Bulk tanlash (checkbox) → ommaviy tasdiqlash.
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const toggleCheck = (id: string): void => {
+    setChecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  const bulkApprove = (): void => {
+    const ids = [...checked];
+    if (ids.length === 0) return;
+    startTransition(async () => {
+      for (const id of ids) {
+        await approveTalent(id);
+      }
+      setItems((prev) => prev.filter((c) => !ids.includes(c.id)));
+      setChecked(new Set());
+      setSelId(null);
+      router.refresh();
+    });
+  };
+
   // Hotkeys: J/K, A, R, Esc, /
   useEffect(() => {
     const onKey = (e: KeyboardEvent): void => {
@@ -187,6 +211,31 @@ export function Queue({ initial }: { initial: Candidate[] }) {
             ))}
           </div>
 
+          {checked.size > 0 ? (
+            <div className="flex items-center justify-between gap-2 rounded-btn bg-ink px-4 py-2.5">
+              <span className="text-[13px] font-semibold text-white">
+                <span className="num">{checked.size}</span> tanlandi
+              </span>
+              <span className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setChecked(new Set())}
+                  className="text-[13px] font-semibold text-white/70 hover:text-white"
+                >
+                  Bekor
+                </button>
+                <button
+                  type="button"
+                  onClick={bulkApprove}
+                  disabled={pending}
+                  className="rounded-btn bg-green px-3 py-1 text-[13px] font-bold text-white disabled:opacity-50"
+                >
+                  Tasdiqlash
+                </button>
+              </span>
+            </div>
+          ) : null}
+
           <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
             {filtered.length === 0 ? (
               <div className="card grid place-items-center gap-1 p-10 text-center">
@@ -200,34 +249,48 @@ export function Queue({ initial }: { initial: Candidate[] }) {
             ) : (
               filtered.map((c) => {
                 const active = c.id === selId;
+                const isChecked = checked.has(c.id);
                 return (
-                  <button
+                  <div
                     key={c.id}
-                    type="button"
-                    onClick={() => setSelId(c.id)}
-                    className={`flex w-full items-center gap-3 rounded-card border p-3 text-left transition-all ${
+                    className={`flex items-center gap-2 rounded-card border p-3 transition-all ${
                       active
                         ? "border-orange bg-orange-tint/50 shadow-raise"
-                        : "border-line bg-surface hover:border-line-strong"
+                        : isChecked
+                          ? "border-orange-ink/40 bg-orange-tint/30"
+                          : "border-line bg-surface hover:border-line-strong"
                     }`}
                   >
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-2 text-[13px] font-bold text-ink-soft">
-                      {c.name.charAt(0)}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[14px] font-semibold text-ink">
-                        {c.name}
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleCheck(c.id)}
+                      aria-label={`${c.name} tanlash`}
+                      className="h-4 w-4 shrink-0 accent-orange"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setSelId(c.id)}
+                      className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                    >
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-2 text-[13px] font-bold text-ink-soft">
+                        {c.name.charAt(0)}
                       </span>
-                      <span className="block truncate text-[12px] text-ink-faint">
-                        {c.directionLabel} · {waited(c.createdAt)}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[14px] font-semibold text-ink">
+                          {c.name}
+                        </span>
+                        <span className="block truncate text-[12px] text-ink-faint">
+                          {c.directionLabel} · {waited(c.createdAt)}
+                        </span>
                       </span>
-                    </span>
-                    {c.score != null ? (
-                      <span className="num shrink-0 text-[13px] font-bold text-ink">
-                        {c.score}
-                      </span>
-                    ) : null}
-                  </button>
+                      {c.score != null ? (
+                        <span className="num shrink-0 text-[13px] font-bold text-ink">
+                          {c.score}
+                        </span>
+                      ) : null}
+                    </button>
+                  </div>
                 );
               })
             )}
