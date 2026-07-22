@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talantly — Design System v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS v2 ================= */
+:root{
+  /* --- Neytral --- */
+  --t-white:#FFFFFF; --t-bg:#F5F5F7; --t-fill:#EDEDF1;
+  --t-line:#E3E3E9; --t-line-strong:#D2D2DA;
+  --t-ink-3:#8E8E99;   /* 3.24:1 — FAQAT nofaol / dekor / qorong'i fonda ikonka */
+  --t-ink-2:#5B5B66;   /* 6.70:1 — placeholder, hint, meta, ikkilamchi matn */
+  --t-ink-1:#17171B;   /* 17.9:1 — sarlavha, asosiy matn, progress, nav korpusi */
+  --t-ink-nav:#26262E;
+
+  /* --- Action: FILL va INK ajratilgan --- */
+  --t-action:#F26430;       /* faqat YUZA: tugma foni, nav pill, hero */
+  --t-action-press:#D74F1F;
+  --t-action-ink:#B8431A;   /* 5.45:1 — MATN/IKONKA yorug' fonda: link, chip, tile */
+  --t-action-soft:#FDEDE6;
+  --t-on-action:#FFFFFF;
+
+  /* --- Verified --- */
+  --t-verified:#1F9E58;     /* faqat YUZA: muhr, katta grafik */
+  --t-verified-ink:#157A42; /* 5.39:1 — badge matni va ikonkasi */
+  --t-verified-soft:#E7F5ED;
+
+  /* --- Danger --- */
+  --t-danger:#D93A34;
+  --t-danger-ink:#B3241F;   /* 5.71:1 — soft fonda matn */
+  --t-danger-soft:#FCEBEA;
+
+  --r-xs:8px; --r-sm:12px; --r-md:14px; --r-lg:18px; --r-xl:24px; --r-full:999px;
+
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:20px; --s-6:24px; --s-8:32px; --s-10:40px; --s-12:48px;
+  --gutter:16px;
+
+  --f-sans:'VK Sans Display','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+
+  --e-out:cubic-bezier(.2,0,0,1); --e-in:cubic-bezier(.4,0,1,1);
+  --d-fast:140ms; --d-base:220ms; --d-slow:360ms;
+
+  --sh-raise:0 1px 2px rgba(23,23,27,.05), 0 0 0 1px rgba(23,23,27,.04);
+  --sh-float:0 8px 24px rgba(23,23,27,.08);
+  --sh-nav:0 12px 32px rgba(23,23,27,.28);
+  --sh-focus:0 0 0 3px rgba(184,67,26,.34);
+
+  --tg-top:88px; --tg-bottom:20px;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ================= DOC CHROME ================= */
+*{box-sizing:border-box}
+body{margin:0;background:#EBEBEF;font-family:var(--f-sans);color:var(--t-ink-1);-webkit-font-smoothing:antialiased}
+.doc-wrap{max-width:1180px;margin:0 auto;padding:0 24px 120px}
+.doc-hero{padding:72px 0 40px;border-bottom:1px solid #DCDCE2}
+.doc-eyebrow{font-size:11px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--t-ink-2)}
+.doc-hero h1{font-size:52px;line-height:1.02;letter-spacing:-.03em;font-weight:700;margin:14px 0 16px}
+.doc-hero p{font-size:17px;line-height:1.55;color:var(--t-ink-2);max-width:620px;margin:0}
+.doc-hero .mark{color:var(--t-action-ink)}
+.doc-nav{position:sticky;top:0;z-index:50;background:rgba(235,235,239,.90);backdrop-filter:blur(14px);
+  border-bottom:1px solid #DCDCE2;margin:0 -24px;padding:12px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.doc-nav::-webkit-scrollbar{display:none}
+.doc-nav a{flex:0 0 auto;font-size:13px;font-weight:500;color:var(--t-ink-2);text-decoration:none;
+  padding:7px 12px;border-radius:var(--r-full);transition:background var(--d-fast),color var(--d-fast)}
+.doc-nav a:focus-visible{outline:2px solid var(--t-action-ink);outline-offset:2px}
+@media (hover:hover){.doc-nav a:hover{background:#fff;color:var(--t-ink-1)}}
+.doc-sec{padding:72px 0 8px;border-top:1px solid #DCDCE2;scroll-margin-top:76px}
+.doc-sec:first-of-type{border-top:0}
+.doc-num{font-size:11px;font-weight:600;letter-spacing:.10em;color:var(--t-action-ink)}
+.doc-sec h2{font-size:32px;letter-spacing:-.02em;font-weight:700;margin:10px 0 10px}
+.doc-lede{font-size:16px;line-height:1.6;color:var(--t-ink-2);max-width:660px;margin:0 0 32px}
+.doc-h3{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--t-ink-2);margin:40px 0 16px}
+.panel{background:#fff;border-radius:var(--r-xl);padding:28px;box-shadow:var(--sh-raise)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
+.rule{background:#fff;border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--sh-raise);font-size:14px;line-height:1.6;color:var(--t-ink-2)}
+.rule b{color:var(--t-ink-1);font-weight:600}
+.rule--yes{border-left:3px solid var(--t-verified-ink)}
+.rule--no{border-left:3px solid var(--t-danger-ink)}
+.rule--key{border-left:3px solid var(--t-action-ink)}
+code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;background:var(--t-fill);padding:2px 6px;border-radius:6px;color:var(--t-ink-1)}
+pre{background:var(--t-ink-1);color:#E8E8EE;border-radius:var(--r-lg);padding:20px;overflow-x:auto;
+  font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.7;margin:0}
+pre .c{color:#9A9AA6} pre .k{color:#FF8A5B} pre .s{color:#7ED09B}
+.sw{border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-raise);background:#fff}
+.sw__chip{height:86px}
+.sw__meta{padding:12px 14px}
+.sw__name{font-size:13px;font-weight:600}
+.sw__hex{font-size:12px;color:var(--t-ink-2);font-family:ui-monospace,Menlo,monospace;margin-top:2px}
+.sw__use{font-size:11.5px;color:var(--t-ink-2);margin-top:6px;line-height:1.45}
+.ratio{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:5px;
+  background:var(--t-verified-soft);color:var(--t-verified-ink);margin-top:6px;font-family:ui-monospace,Menlo,monospace}
+.ratio--warn{background:var(--t-fill);color:var(--t-ink-1)}
+
+/* ================= TYPE SPECIMEN ================= */
+.ty{display:flex;align-items:baseline;justify-content:space-between;gap:24px;padding:18px 0;border-bottom:1px solid var(--t-line)}
+.ty:last-child{border-bottom:0}
+.ty__spec{font-size:11.5px;color:var(--t-ink-2);font-family:ui-monospace,Menlo,monospace;flex:0 0 auto;text-align:right}
+.d-l{font-size:32px;line-height:36px;letter-spacing:-.02em;font-weight:700}
+.d-m{font-size:26px;line-height:30px;letter-spacing:-.02em;font-weight:700}
+.d-title{font-size:20px;line-height:26px;letter-spacing:-.01em;font-weight:600}
+.d-head{font-size:17px;line-height:22px;letter-spacing:-.01em;font-weight:600}
+.d-body{font-size:15px;line-height:21px;font-weight:400}
+.d-cap{font-size:13px;line-height:18px;font-weight:400;color:var(--t-ink-2)}
+.d-micro{font-size:11px;line-height:14px;letter-spacing:.08em;font-weight:600;text-transform:uppercase;color:var(--t-ink-2)}
+
+/* ================= ICONS ================= */
+.ico{width:24px;height:24px;flex:0 0 auto;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ico--26{width:26px;height:26px}
+.ico--32{width:32px;height:32px}
+.ico--40{width:40px;height:40px}
+.itile{width:100%;aspect-ratio:1;background:var(--t-bg);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;color:var(--t-ink-1)}
+.iname{font-size:10.5px;color:var(--t-ink-2);text-align:center;margin-top:8px;font-family:ui-monospace,Menlo,monospace}
+.igrid{display:grid;grid-template-columns:repeat(10,1fr);gap:12px}
+@media(max-width:860px){.igrid{grid-template-columns:repeat(5,1fr)}}
+
+/* ================= PHONE + TELEGRAM ================= */
+.frames{display:flex;gap:36px;flex-wrap:wrap;justify-content:center}
+.frame{flex:0 0 auto}
+.frame__tag{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--t-ink-2);text-align:center;margin-bottom:14px}
+.tg{width:340px;height:720px;border-radius:38px;background:var(--t-bg);position:relative;overflow:hidden;
+  box-shadow:0 30px 60px rgba(23,23,27,.16),0 0 0 1px rgba(23,23,27,.07)}
+.tg__status{position:absolute;top:0;left:0;right:0;height:44px;z-index:30;display:flex;align-items:center;
+  justify-content:space-between;padding:0 22px;font-size:13px;font-weight:600;color:var(--t-ink-1);pointer-events:none}
+.tg__status--onDark{color:#fff}
+.tg__island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:88px;height:26px;background:#000;border-radius:14px;z-index:40}
+.tg__ctl{position:absolute;top:48px;left:12px;right:12px;height:34px;z-index:35;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.tg__close,.tg__more{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:var(--r-full);
+  font-size:13px;font-weight:600;background:rgba(23,23,27,.10);color:var(--t-ink-1);backdrop-filter:blur(12px)}
+.tg__more{padding:0 8px;gap:2px}
+.tg--onDark .tg__close,.tg--onDark .tg__more{background:rgba(0,0,0,.28);color:#fff}
+.tg__sep{width:1px;height:16px;background:currentColor;opacity:.25;margin:0 4px}
+.app{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column}
+.zone{position:absolute;left:0;right:0;top:0;height:var(--tg-top);z-index:25;
+  background:repeating-linear-gradient(-45deg,rgba(179,36,31,.12) 0 6px,transparent 6px 12px);border-bottom:1px dashed rgba(179,36,31,.6)}
+.zone__lbl{position:absolute;bottom:6px;left:12px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t-danger-ink)}
+
+/* ================= AUTH HERO ================= */
+.hero{background:var(--t-action);padding:var(--tg-top) var(--gutter) 48px;position:relative;overflow:hidden;color:#fff;flex:0 0 auto}
+.hero::before{content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.13) 1px,transparent 1px);
+  background-size:44px 44px;background-position:-1px -1px;
+  -webkit-mask-image:linear-gradient(160deg,#000 10%,transparent 78%);mask-image:linear-gradient(160deg,#000 10%,transparent 78%)}
+.hero::after{content:'';position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%)}
+.hero > *{position:relative;z-index:2}
+.hero__logo{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.hero__mark{width:30px;height:30px}
+.hero__word{font-size:17px;font-weight:700;letter-spacing:-.02em}
+.hero h1{font-size:32px;line-height:36px;letter-spacing:-.02em;font-weight:700;margin:0 0 8px}
+.hero p{font-size:15px;line-height:21px;margin:0;color:rgba(255,255,255,.88)}
+.sheet{flex:1 1 auto;background:#fff;border-radius:var(--r-xl) var(--r-xl) 0 0;margin-top:-24px;
+  padding:24px var(--gutter) 0;position:relative;z-index:3;overflow-y:auto;scrollbar-width:none}
+.sheet::-webkit-scrollbar{display:none}
+.sheet__grab{width:40px;height:4px;border-radius:2px;background:var(--t-line-strong);margin:0 auto 24px}
+
+/* ================= FORM ================= */
+.field{margin-bottom:20px}
+.label{display:block;font-size:13px;line-height:18px;font-weight:600;margin-bottom:8px;color:var(--t-ink-1)}
+.input{display:flex;align-items:center;gap:12px;height:56px;padding:0 16px;background:#fff;border-radius:var(--r-sm);
+  box-shadow:inset 0 0 0 1px var(--t-line-strong);transition:box-shadow var(--d-fast) var(--e-out)}
+.input:focus-within{box-shadow:inset 0 0 0 2px var(--t-action-ink),var(--sh-focus)}
+.input__ico{color:var(--t-ink-2);flex:0 0 auto}
+.input input{flex:1;border:0;outline:0;background:transparent;font:500 15px/21px var(--f-sans);color:var(--t-ink-1);min-width:0}
+.input input::placeholder{color:var(--t-ink-2);font-weight:400}
+.input--err{box-shadow:inset 0 0 0 2px var(--t-danger-ink)}
+.input__btn{width:44px;height:44px;margin-right:-12px;border:0;background:transparent;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;color:var(--t-ink-2);cursor:pointer}
+.input__btn:focus-visible{outline:2px solid var(--t-action-ink);outline-offset:-2px}
+.hint{font-size:13px;line-height:18px;color:var(--t-ink-2);margin-top:8px}
+.hint--err{color:var(--t-danger-ink)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 24px}
+.check{display:flex;align-items:center;gap:12px;min-height:44px;font-size:13px;color:var(--t-ink-2);cursor:pointer}
+.check__box{width:20px;height:20px;border-radius:6px;box-shadow:inset 0 0 0 2px var(--t-line-strong);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:#fff;transition:all var(--d-fast)}
+.check__box.on{background:var(--t-action);box-shadow:none}
+.link{display:inline-flex;align-items:center;min-height:44px;font-size:13px;font-weight:600;color:var(--t-action-ink);text-decoration:none}
+.link:focus-visible{outline:2px solid var(--t-action-ink);outline-offset:2px;border-radius:4px}
+
+/* ================= BUTTON ================= */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:56px;padding:0 24px;border:0;
+  border-radius:var(--r-md);font:700 17px/22px var(--f-sans);letter-spacing:-.01em;cursor:pointer;
+  transition:background var(--d-fast),transform var(--d-fast) var(--e-out),box-shadow var(--d-fast)}
+.btn:active{transform:scale(.985)}
+.btn:focus-visible{outline:3px solid var(--t-action-ink);outline-offset:3px}
+.btn--block{width:100%}
+.btn--primary{background:var(--t-action);color:var(--t-on-action);box-shadow:0 6px 18px rgba(242,100,48,.26)}
+.btn--secondary{background:#fff;color:var(--t-ink-1);box-shadow:inset 0 0 0 2px var(--t-line-strong)}
+.btn--ink{background:var(--t-ink-1);color:#fff}
+.btn--ghost{background:transparent;color:var(--t-action-ink)}
+@media (hover:hover){
+  .btn--primary:hover{background:var(--t-action-press)}
+  .btn--secondary:hover{box-shadow:inset 0 0 0 2px var(--t-ink-2)}
+}
+.btn[disabled]{background:var(--t-fill);color:var(--t-ink-2);box-shadow:none;cursor:not-allowed;transform:none}
+.btn--sm{height:44px;padding:0 16px;font-size:15px;border-radius:var(--r-sm)}
+.divider{display:flex;align-items:center;gap:16px;margin:24px 0 16px;font-size:13px;color:var(--t-ink-2);font-weight:500}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--t-line)}
+.socials{display:flex;gap:12px;padding-bottom:calc(24px + var(--tg-bottom))}
+.social{flex:1;height:56px;border-radius:var(--r-md);background:#fff;box-shadow:inset 0 0 0 2px var(--t-line);
+  display:flex;align-items:center;justify-content:center;color:var(--t-ink-1);cursor:pointer;border:0;transition:box-shadow var(--d-fast)}
+.social:focus-visible{outline:3px solid var(--t-action-ink);outline-offset:2px}
+@media (hover:hover){.social:hover{box-shadow:inset 0 0 0 2px var(--t-ink-2)}}
+
+/* ================= ONBOARDING ================= */
+.ob{flex:1;padding:var(--tg-top) var(--gutter) 0;display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none}
+.ob::-webkit-scrollbar{display:none}
+.prog__meta{display:flex;justify-content:space-between;font-size:13px;line-height:18px;font-weight:500;color:var(--t-ink-2);margin-bottom:8px}
+.prog__meta b{color:var(--t-ink-1);font-weight:600;font-variant-numeric:tabular-nums}
+.prog{height:6px;border-radius:var(--r-full);background:var(--t-fill);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(23,23,27,.06)}
+.prog__bar{height:100%;border-radius:var(--r-full);background:var(--t-ink-1);transition:width var(--d-slow) var(--e-out)}
+.ask{font-size:26px;line-height:30px;letter-spacing:-.02em;font-weight:700;text-align:center;margin:32px 0 8px}
+.ask + p{font-size:15px;line-height:21px;color:var(--t-ink-2);text-align:center;margin:0 0 24px}
+.rcard{display:flex;gap:16px;align-items:flex-start;width:100%;text-align:left;background:#fff;border-radius:var(--r-lg);
+  padding:16px;box-shadow:inset 0 0 0 1px var(--t-line);cursor:pointer;margin-bottom:12px;border:0;
+  transition:box-shadow var(--d-base) var(--e-out),transform var(--d-fast)}
+.rcard:active{transform:scale(.99)}
+.rcard:focus-visible{outline:3px solid var(--t-action-ink);outline-offset:2px}
+.rcard.on{box-shadow:inset 0 0 0 2px var(--t-action-ink),var(--sh-focus)}
+.rcard__ico{width:44px;height:44px;border-radius:var(--r-sm);background:var(--t-bg);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;color:var(--t-ink-1);transition:all var(--d-base)}
+.rcard.on .rcard__ico{background:var(--t-action-soft);color:var(--t-action-ink)}
+.rcard__t{font-size:15px;line-height:21px;font-weight:600;margin:0 0 4px}
+.rcard__d{font-size:13px;line-height:18px;color:var(--t-ink-2)}
+.upload{background:#fff;border-radius:var(--r-lg);padding:16px;box-shadow:inset 0 0 0 1px var(--t-line)}
+.upload__t{font-size:15px;line-height:21px;font-weight:600;margin:0 0 12px}
+.drop{border:2px dashed var(--t-line-strong);border-radius:var(--r-md);background:var(--t-bg);padding:32px 16px;text-align:center;
+  transition:border-color var(--d-fast),background var(--d-fast)}
+.drop.is-over,.drop:active{border-color:var(--t-action-ink);background:var(--t-action-soft)}
+@media (hover:hover){.drop:hover{border-color:var(--t-action-ink);background:var(--t-action-soft)}}
+.drop__ico{color:var(--t-ink-1);margin-bottom:12px}
+.drop__txt{font-size:13px;line-height:18px;color:var(--t-ink-2)}
+.drop__txt b{color:var(--t-action-ink);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.upload__meta{display:flex;justify-content:space-between;font-size:13px;line-height:18px;color:var(--t-ink-2);margin-top:12px}
+.seal{width:96px;height:96px;margin:16px auto 24px;border-radius:50%;position:relative;display:flex;align-items:center;
+  justify-content:center;color:var(--t-verified);background:var(--t-verified-soft)}
+.seal::before{content:'';position:absolute;inset:-10px;border-radius:50%;background:var(--t-verified);opacity:.07}
+.wel{font-size:26px;line-height:30px;letter-spacing:-.02em;font-weight:700;text-align:center;margin:0 0 8px}
+.wel + p{font-size:15px;line-height:21px;color:var(--t-ink-2);text-align:center;margin:0 0 24px}
+.pcard{background:#fff;border-radius:var(--r-lg);padding:16px;box-shadow:inset 0 0 0 1px var(--t-line);margin-bottom:24px}
+.pcard__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pcard__l{display:flex;align-items:center;gap:8px;font-size:15px;line-height:21px;font-weight:600}
+.pcard__pct{font-size:13px;font-weight:600;color:var(--t-ink-1);font-variant-numeric:tabular-nums}
+.lrow{display:flex;align-items:center;gap:16px;width:100%;text-align:left;background:#fff;border-radius:var(--r-lg);
+  padding:12px;box-shadow:inset 0 0 0 1px var(--t-line);margin-bottom:12px;cursor:pointer;border:0;transition:box-shadow var(--d-fast)}
+.lrow:focus-visible{outline:3px solid var(--t-action-ink);outline-offset:2px}
+@media (hover:hover){.lrow:hover{box-shadow:inset 0 0 0 1px var(--t-line-strong)}}
+.lrow__ico{width:44px;height:44px;border-radius:var(--r-sm);background:var(--t-bg);flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:var(--t-ink-1)}
+.lrow__t{font-size:15px;line-height:21px;font-weight:600}
+.lrow__d{font-size:13px;line-height:18px;color:var(--t-ink-2);margin-top:2px}
+.ob__foot{position:sticky;bottom:0;margin-top:auto;padding:16px 0 calc(16px + var(--tg-bottom));
+  background:linear-gradient(rgba(245,245,247,0),var(--t-bg) 40%)}
+.legal{font-size:13px;line-height:18px;color:var(--t-ink-2);text-align:center;margin:12px 0 0}
+.legal a{color:var(--t-ink-1);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+
+/* ================= NAV PILL ================= */
+.nav{position:absolute;left:var(--gutter);right:var(--gutter);bottom:calc(16px + var(--tg-bottom));height:64px;
+  background:var(--t-ink-1);border-radius:var(--r-full);padding:8px;z-index:20;display:flex;align-items:center;gap:4px;box-shadow:var(--sh-nav)}
+.nav__i{position:relative;flex:0 0 48px;height:48px;border-radius:var(--r-full);background:var(--t-ink-nav);border:0;
+  display:flex;align-items:center;justify-content:center;gap:8px;color:var(--t-ink-3);cursor:pointer;overflow:hidden;
+  transition:flex-basis var(--d-base) var(--e-out),flex-grow var(--d-base) var(--e-out),
+             background var(--d-base) var(--e-out),color var(--d-base) var(--e-out),padding var(--d-base) var(--e-out)}
+.nav__i:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+@media (hover:hover){.nav__i:hover{color:#fff}}
+.nav__i.on{flex:1 1 auto;background:var(--t-action);color:var(--t-on-action);padding:0 16px}
+.nav__lbl{font-size:15px;font-weight:700;white-space:nowrap;letter-spacing:-.01em;max-width:0;opacity:0;
+  transition:max-width var(--d-base) var(--e-out),opacity var(--d-fast) var(--e-out)}
+.nav__i.on .nav__lbl{max-width:140px;opacity:1}
+.nav__dot{position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--t-action);box-shadow:0 0 0 2px var(--t-ink-nav)}
+.navdemo{background:var(--t-bg);border-radius:var(--r-xl);padding:24px;display:flex;flex-direction:column;gap:16px}
+.navdemo .nav{position:static;box-shadow:0 8px 22px rgba(23,23,27,.20)}
+
+/* ================= BADGE / CHIP ================= */
+.vbadge{display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:var(--r-full);
+  background:var(--t-verified-soft);color:var(--t-verified-ink);font-size:11px;line-height:14px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase}
+.vbadge .ico{width:14px;height:14px;stroke-width:2}
+.chip{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:var(--r-full);background:#fff;
+  box-shadow:inset 0 0 0 1px var(--t-line);font-size:13px;font-weight:500;color:var(--t-ink-2);cursor:pointer;border:0;transition:all var(--d-fast)}
+.chip:focus-visible{outline:3px solid var(--t-action-ink);outline-offset:2px}
+.chip.on{background:var(--t-action-soft);color:var(--t-action-ink);box-shadow:inset 0 0 0 2px var(--t-action-ink);font-weight:600}
+.stack{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.2 12 3.7l8.5 6.5V19a2.2 2.2 0 0 1-2.2 2.2H5.7A2.2 2.2 0 0 1 3.5 19z"/><path d="M9.3 21.2v-6.4h5.4v6.4"/></symbol>
+  <symbol id="i-job" viewBox="0 0 24 24"><rect x="2.5" y="7.2" width="19" height="13.3" rx="3.4"/><path d="M8.6 7.2V5.9c0-1.3 1.1-2.4 2.4-2.4h2c1.3 0 2.4 1.1 2.4 2.4v1.3"/><path d="M2.5 12.4c3 1.7 6.2 2.6 9.5 2.6s6.5-.9 9.5-2.6"/><path d="M11 14.7h2"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M12 20.5c4.7 0 8.5-3.4 8.5-7.6S16.7 5.3 12 5.3 3.5 8.7 3.5 12.9c0 1.9.8 3.7 2.1 5 0 .9-.4 2-1 2.8 1.6.2 2.9-.3 3.8-.9 1.1.4 2.3.7 3.6.7Z"/><circle cx="8.4" cy="12.9" r=".85" fill="currentColor" stroke="none"/><circle cx="12" cy="12.9" r=".85" fill="currentColor" stroke="none"/><circle cx="15.6" cy="12.9" r=".85" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M4.6 20.3c0-3.6 3.3-6 7.4-6s7.4 2.4 7.4 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3.5"/><path d="M4.5 8.6 10.4 12.5a3 3 0 0 0 3.2 0L19.5 8.6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="3.5"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/><circle cx="12" cy="15.5" r="1.3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3.2 3.2 20.8 20.8"/><path d="M10.6 6.2A7.8 7.8 0 0 1 12 6.1c5 0 8.5 5.9 8.5 5.9a15.6 15.6 0 0 1-2.6 3.3"/><path d="M6.5 8.2A15.7 15.7 0 0 0 3.5 12s3.5 5.9 8.5 5.9c1.4 0 2.7-.4 3.8-1.1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15"/><path d="M13 5.8 19.2 12 13 18.2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8 9.6 17.4 19 8"/></symbol>
+  <symbol id="i-verified" viewBox="0 0 24 24"><path d="M12 2.6 14.1 4.3l2.7-.3 1 2.5 2.5 1-.3 2.7L21.7 12l-1.7 2.1.3 2.7-2.5 1-1 2.5-2.7-.3L12 21.4 9.9 19.7l-2.7.3-1-2.5-2.5-1 .3-2.7L2.3 12 4 9.9l-.3-2.7 2.5-1 1-2.5 2.7.3z"/><path d="M8.6 12.2 10.9 14.5 15.5 9.7"/></symbol>
+  <symbol id="i-folder-up" viewBox="0 0 24 24"><path d="M3 7.6c0-1.4 1.2-2.6 2.6-2.6h3.1c.6 0 1.1.2 1.5.7l1.2 1.4c.4.4.9.7 1.5.7h5.5c1.4 0 2.6 1.2 2.6 2.6v7.4c0 1.4-1.2 2.6-2.6 2.6H5.6C4.2 20.4 3 19.2 3 17.8z"/><path d="M12 17.2v-6.4"/><path d="M9.5 13.2 12 10.6l2.5 2.6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.2"/><path d="M16.6 16.6 21 21"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12h9"/><path d="M17.6 12v3"/><path d="M20.6 12v2.4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.2 11c0-3.2 2.6-5.8 5.8-5.8s5.8 2.6 5.8 5.8c0 3 .5 4.4 1.4 5.6.3.4 0 1-.5 1H5.3c-.5 0-.8-.6-.5-1 .9-1.2 1.4-2.6 1.4-5.6Z"/><path d="M10 19.6a2.3 2.3 0 0 0 4 0"/><path d="M12 5.2V3.2"/></symbol>
+  <symbol id="i-ai" viewBox="0 0 24 24"><path d="M11 3.4 12.7 8 17.3 9.7 12.7 11.4 11 16 9.3 11.4 4.7 9.7 9.3 8Z"/><path d="M18.2 15.2l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3.2H8.6C7.1 3.2 6 4.4 6 5.8v12.4c0 1.5 1.1 2.6 2.6 2.6h6.8c1.5 0 2.6-1.2 2.6-2.6V7.2z"/><path d="M13.8 3.4v3.2c0 .9.7 1.6 1.6 1.6h3"/><path d="M9.5 13.2h5"/><path d="M9.5 16.6h3.5"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.6 14.6 8.9 20.5 9.8 16.2 14 17.2 19.8 12 17.1 6.8 19.8 7.8 14 3.5 9.8 9.4 8.9z"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="3.5" width="11" height="17" rx="2.2"/><path d="M15 9.6h3.4c1.1 0 1.6.5 1.6 1.6v9.3"/><path d="M7.6 7.4h3.8"/><path d="M7.6 11.2h3.8"/><path d="M7.6 15h3.8"/><path d="M2.8 20.5h18.4"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path d="M21.4 4.6 2.9 11.3c-.7.3-.7 1.2 0 1.5l4.6 1.5 1.8 5.3c.2.6 1 .8 1.4.3l2.4-2.5 4.5 3.3c.6.4 1.4.1 1.6-.6l3.3-14.6c.2-.8-.5-1.4-1.1-1.1Z"/><path d="M7.5 13.3 18.4 6.7l-8 7.5-.4 4.6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9.5 12 15.5 18 9.5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6 18 18"/><path d="M18 6 6 18"/></symbol>
+  <symbol id="i-kebab" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.5 5.9v5.6c0 4.3 3 8.3 7.5 9.7 4.5-1.4 7.5-5.4 7.5-9.7V5.9z"/><path d="M9 12.2 11.2 14.4 15.4 10"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 24 24"><path d="M12 2.2 21.5 7.6v10.8L12 21.8 2.5 18.4V7.6z" stroke-width="1.8"/><path d="M8.2 11.8 11 14.6 16 9.2" stroke-width="1.8"/></symbol>
+</svg>
+
+<div class="doc-wrap">
+
+  <div class="doc-hero">
+    <div class="doc-eyebrow">Talantly · Design System · v2</div>
+    <h1>Bitta til.<br>Bitta <span class="mark">harakat</span> rangi.<br>Bitta ishonch belgisi.</h1>
+    <p>Telegram Mini App, bot va admin panel uchun yagona vizual manba. Har bir rang kontrast bo'yicha tekshirilgan, har bir o'lcham shkalada, har bir tegish maydoni 44 px dan katta. Qiymatlar komponentda hardcode qilinmaydi — faqat token orqali chaqiriladi.</p>
+  </div>
+
+  <nav class="doc-nav">
+    <a href="#p">01 Prinsiplar</a>
+    <a href="#c">02 Rang · kontrast</a>
+    <a href="#t">03 Tipografika</a>
+    <a href="#g">04 Grid</a>
+    <a href="#i">05 Ikonalar</a>
+    <a href="#tg">06 Telegram header</a>
+    <a href="#auth">07 Auth</a>
+    <a href="#ob">08 Onboarding</a>
+    <a href="#nav">09 Menu bar</a>
+    <a href="#cmp">10 Komponentlar</a>
+    <a href="#w">11 Yozuv</a>
+    <a href="#dd">12 Do / Don't</a>
+  </nav>
+
+  <section class="doc-sec" id="p">
+    <div class="doc-num">01</div>
+    <h2>Prinsiplar</h2>
+    <p class="doc-lede">To'rtta qoida. Har bir dizayn qarori shulardan biriga tayanadi. Tayanmasa — chiqarib tashlanadi.</p>
+    <div class="grid g2">
+      <div class="rule rule--key"><b>Rang — vazifa, bezak emas.</b><br>To'q sariq faqat <b>harakat</b> va brend yuzasi. Yashil faqat <b>tekshirilgan</b> holat. Status, progress, "saqlandi" — hammasi neytral. Shuning uchun ekranda yashil ko'rinsa, u faqat bitta narsani bildiradi.</div>
+      <div class="rule rule--key"><b>Telegram — uy egasi.</b><br>Header, back, close — Telegram'niki. Biz ularni takrorlamaymiz va ostiga chizmaymiz. Kontent <code>var(--tg-top)</code>dan boshlanadi.</div>
+      <div class="rule rule--key"><b>Bitta ekran — bitta asosiy harakat.</b><br>Har ekranda bitta to'q sariq tugma. Ikkinchisi kerak bo'lsa — oq yoki ghost. Ikkita to'q sariq tugma = qaror qabul qilinmagan.</div>
+      <div class="rule rule--key"><b>Rang ikkiga bo'linadi: yuza va siyoh.</b><br>Yorqin rang katta yuzada ishlaydi, matnda ishlamaydi. Shuning uchun har bir rangning <code>-ink</code> varianti bor — kontrast 4.5:1 dan o'tadi.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="c">
+    <div class="doc-num">02</div>
+    <h2>Rang va kontrast</h2>
+    <p class="doc-lede">Har bir juftlik WCAG 2.1 bo'yicha hisoblangan. Matn uchun <b>4.5:1</b>, ikonka va chegara uchun <b>3:1</b>. Raqamlar swatch ostida turibdi — taxmin yo'q.</p>
+
+    <div class="doc-h3">Action — yuza va siyoh ajratilgan</div>
+    <div class="grid g4">
+      <div class="sw"><div class="sw__chip" style="background:#F26430"></div><div class="sw__meta"><div class="sw__name">action</div><div class="sw__hex">#F26430</div><div class="sw__use">Faqat <b>yuza</b>: tugma foni, nav pill, hero. Matn sifatida ishlatilmaydi.</div><span class="ratio ratio--warn">oq matn 3.16:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#B8431A"></div><div class="sw__meta"><div class="sw__name">action-ink</div><div class="sw__hex">#B8431A</div><div class="sw__use">Barcha to'q sariq <b>matn va ikonka</b>: link, chip, tanlangan tile, fokus halqasi.</div><span class="ratio">oq fonda 5.45:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#D74F1F"></div><div class="sw__meta"><div class="sw__name">action-press</div><div class="sw__hex">#D74F1F</div><div class="sw__use">Faqat bosilgan holat.</div></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#FDEDE6"></div><div class="sw__meta"><div class="sw__name">action-soft</div><div class="sw__hex">#FDEDE6</div><div class="sw__use">Tanlangan karta va tile foni.</div><span class="ratio">ink bilan 4.78:1</span></div></div>
+    </div>
+
+    <div class="doc-h3">Verified — faqat tekshiruv</div>
+    <div class="grid g4">
+      <div class="sw"><div class="sw__chip" style="background:#1F9E58"></div><div class="sw__meta"><div class="sw__name">verified</div><div class="sw__hex">#1F9E58</div><div class="sw__use">Faqat <b>yuza</b>: muhr, katta grafik.</div><span class="ratio ratio--warn">matn 3.45:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#157A42"></div><div class="sw__meta"><div class="sw__name">verified-ink</div><div class="sw__hex">#157A42</div><div class="sw__use">Badge matni va ikonkasi.</div><span class="ratio">soft fonda 4.80:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#E7F5ED"></div><div class="sw__meta"><div class="sw__name">verified-soft</div><div class="sw__hex">#E7F5ED</div><div class="sw__use">Badge va muhr foni.</div></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#B3241F"></div><div class="sw__meta"><div class="sw__name">danger-ink</div><div class="sw__hex">#B3241F</div><div class="sw__use">Xato matni, xato chegarasi.</div><span class="ratio">soft fonda 5.71:1</span></div></div>
+    </div>
+
+    <div class="doc-h3">Neytral</div>
+    <div class="grid g4">
+      <div class="sw"><div class="sw__chip" style="background:#17171B"></div><div class="sw__meta"><div class="sw__name">ink-1</div><div class="sw__hex">#17171B</div><div class="sw__use">Sarlavha, asosiy matn, progress, nav korpusi.</div><span class="ratio">17.9:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#5B5B66"></div><div class="sw__meta"><div class="sw__name">ink-2</div><div class="sw__hex">#5B5B66</div><div class="sw__use">Ikkilamchi matn, <b>placeholder</b>, hint, meta.</div><span class="ratio">6.70:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#8E8E99"></div><div class="sw__meta"><div class="sw__name">ink-3</div><div class="sw__hex">#8E8E99</div><div class="sw__use">Faqat <b>nofaol</b> va qorong'i fondagi ikonka. Yorug' fonda matn uchun ishlatilmaydi.</div><span class="ratio ratio--warn">oq fonda 3.24:1</span></div></div>
+      <div class="sw"><div class="sw__chip" style="background:#F5F5F7;box-shadow:inset 0 0 0 1px #E3E3E9"></div><div class="sw__meta"><div class="sw__name">bg · fill · line</div><div class="sw__hex">#F5F5F7 · #EDEDF1 · #E3E3E9</div><div class="sw__use">Fon, passiv to'ldirish, chegara.</div></div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:24px">
+      <div class="rule rule--key"><b>Ochiq qaram-qarshilik, yashirilmaydi:</b> oq matn <code>#F26430</code> ustida — <b>3.16:1</b>. Bu WCAG'ning matn uchun 4.5:1 chegarasidan past. Brend rangi qulflangani uchun uni o'zgartirmaymiz, lekin uchta shart bilan: tugma yorlig'i <b>17/700</b> (kichik matn emas), tugma <b>3:1</b> UI-komponent chegarasidan o'tadi, va <code>#F26430</code> hech qachon 15 px dan kichik matnda ishlatilmaydi. Kichik matn kerak bo'lsa — <code>action-ink</code>.</div>
+      <div class="rule rule--no"><b>Eng ko'p yo'l qo'yiladigan xato:</b> placeholder'ni <code>ink-3</code> qilish. U oq fonda 3.24:1 — o'qilmaydi. Placeholder — bu <b>matn</b>, dekor emas. Bizda placeholder, hint va meta doim <code>ink-2</code> (6.70:1).</div>
+      <div class="rule rule--yes"><b>Progress — status, harakat emas.</b> Shuning uchun uning to'ldirmasi <code>ink-1</code>, to'q sariq emas. Bonus: <code>#EDEDF1</code> ustida 15.3:1 — to'q sariqning 2.71:1 iga qaraganda ancha aniq.</div>
+      <div class="rule rule--no"><b>Gradient yo'q. Yorug' tema qulflangan.</b> Telegram <code>themeParams</code> ranglarimizga tegmaydi — biz faqat header va background rangini Telegram'ga uzatamiz.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="t">
+    <div class="doc-num">03</div>
+    <h2>Tipografika</h2>
+    <p class="doc-lede"><b>VK Sans Display</b> — 5 vazn, bitta oila. Shkalada <b>7 ta</b> qiymat bor: 32 · 26 · 20 · 17 · 15 · 13 · 11. Oraliq qiymat yo'q — 14.5 yoki 15.5 paydo bo'lsa, bu shkala emas, bu tasodif.</p>
+
+    <div class="panel">
+      <div class="ty"><div class="d-l">Tekshirilgan talantlar</div><div class="ty__spec">display-l · 32/36 · -2% · 700</div></div>
+      <div class="ty"><div class="d-m">Rolni tanlang</div><div class="ty__spec">display-m · 26/30 · -2% · 700</div></div>
+      <div class="ty"><div class="d-title">Profilni to'ldirish</div><div class="ty__spec">title · 20/26 · -1% · 600</div></div>
+      <div class="ty"><div class="d-head">Ish beruvchi</div><div class="ty__spec">headline · 17/22 · -1% · 600 · tugma yorlig'i 700</div></div>
+      <div class="ty"><div class="d-body">CV yuklang — AI uni o'qib, mos vakansiyalarni topadi.</div><div class="ty__spec">body · 15/21 · 0 · 400/500/600</div></div>
+      <div class="ty"><div class="d-cap">PDF, DOCX. Eng katta hajm 10 MB.</div><div class="ty__spec">caption · 13/18 · 0 · 400/600</div></div>
+      <div class="ty"><div class="d-micro">Tekshirilgan</div><div class="ty__spec">micro · 11/14 · +8% · 700 · UPPER</div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="rule rule--key"><b>Apostrof — faqat <code>'</code> (U+2019).</b> <code>ʻ</code> (U+02BB) VK Sans Display'da noto'g'ri chiziladi va qidiruvni buzadi. To'g'ri: <b>to'lov, o'zbek, ma'lumot</b>.</div>
+      <div class="rule rule--key"><b>Raqamlar — tabular.</b> Foiz, maosh, sana, qadam: <code>font-variant-numeric:tabular-nums</code>. 25% → 100% o'zgarganda raqam sakramaydi.</div>
+      <div class="rule rule--yes"><b>Line-height — qat'iy, nisbiy emas.</b> 32/36, 15/21. <code>line-height:1.5</code> yozilsa, har o'lchamda boshqa natija chiqadi va vertikal ritm buziladi.</div>
+      <div class="rule rule--no"><b>Fallback zanjiri majburiy:</b> <code>'VK Sans Display','Inter',-apple-system,…</code> — Telegram WebView shriftni yuklamay qolsa ham layout buzilmaydi.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="g">
+    <div class="doc-num">04</div>
+    <h2>Grid, oraliq, radius</h2>
+    <p class="doc-lede">4 px asos, 8 px ritm: <b>4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 48</b>. Ekran gutter — <b>16</b> (handoff §2.3). Oraliqda 18 yoki 14 yo'q. Istisno faqat chiziq qalinligi (1 · 1.5 · 2) va progress balandligi (6) — ular oraliq emas, ular shtrix.</p>
+    <div class="grid g2">
+      <div class="panel">
+        <div class="doc-h3" style="margin-top:0">Oraliq</div>
+        <div class="stack" style="align-items:flex-end;gap:16px">
+          <div style="text-align:center"><div style="width:4px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">4</div></div>
+          <div style="text-align:center"><div style="width:8px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">8</div></div>
+          <div style="text-align:center"><div style="width:12px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">12</div></div>
+          <div style="text-align:center"><div style="width:16px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">16</div></div>
+          <div style="text-align:center"><div style="width:20px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">20</div></div>
+          <div style="text-align:center"><div style="width:24px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">24</div></div>
+          <div style="text-align:center"><div style="width:32px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">32</div></div>
+          <div style="text-align:center"><div style="width:48px;height:44px;background:var(--t-ink-1);border-radius:2px"></div><div class="iname">48</div></div>
+        </div>
+        <div style="margin-top:24px;font-size:14px;line-height:1.65;color:var(--t-ink-2)">
+          Field'lar orasi <b>20</b>. Karta ichi <b>16</b>. Blok orasi <b>24</b>. Sarlavha ustidan <b>32</b>. Ekran gutter <b>16</b>.
+        </div>
+      </div>
+      <div class="panel">
+        <div class="doc-h3" style="margin-top:0">Radius</div>
+        <div class="stack">
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:8px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">8 · badge</div></div>
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:12px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">12 · input · tile</div></div>
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:14px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">14 · TUGMA</div></div>
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:18px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">18 · karta</div></div>
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:24px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">24 · sheet</div></div>
+          <div style="text-align:center"><div style="width:58px;height:58px;background:var(--t-bg);border-radius:999px;box-shadow:inset 0 0 0 2px var(--t-line-strong)"></div><div class="iname">full · chip</div></div>
+        </div>
+        <div style="margin-top:24px;font-size:14px;line-height:1.65;color:var(--t-ink-2)">
+          Yorug' temada avval <b>chiziq</b>, so'ng soya. Soya faqat ko'tarilgan yuzada: menu bar, sheet, asosiy tugma.
+        </div>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="rule rule--key"><b>44 px — muqaddas chegara.</b> Tugma 56, kichik tugma 44, nav tugmasi 48, input 56, ko'z tugmasi 44×44, checkbox qatori min 44. Ikonka 20 px bo'lishi mumkin — lekin uning <b>tegish maydoni</b> hech qachon 44 dan kichik emas.</div>
+      <div class="rule rule--no"><b>Ko'pchilik e'tibor bermaydi:</b> 20×20 ko'z ikonkasi. U ko'rinishda ikonka, amalda esa tugma. Uni <code>&lt;button&gt;</code> ichiga 44×44 qilib olamiz va <code>margin-right:-12px</code> bilan optik joyiga qaytaramiz.</div>
+      <div class="rule rule--yes"><b>Optik markaz:</b> sheet hero ustiga <b>-24</b> bilan chiqadi (radius ham 24) — shunda burchak toza kesiladi. Hero pastki padding 48, chunki 24 sini sheet yeydi.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="i">
+    <div class="doc-num">05</div>
+    <h2>Ikonalar — HugeIcons Stroke Rounded</h2>
+    <p class="doc-lede">Kutubxona: <b>HugeIcons, Stroke Rounded</b>. 24 px grid, <b>1.5 px</b> chiziq, dumaloq uch va burchak. Boshqa to'plamdan ikonka aralashtirilmaydi — chiziq qalinligi darrov ko'zga tashlanadi.</p>
+    <div class="panel">
+      <div class="igrid">
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-home"/></svg></div><div class="iname">home</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-job"/></svg></div><div class="iname">job</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-chat"/></svg></div><div class="iname">chat</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-user"/></svg></div><div class="iname">user</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-search"/></svg></div><div class="iname">search</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-mail"/></svg></div><div class="iname">mail</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-lock"/></svg></div><div class="iname">lock</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-key"/></svg></div><div class="iname">key</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-eye-off"/></svg></div><div class="iname">eye-off</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-verified"/></svg></div><div class="iname">verified</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-shield"/></svg></div><div class="iname">shield</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-file"/></svg></div><div class="iname">file</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-folder-up"/></svg></div><div class="iname">upload</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-building"/></svg></div><div class="iname">building</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-ai"/></svg></div><div class="iname">ai</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-star"/></svg></div><div class="iname">star</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-bell"/></svg></div><div class="iname">bell</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-plus"/></svg></div><div class="iname">plus</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-arrow-right"/></svg></div><div class="iname">arrow-r</div></div>
+        <div><div class="itile"><svg class="ico ico--26"><use href="#i-tg"/></svg></div><div class="iname">telegram</div></div>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:16px">
+      <div class="rule rule--key"><b>O'lcham:</b> menu bar <b>26</b>, tile ichida <b>26</b>, input va tugma ichida <b>20</b>, badge ichida <b>14</b>, hero mark <b>30</b>, seal <b>44</b>.</div>
+      <div class="rule rule--key"><b>Tile:</b> 44×44, radius 12, fon <code>#F5F5F7</code>, ikonka <code>#17171B</code>. Faol: fon <code>#FDEDE6</code>, ikonka <code>#B8431A</code> (4.78:1 — <code>#F26430</code> bo'lganda 2.78:1 edi, o'tmasdi).</div>
+      <div class="rule rule--no"><b>Fill qachon?</b> Faqat holat belgisida: verified muhri, tanlangan checkbox, o'qilmagan nuqta. Navigatsiya va harakat ikonkalari doim stroke.</div>
+    </div>
+  </section>
+  <section class="doc-sec" id="tg">
+    <div class="doc-num">06</div>
+    <h2>Telegram header — asosiy qoida</h2>
+    <p class="doc-lede">Telegram ekran tepasiga o'zining <b>Close</b>, <b>chevron</b> va <b>kebab</b> tugmalarini chizadi — bizning kontentimiz <i>ustida</i>. Demak tepadagi <b>~88 px</b> band: u yerga logotip ham, sarlavha ham, tugma ham qo'yilmaydi.</p>
+
+    <div class="frames">
+      <div class="frame">
+        <div class="frame__tag">Noto'g'ri — kontent header ostida</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="zone"><span class="zone__lbl">Telegram zonasi · tegilmaydi</span></div>
+          <div class="app" style="padding:12px 20px">
+            <div style="display:flex;align-items:center;gap:8px;color:var(--t-ink-1)">
+              <svg class="ico ico--26" style="color:var(--t-action)"><use href="#i-mark"/></svg>
+              <span style="font-size:17px;font-weight:700;letter-spacing:-.02em">Talantly</span>
+            </div>
+            <h1 style="font-size:32px;line-height:36px;letter-spacing:-.02em;margin:16px 0 0">Kirish</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="frame__tag">To'g'ri — safe area'dan boshlanadi</div>
+        <div class="tg tg--onDark">
+          <div class="tg__island"></div>
+          <div class="tg__status tg__status--onDark"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app">
+            <div class="hero">
+              <div class="hero__logo"><svg class="ico hero__mark"><use href="#i-mark"/></svg><span class="hero__word">Talantly</span></div>
+              <h1>Kirish</h1>
+              <p>Tekshirilgan talantlar bozori.</p>
+            </div>
+            <div class="sheet">
+              <div class="sheet__grab"></div>
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="input"><svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-mail"/></svg><input placeholder="pochtangizni kiriting..."></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2" style="margin-top:32px">
+      <div class="rule rule--no"><b>Chizmaymiz:</b> o'z back tugmamiz, o'z close tugmamiz, o'z top bar'imiz. Orqaga qaytish — <code>tg.BackButton.show()</code>: Telegram uni o'zi chizadi va tarixni boshqaradi.</div>
+      <div class="rule rule--yes"><b>Chizamiz:</b> hero fonini tepaga to'liq cho'zamiz, lekin <b>kontentni</b> <code>var(--tg-top)</code>dan boshlaymiz. Hero rangi = <code>setHeaderColor</code> rangi — chegara ko'rinmaydi.</div>
+    </div>
+
+    <div class="doc-h3">Bootstrap — har ekranda bir marta</div>
+<pre><span class="c">// 1) ready() — BIRINCHI render effect'da. Kech chaqirilsa "Mini App not available".</span>
+<span class="k">const</span> tg = window.Telegram?.WebApp;
+<span class="k">if</span> (!tg) { showQrFallback(); }   <span class="c">// brauzerda: QR + "Telegramda oching", crash EMAS</span>
+tg.ready(); tg.expand(); tg.disableVerticalSwipes();
+
+<span class="c">// 2) BALANDLIK — 100vh ISHLATMA. Telegram header/klaviatura hisobga olinmaydi.</span>
+<span class="k">function</span> syncViewport() {
+  <span class="k">const</span> r = document.documentElement.style;
+  r.setProperty(<span class="s">'--tg-vh'</span>, tg.viewportStableHeight + <span class="s">'px'</span>);
+}
+tg.onEvent(<span class="s">'viewportChanged'</span>, syncViewport);
+syncViewport();
+
+<span class="c">// 3) Safe area → CSS o'zgaruvchilarga</span>
+<span class="k">function</span> syncInsets() {
+  <span class="k">const</span> s = tg.safeAreaInset        || {top:0,bottom:0};
+  <span class="k">const</span> c = tg.contentSafeAreaInset || {top:0,bottom:0};
+  <span class="k">const</span> r = document.documentElement.style;
+  r.setProperty(<span class="s">'--tg-top'</span>,    (s.top + c.top) + <span class="s">'px'</span>);
+  r.setProperty(<span class="s">'--tg-bottom'</span>, (s.bottom + c.bottom) + <span class="s">'px'</span>);
+}
+tg.onEvent(<span class="s">'safeAreaChanged'</span>, syncInsets);
+tg.onEvent(<span class="s">'contentSafeAreaChanged'</span>, syncInsets);
+syncInsets();
+
+<span class="c">// 4) Tema QULFLANGAN. themeParams ranglarga ta'sir qilmaydi.</span>
+tg.setHeaderColor(<span class="s">'#F5F5F7'</span>);      <span class="c">// standart — handoff §3.1</span>
+tg.setBackgroundColor(<span class="s">'#F5F5F7'</span>);
+
+<span class="c">// 5) Orqaga — Telegram native. O'z strelkamizni chizmaymiz.</span>
+tg.BackButton.onClick(() => history.back());
+tg.BackButton.show();</pre>
+
+<div class="rule rule--no" style="margin-top:16px"><b>CSS tomonda:</b> <code>.app { height: var(--tg-vh) }</code> — <code>100vh</code> HECH QACHON. Telegram'da <code>100vh</code> header va klaviaturani hisobga olmaydi: kontent kesiladi yoki scroll buziladi.</div>
+    <div class="rule rule--key" style="margin-top:16px"><b>Eslatma:</b> <code>--tg-top</code> qurilmaga qarab 56–110 px orasida o'zgaradi (Dynamic Island, fullscreen, Android). Shuning uchun u <b>doim</b> o'zgaruvchi — hech qachon qat'iy 88 px yozilmaydi. <code>--tg-bottom</code> ham xuddi shunday: nav va CTA unga tayanadi.</div>
+  </section>
+
+  <section class="doc-sec" id="auth">
+    <div class="doc-num">07</div>
+    <h2>Auth — hero + oq sheet</h2>
+    <p class="doc-lede">Rangli hero tepada, oq sheet uni ostidan ko'tarib turadi. Hero — brend yuzasi (tekis to'q sariq, 44 px oq grid, maska bilan so'nadi), sheet — ish maydoni.</p>
+
+    <div class="rule rule--key" style="margin-bottom:28px"><b>Qayerda ishlaydi:</b> Mini App ichida parol yo'q — foydalanuvchi Telegram orqali allaqachon tanilgan. Bu ekranlar <b>admin panel</b> va <b>kompaniya web-kabineti</b> uchun. Mini App'da xuddi shu hero onboarding'ning birinchi ekrani bo'ladi.</div>
+
+    <div class="frames">
+      <div class="frame">
+        <div class="frame__tag">Kirish</div>
+        <div class="tg tg--onDark">
+          <div class="tg__island"></div>
+          <div class="tg__status tg__status--onDark"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app">
+            <div class="hero">
+              <div class="hero__logo"><svg class="ico hero__mark"><use href="#i-mark"/></svg><span class="hero__word">Talantly</span></div>
+              <h1>Kirish</h1>
+              <p>Tekshirilgan talantlar bozoriga xush kelibsiz.</p>
+            </div>
+            <div class="sheet">
+              <div class="sheet__grab"></div>
+              <div class="field">
+                <label class="label">Email</label>
+                <div class="input"><svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-mail"/></svg><input placeholder="pochtangizni kiriting..."></div>
+              </div>
+              <div class="field">
+                <label class="label">Parol</label>
+                <div class="input">
+                  <svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-lock"/></svg>
+                  <input type="password" value="parolparol">
+                  <button class="input__btn" type="button" aria-label="Parolni ko'rsatish"><svg class="ico" style="width:20px;height:20px"><use href="#i-eye-off"/></svg></button>
+                </div>
+              </div>
+              <div class="row">
+                <label class="check"><span class="check__box on"><svg class="ico" style="width:13px;height:13px;stroke-width:2.6"><use href="#i-check"/></svg></span>Meni eslab qol</label>
+                <a class="link" href="#">Parolni unutdim</a>
+              </div>
+              <button class="btn btn--primary btn--block" type="button">Kirish <svg class="ico" style="width:20px;height:20px;stroke-width:2"><use href="#i-arrow-right"/></svg></button>
+              <div class="divider">yoki</div>
+              <div class="socials">
+                <button class="social" type="button" aria-label="Telegram orqali kirish"><svg class="ico ico--26" style="color:var(--t-action-ink)"><use href="#i-tg"/></svg></button>
+                <button class="social" type="button" aria-label="Pochta orqali kirish"><svg class="ico ico--26"><use href="#i-mail"/></svg></button>
+                <button class="social" type="button" aria-label="Kompaniya hisobi orqali kirish"><svg class="ico ico--26"><use href="#i-building"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="frame__tag">Parolni tiklash</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app" style="padding:var(--tg-top) var(--gutter) 0">
+            <div style="width:56px;height:56px;border-radius:var(--r-lg);background:var(--t-action-soft);color:var(--t-action-ink);display:flex;align-items:center;justify-content:center;margin:16px 0 24px">
+              <svg class="ico ico--32"><use href="#i-key"/></svg>
+            </div>
+            <h1 style="font-size:26px;line-height:30px;letter-spacing:-.02em;font-weight:700;margin:0 0 8px">Parolni tiklash</h1>
+            <p style="font-size:15px;line-height:21px;color:var(--t-ink-2);margin:0 0 24px">Pochtangizni kiriting — tiklash havolasini yuboramiz.</p>
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="input"><svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-mail"/></svg><input value="kumush@talantly.uz"></div>
+            </div>
+            <button class="btn btn--primary btn--block" type="button">Havolani yuborish</button>
+            <p style="font-size:13px;line-height:18px;color:var(--t-ink-2);text-align:center;margin:24px 0 0">
+              Pochtangiz esingizda yo'qmi?<br><a class="link" href="#">yordam@talantly.uz</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="frame__tag">Xato holati</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app" style="padding:var(--tg-top) var(--gutter) 0">
+            <h1 style="font-size:26px;line-height:30px;letter-spacing:-.02em;font-weight:700;margin:16px 0 8px">Kirish</h1>
+            <p style="font-size:15px;line-height:21px;color:var(--t-ink-2);margin:0 0 24px">Kompaniya kabinetiga kiring.</p>
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="input input--err"><svg class="ico input__ico" style="width:20px;height:20px;color:var(--t-danger-ink)"><use href="#i-mail"/></svg><input value="kumush@talantly"></div>
+              <div class="hint hint--err">Pochta manzili to'liq emas. Namuna: ism@kompaniya.uz</div>
+            </div>
+            <div class="field">
+              <label class="label">Parol</label>
+              <div class="input"><svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-lock"/></svg><input type="password" value="parol"></div>
+              <div class="hint">Kamida 8 belgi.</div>
+            </div>
+            <button class="btn btn--primary btn--block" type="button" disabled>Kirish</button>
+            <div class="rule" style="margin-top:24px;box-shadow:none;background:var(--t-bg);padding:16px;font-size:13px;line-height:18px">
+              Xato matni ayblamaydi va uzr so'ramaydi — <b>nima bo'lganini</b> va <b>qanday tuzatishni</b> aytadi. Xato rangi <code>#B3241F</code>: soft fonda 5.71:1.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="ob">
+    <div class="doc-num">08</div>
+    <h2>Onboarding — qadamlar</h2>
+    <p class="doc-lede">Tepada qadam progressi, o'rtada bitta savol, pastda bitta tugma. CTA <code>position:sticky</code> — kontent uzun bo'lsa ham pastda qoladi. Yakunda esa asosiy va'damiz: tekshiruv muhri.</p>
+
+    <div class="frames">
+      <div class="frame">
+        <div class="frame__tag">Qadam 1 — rol</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app">
+            <div class="ob">
+              <div class="prog__meta"><span>Qadam <b>1</b> / 4</span><b>25%</b></div>
+              <div class="prog"><div class="prog__bar" style="width:25%"></div></div>
+              <h2 class="ask">Talantly'dan qanday foydalanasiz?</h2>
+              <p>Rolni tanlang — ilova o'zini sizga moslaydi.</p>
+
+              <button class="rcard on" type="button">
+                <span class="rcard__ico"><svg class="ico ico--26"><use href="#i-star"/></svg></span>
+                <span><span class="rcard__t" style="display:block">Talant</span><span class="rcard__d" style="display:block">Profilingizni tekshiruvdan o'tkazing va ish beruvchilarga ko'rining.</span></span>
+              </button>
+              <button class="rcard" type="button">
+                <span class="rcard__ico"><svg class="ico ico--26"><use href="#i-building"/></svg></span>
+                <span><span class="rcard__t" style="display:block">Izlovchi</span><span class="rcard__d" style="display:block">Vakansiya joylang, tekshirilgan nomzodlarni AI orqali saralang.</span></span>
+              </button>
+              <button class="rcard" type="button">
+                <span class="rcard__ico"><svg class="ico ico--26"><use href="#i-search"/></svg></span>
+                <span><span class="rcard__t" style="display:block">Ko'rib chiqaman</span><span class="rcard__d" style="display:block">Hozircha faqat qarayman, keyin qaror qilaman.</span></span>
+              </button>
+
+              <div class="ob__foot">
+                <button class="btn btn--primary btn--block" type="button">Davom etish</button>
+                <p class="legal">Davom etish orqali <a href="#">Shartlar</a> va <a href="#">Maxfiylik siyosati</a>ga rozilik bildirasiz.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="frame__tag">Qadam 3 — CV</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app">
+            <div class="ob">
+              <div class="prog__meta"><span>Qadam <b>3</b> / 4</span><b>75%</b></div>
+              <div class="prog"><div class="prog__bar" style="width:75%"></div></div>
+              <h2 class="ask" style="margin-bottom:24px">CV yuklang</h2>
+
+              <div class="upload">
+                <div class="upload__t">CV / Rezyume</div>
+                <div class="drop">
+                  <div class="drop__ico"><svg class="ico ico--40"><use href="#i-folder-up"/></svg></div>
+                  <div class="drop__txt">Faylni tashlang yoki <b>qurilmadan tanlang</b></div>
+                </div>
+                <div class="upload__meta"><span>PDF, DOCX</span><span>10 MB gacha</span></div>
+              </div>
+
+              <button class="lrow" type="button" style="margin-top:16px">
+                <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-ai"/></svg></span>
+                <span><span class="lrow__t" style="display:block">AI CV'ni o'qiydi</span><span class="lrow__d" style="display:block">Ko'nikmalar va tajriba o'zi to'ldiriladi.</span></span>
+              </button>
+
+              <div class="ob__foot">
+                <button class="btn btn--primary btn--block" type="button">Davom etish</button>
+                <p class="legal">CV'ni keyinroq ham yuklashingiz mumkin.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="frame__tag">Yakun — tekshiruv</div>
+        <div class="tg">
+          <div class="tg__island"></div>
+          <div class="tg__status"><span>9:41</span><span>▲ ◡ ▮</span></div>
+          <div class="tg__ctl">
+            <div class="tg__close"><svg class="ico" style="width:15px;height:15px;stroke-width:2"><use href="#i-close"/></svg>Close</div>
+            <div class="tg__more"><svg class="ico" style="width:17px;height:17px"><use href="#i-chevron-down"/></svg><span class="tg__sep"></span><svg class="ico" style="width:17px;height:17px"><use href="#i-kebab"/></svg></div>
+          </div>
+          <div class="app">
+            <div class="ob">
+              <div class="seal"><svg class="ico" style="width:44px;height:44px;stroke-width:1.4"><use href="#i-verified"/></svg></div>
+              <h2 class="wel">Profilingiz tekshirildi</h2>
+              <p>Endi ish beruvchilar sizni ko'radi.</p>
+
+              <div class="pcard">
+                <div class="pcard__top">
+                  <div class="pcard__l"><svg class="ico" style="width:20px;height:20px"><use href="#i-user"/></svg>Profil to'ldirildi</div>
+                  <div class="pcard__pct">100%</div>
+                </div>
+                <div class="prog"><div class="prog__bar" style="width:100%"></div></div>
+              </div>
+
+              <div class="d-micro" style="margin-bottom:12px">Boshlang</div>
+              <button class="lrow" type="button">
+                <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-job"/></svg></span>
+                <span><span class="lrow__t" style="display:block">Vakansiyalarni ko'rish</span><span class="lrow__d" style="display:block">Sizga mos ishlar</span></span>
+              </button>
+              <button class="lrow" type="button">
+                <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-ai"/></svg></span>
+                <span><span class="lrow__t" style="display:block">Arxetipni aniqlash</span><span class="lrow__d" style="display:block">6 savol · 2 daqiqa</span></span>
+              </button>
+              <button class="lrow" type="button">
+                <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-shield"/></svg></span>
+                <span><span class="lrow__t" style="display:block">Tekshiruv darajasi</span><span class="lrow__d" style="display:block">Qaysi ma'lumot tasdiqlangani</span></span>
+              </button>
+
+              <div class="ob__foot"><button class="btn btn--primary btn--block" type="button">Boshladik</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:32px">
+      <div class="rule rule--key"><b>Muhr uchta o'lchovni yopadi:</b> <b>KIM</b> — arxetip (6 tur: Yaratuvchi · Tahlilchi · Yetakchi · Aloqachi · Ijrochi · Kashfiyotchi) · <b>NIMA QILADI</b> — ko'nikma testi, 0–100 ball · <b>QANDAY</b> — jonli suhbat, 1–5 reyting. Uchalasi tugaganda muhr chiqadi. Muhr — mahsulotning butun qiymati, shuning uchun u yagona katta rangli element.</div>
+      <div class="rule rule--yes"><b>Qadam raqami — haqiqiy ketma-ketlik.</b> "Qadam 1 / 4" faqat chiziqli oqimda. Erkin tartibda to'ldiriladigan profilda progress bor, qadam raqami yo'q.</div>
+      <div class="rule rule--no"><b>Handoff §3.3 — CTA kimniki?</b> Forma, test, onboarding → <code>tg.MainButton</code> (native, silliq, klaviatura ustida to'g'ri turadi). Feed, nomzod detali, to'lov → o'z orange tugmamiz (brend muhim). Yuqoridagi ekranlarda ko'rsatilgan sticky CTA — <b>faqat maket</b>: kodda ular <code>tg.MainButton.setParams({ color:'#F26430', text_color:'#FFFFFF' })</code> bo'ladi.</div>
+      <div class="rule rule--key"><b>Sticky CTA qayerda qoladi:</b> feed, nomzod detali, to'lov ekranlarida. O'shanda <code>ob__foot</code> — <code>sticky; bottom:0</code> + gradient fade + <code>16 + var(--tg-bottom)</code>.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="nav">
+    <div class="doc-num">09</div>
+    <h2>Menu bar — suzuvchi pill</h2>
+    <p class="doc-lede">Qora korpus, ichida dumaloq tugmalar, faol tugma kengayib yorliq bilan to'q sariq pill'ga aylanadi. Bir vaqtda faqat bitta yorliq — foydalanuvchi qayerdaligi bir qarashda o'qiladi.</p>
+
+    <div class="navdemo">
+      <div class="nav">
+        <button class="nav__i on" type="button"><svg class="ico ico--26"><use href="#i-home"/></svg><span class="nav__lbl">Asosiy</span></button>
+        <button class="nav__i" type="button" aria-label="Testlar"><svg class="ico ico--26"><use href="#i-job"/></svg><span class="nav__lbl">Testlar</span></button>
+        <button class="nav__i" type="button" aria-label="Arizalar"><svg class="ico ico--26"><use href="#i-chat"/></svg><span class="nav__lbl">Arizalar</span><span class="nav__dot"></span></button>
+        <button class="nav__i" type="button" aria-label="Profil"><svg class="ico ico--26"><use href="#i-user"/></svg><span class="nav__lbl">Profil</span></button>
+      </div>
+      <div class="nav">
+        <button class="nav__i" type="button" aria-label="Asosiy"><svg class="ico ico--26"><use href="#i-home"/></svg><span class="nav__lbl">Asosiy</span></button>
+        <button class="nav__i on" type="button"><svg class="ico ico--26"><use href="#i-job"/></svg><span class="nav__lbl">Testlar</span></button>
+        <button class="nav__i" type="button" aria-label="Arizalar"><svg class="ico ico--26"><use href="#i-chat"/></svg><span class="nav__lbl">Arizalar</span><span class="nav__dot"></span></button>
+        <button class="nav__i" type="button" aria-label="Profil"><svg class="ico ico--26"><use href="#i-user"/></svg><span class="nav__lbl">Profil</span></button>
+      </div>
+      <div class="nav">
+        <button class="nav__i" type="button" aria-label="Asosiy"><svg class="ico ico--26"><use href="#i-home"/></svg><span class="nav__lbl">Asosiy</span></button>
+        <button class="nav__i" type="button" aria-label="Testlar"><svg class="ico ico--26"><use href="#i-job"/></svg><span class="nav__lbl">Testlar</span></button>
+        <button class="nav__i on" type="button"><svg class="ico ico--26"><use href="#i-chat"/></svg><span class="nav__lbl">Arizalar</span></button>
+        <button class="nav__i" type="button" aria-label="Profil"><svg class="ico ico--26"><use href="#i-user"/></svg><span class="nav__lbl">Profil</span></button>
+      </div>
+      <div class="nav">
+        <button class="nav__i" type="button" aria-label="Asosiy"><svg class="ico ico--26"><use href="#i-home"/></svg><span class="nav__lbl">Asosiy</span></button>
+        <button class="nav__i" type="button" aria-label="Testlar"><svg class="ico ico--26"><use href="#i-job"/></svg><span class="nav__lbl">Testlar</span></button>
+        <button class="nav__i" type="button" aria-label="Arizalar"><svg class="ico ico--26"><use href="#i-chat"/></svg><span class="nav__lbl">Arizalar</span><span class="nav__dot"></span></button>
+        <button class="nav__i on" type="button"><svg class="ico ico--26"><use href="#i-user"/></svg><span class="nav__lbl">Profil</span></button>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:16px">
+      <div class="rule rule--key"><b>O'lchamlar:</b> korpus 64, padding 8, tugma 48×48, ikonka 26 — hammasi 4/8 gridda va 44 px tegish chegarasidan yuqori. Nofaol fon <code>#26262E</code>, ikonka <code>#8E8E99</code> — qorong'i fonda 4.63:1, o'tadi.</div>
+      <div class="rule rule--key"><b>Joylashuv:</b> <code>bottom: 16px + var(--tg-bottom)</code>. Suzadi. Kontent ostidan o'tishi uchun ro'yxatga <code>padding-bottom:96px</code>.</div>
+      <div class="rule rule--yes"><b>Anima:</b> kengayish 220 ms <code>cubic-bezier(.2,0,0,1)</code>, yorliq 140 ms bilan orqadan kiradi. <code>prefers-reduced-motion</code> yoqilsa — bir zumda.</div>
+      <div class="rule rule--yes"><b>Rollar (handoff §5):</b> Talant → Asosiy · Testlar · Arizalar · Profil. Izlovchi → Nomzodlar · Doskam · Chat · Ko'proq. Mehmonda Doskam/Chat qulflangan (qulf ikonkasi).</div>
+      <div class="rule rule--no"><b>4 tadan oshmaydi.</b> 5-tab kerak bo'lsa — u tab emas, u Profil ichidagi qator.</div>
+      <div class="rule rule--no"><b>Nofaol tugmada yorliq yo'q</b> — shuning uchun ularga <code>aria-label</code> majburiy. Aks holda screen reader bo'sh tugma o'qiydi.</div>
+    </div>
+  </section>
+  <section class="doc-sec" id="cmp">
+    <div class="doc-num">10</div>
+    <h2>Komponentlar</h2>
+    <p class="doc-lede">Har bir komponentning holatlari birga chiziladi — Claude Code'ga topshirilganda "hover qanaqa, fokus qanaqa?" degan savol qolmasin.</p>
+
+    <div class="doc-h3">Tugmalar</div>
+    <div class="panel">
+      <div class="stack">
+        <button class="btn btn--primary" type="button">Asosiy harakat</button>
+        <button class="btn btn--primary" type="button" style="background:var(--t-action-press)">Bosilgan</button>
+        <button class="btn btn--secondary" type="button">Ikkilamchi</button>
+        <button class="btn btn--ink" type="button">Ink</button>
+        <button class="btn btn--ghost" type="button">Ghost</button>
+        <button class="btn btn--primary" type="button" disabled>Nofaol</button>
+        <button class="btn btn--sm btn--secondary" type="button"><svg class="ico" style="width:20px;height:20px"><use href="#i-plus"/></svg>Kichik</button>
+      </div>
+      <div style="margin-top:24px;font-size:14px;line-height:1.65;color:var(--t-ink-2)">
+        Balandlik <b>56</b> (asosiy) / <b>44</b> (kichik) — ikkalasi ham 44 px tegish chegarasidan yuqori. Radius <b>14</b> / <b>12</b>. Yorliq <b>17/700</b>.
+        Ekran pastidagi asosiy tugma doim <code>btn--block</code>. Tugma matni — <b>fe'l</b>: "Kirish", "Yuborish", "Davom etish". Tugma nima desa, natija toast'i ham shuni deydi: <b>Yuborish → Yuborildi</b>.
+        Nofaol tugma matni <code>ink-2</code>, <code>ink-3</code> emas — nofaol degani "o'qilmaydigan" degani emas.
+      </div>
+    </div>
+
+    <div class="doc-h3">Input holatlari</div>
+    <div class="panel grid g2">
+      <div>
+        <div class="field"><label class="label">Odatiy</label>
+          <div class="input"><svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-mail"/></svg><input placeholder="pochtangizni kiriting..."></div>
+          <div class="hint">Placeholder <code>ink-2</code> — 6.70:1.</div></div>
+        <div class="field"><label class="label">To'ldirilgan · ko'z tugmasi 44×44</label>
+          <div class="input">
+            <svg class="ico input__ico" style="width:20px;height:20px"><use href="#i-lock"/></svg>
+            <input type="password" value="parolparol">
+            <button class="input__btn" type="button" aria-label="Parolni ko'rsatish"><svg class="ico" style="width:20px;height:20px"><use href="#i-eye-off"/></svg></button>
+          </div></div>
+      </div>
+      <div>
+        <div class="field"><label class="label">Fokus</label>
+          <div class="input" style="box-shadow:inset 0 0 0 2px var(--t-action-ink),var(--sh-focus)"><svg class="ico input__ico" style="width:20px;height:20px;color:var(--t-action-ink)"><use href="#i-search"/></svg><input value="UX dizayner"></div></div>
+        <div class="field"><label class="label">Xato</label>
+          <div class="input input--err"><svg class="ico input__ico" style="width:20px;height:20px;color:var(--t-danger-ink)"><use href="#i-lock"/></svg><input type="password" value="123"></div>
+          <div class="hint hint--err">Parol kamida 8 belgi bo'lsin.</div></div>
+      </div>
+    </div>
+
+    <div class="doc-h3">Chip va tekshiruv belgisi</div>
+    <div class="panel">
+      <div class="stack" style="margin-bottom:24px">
+        <button class="chip on" type="button"><svg class="ico" style="width:16px;height:16px"><use href="#i-check"/></svg>Hammasi</button>
+        <button class="chip" type="button">Dizayn</button>
+        <button class="chip" type="button">Dasturlash</button>
+        <button class="chip" type="button">Marketing</button>
+        <button class="chip" type="button"><svg class="ico" style="width:16px;height:16px"><use href="#i-plus"/></svg>Yana</button>
+      </div>
+      <div class="stack">
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">yangi</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">malumot_toldirilgan</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">tolov_kutilmoqda</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">tolov_tasdiqlangan</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">cv_tayyor</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">test_otgan</span>
+        <span class="vbadge" style="background:var(--t-fill);color:var(--t-ink-2)">suhbat_belgilangan</span>
+        <span class="vbadge"><svg class="ico"><use href="#i-verified"/></svg>tekshirilgan</span>
+        <span class="vbadge" style="background:var(--t-danger-soft);color:var(--t-danger-ink)"><svg class="ico"><use href="#i-close"/></svg>rad_etilgan</span>
+      </div>
+      <div style="margin-top:24px;font-size:14px;line-height:1.65;color:var(--t-ink-2)">
+        <b style="color:var(--t-ink-1)">To'qqizta status — schema'dagi <code>talents.status</code> enum'i aynan shu.</b> Faqat ikkitasi rangli: <code>tekshirilgan</code> yashil, <code>rad_etilgan</code> qizil.
+        Qolgan yettitasi <b>neytral</b> — ular yo'ldagi qadamlar, natija emas. Bu atayin: agar oraliq statuslar ham rangli bo'lsa, muhr o'z kuchini yo'qotadi.<br>
+        Chip balandligi <b>40</b> — 36 emas, barmoq uchun kichik. Badge <b>micro 11/700</b> katta harfda: u sistema ovozi, matn emas.
+      </div>
+    </div>
+
+    <div class="doc-h3">Avatar — yagona ruxsat etilgan gradient</div>
+    <div class="panel">
+      <div class="stack" style="gap:20px;align-items:center">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFD9A8,#F7A05C);color:#7a3c10;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600">K</div>
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFD9A8,#F7A05C);color:#7a3c10;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600">Z</div>
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFD9A8,#F7A05C);color:#7a3c10;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;filter:blur(6px)"></div>
+        <div style="font-size:14px;line-height:1.65;color:var(--t-ink-2);flex:1;min-width:240px">
+          1. <code>talents.photo_url</code> bo'lsa — real rasm, dumaloq, <code>object-fit:cover</code>.<br>
+          2. Yo'q bo'lsa — <b>harf-tile</b>: <code>linear-gradient(135deg,#FFD9A8,#F7A05C)</code>, matn <code>#7a3c10</code>, VK Sans 600. Deterministik: bir ism → doim bir xil tile.<br>
+          3. Mehmon: <code>blur(6px)</code> + ism <code>A••••</code>.<br>
+          Bitta komponent: <code>&lt;Avatar name photoUrl blurred size /&gt;</code>. AI avatar, stock rasm, randomuser.me — <b>yo'q</b>.
+        </div>
+      </div>
+      <div class="rule rule--key" style="margin-top:20px;box-shadow:none;background:var(--t-bg)"><b>Ziddiyat, ochiq yozaman:</b> tizim "gradient yo'q" deydi, avatar esa gradient. Bu <b>yagona istisno</b> va u asosli — harf-tile identifikator, UI emas. Boshqa hech qayerda gradient yo'q.</div>
+    </div>
+
+    <div class="doc-h3">Ro'yxat qatori, progress, skeleton</div>
+    <div class="panel grid g2">
+      <div>
+        <button class="lrow" type="button">
+          <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-job"/></svg></span>
+          <span style="flex:1"><span class="lrow__t" style="display:block">Senior UX Designer</span><span class="lrow__d" style="display:block">Next One · Toshkent · 12–18 mln</span></span>
+          <span class="vbadge"><svg class="ico"><use href="#i-verified"/></svg></span>
+        </button>
+        <button class="lrow" type="button">
+          <span class="lrow__ico"><svg class="ico ico--26"><use href="#i-building"/></svg></span>
+          <span style="flex:1"><span class="lrow__t" style="display:block">CarFit</span><span class="lrow__d" style="display:block">3 ta ochiq vakansiya</span></span>
+          <svg class="ico" style="width:20px;height:20px;color:var(--t-ink-2);transform:rotate(-90deg)"><use href="#i-chevron-down"/></svg>
+        </button>
+      </div>
+      <div>
+        <div class="prog__meta"><span>Profil to'ldirildi</span><b>60%</b></div>
+        <div class="prog" style="margin-bottom:24px"><div class="prog__bar" style="width:60%"></div></div>
+        <div style="height:16px;border-radius:8px;background:var(--t-fill);margin-bottom:12px;width:70%"></div>
+        <div style="height:16px;border-radius:8px;background:var(--t-fill);margin-bottom:12px"></div>
+        <div style="height:16px;border-radius:8px;background:var(--t-fill);width:45%"></div>
+        <div style="margin-top:16px;font-size:13px;line-height:18px;color:var(--t-ink-2)">Skeleton — <code>#EDEDF1</code>, shimmer 1.6 s. Progress to'ldirmasi <code>ink-1</code>: status harakat emas.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="w">
+    <div class="doc-num">11</div>
+    <h2>Yozuv</h2>
+    <p class="doc-lede">Matn — dizayn materiali. U bezak emas, u navigatsiya.</p>
+    <div class="grid g3">
+      <div class="rule rule--yes"><b>Foydalanuvchi tilida.</b> "Tekshiruv" — ha. "Verification status", "moderatsiya flow" — yo'q.</div>
+      <div class="rule rule--yes"><b>Bitta harakat — bitta nom.</b> Tugmada "Yuborish" bo'lsa, jarayonda "Yuborilmoqda", natijada "Yuborildi".</div>
+      <div class="rule rule--no"><b>Xato uzr so'ramaydi.</b> "Kechirasiz, xatolik yuz berdi" — yo'q. "Internetga ulanmadi. Qayta urinib ko'ring." — ha.</div>
+      <div class="rule rule--no"><b>Bo'sh ekran — taklif.</b> "Ma'lumot yo'q" emas, "Hali vakansiya joylamadingiz. Birinchisini joylang." + tugma.</div>
+      <div class="rule rule--key"><b>Apostrof:</b> faqat <code>'</code>. <code>ʻ</code> ishlatilmaydi — shrift ham, qidiruv ham buni yoqtirmaydi.</div>
+      <div class="rule rule--key"><b>Gap boshi katta, qolgani kichik.</b> Title Case yo'q. Faqat micro yorliq katta harfda.</div>
+    </div>
+  </section>
+
+  <section class="doc-sec" id="dd">
+    <div class="doc-num">12</div>
+    <h2>Do / Don't</h2>
+    <div class="grid g2">
+      <div class="rule rule--yes"><b>Ha:</b> to'q sariq — yuza; <code>action-ink</code> — matn.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> 13 px link <code>#F26430</code> rangida (2.78:1).</div>
+      <div class="rule rule--yes"><b>Ha:</b> placeholder <code>ink-2</code>.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> placeholder <code>ink-3</code> (3.24:1 — o'qilmaydi).</div>
+      <div class="rule rule--yes"><b>Ha:</b> progress <code>ink-1</code> — status.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> progress to'q sariq (2.71:1 va qoidani buzadi).</div>
+      <div class="rule rule--yes"><b>Ha:</b> orqaga — <code>tg.BackButton</code>.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> ekran tepasida o'z chizgan <code>←</code>.</div>
+      <div class="rule rule--yes"><b>Ha:</b> kontent <code>var(--tg-top)</code>dan.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> qat'iy <code>padding-top:88px</code>.</div>
+      <div class="rule rule--yes"><b>Ha:</b> ikonka-tugmaga 44×44 tegish maydoni.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> 20×20 ikonka to'g'ridan-to'g'ri bosiladigan element sifatida.</div>
+      <div class="rule rule--yes"><b>Ha:</b> shkaladan 7 ta o'lcham.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> 14.5 / 15.5 / 12.5 kabi "shunchaki to'g'ri ko'ringan" qiymatlar.</div>
+      <div class="rule rule--yes"><b>Ha:</b> <code>@media (hover:hover)</code> ichida hover.</div>
+      <div class="rule rule--no"><b>Yo'q:</b> mobil ekranda hover'ga tayangan holat (sensorda u yopishib qoladi).</div>
+    </div>
+
+    <div class="doc-h3">Audit — v1 dan v2 ga nima o'zgardi</div>
+    <div class="panel">
+      <div style="font-size:14px;line-height:1.8;color:var(--t-ink-2)">
+        <b style="color:var(--t-ink-1)">Kontrast (8 ta real xato):</b> to'q sariq matn 3.16:1 → <code>action-ink</code> 5.45:1 · to'q sariq soft fonda 2.78:1 → 4.78:1 · yashil badge 3.07:1 → <code>verified-ink</code> 4.80:1 · placeholder <code>ink-3</code> 3.24:1 → <code>ink-2</code> 6.70:1 · xato soft fonda 3.95:1 → <code>danger-ink</code> 5.71:1 · progress 2.71:1 → <code>ink-1</code> 15.3:1.<br>
+        <b style="color:var(--t-ink-1)">Tegish maydoni:</b> ko'z ikonkasi 20×20 → 44×44 <code>&lt;button&gt;</code> · chip 36 → 40 · kichik tugma 42 → 44 · checkbox qatori → min 44 · nav tugmasi 52 → 48 (gridda, hali ham 44 dan katta).<br>
+        <b style="color:var(--t-ink-1)">Shkala:</b> 15.5 / 14.5 / 13.5 / 12.5 / 11.5 / 34 / 30 / 24 px olib tashlandi — faqat 32·26·20·17·15·13·11 qoldi. Nisbiy <code>line-height:1.5</code> → qat'iy qiymatlar.<br>
+        <b style="color:var(--t-ink-1)">Grid:</b> 18 va 14 oraliqlar → 20 va 16 · input/tugma 54 → 56 (54 to'rtga bo'linmaydi) · nav 66/7/52 → 64/8/48 · gutter ikki faylda 16 va 20 edi — endi ikkalasida 20.<br>
+        <b style="color:var(--t-ink-1)">O'zaro ta'sir:</b> barcha <code>:hover</code> → <code>@media (hover:hover)</code> ichiga · hamma interaktiv elementga <code>:focus-visible</code> halqa · <code>&lt;div&gt;</code> kartalar → <code>&lt;button&gt;</code> (klaviatura) · yorliqsiz nav tugmalariga <code>aria-label</code> · CTA <code>sticky</code> · sheet va socials pastiga <code>var(--tg-bottom)</code>.
+      </div>
+    </div>
+
+    <div class="doc-h3">Handoff bilan ziddiyat — qaror kerak 🔥</div>
+    <div class="grid g2">
+      <div class="rule rule--no">
+        <b>1. Ikonka: fill yoki stroke?</b><br>
+        Handoff §4: <i>"Barchasi FILL (solid) — stroke/outline YO'Q"</i>, o'lchamlar nav 24 · header 22 · qator 20 · kichik 16.<br>
+        Sening so'nggi ko'rsatmang: <i>"iconlarimiz huge icon bo'lishi kerak huddi 5-rasm kabi"</i> — 5-rasm esa <b>HugeIcons Stroke Rounded</b>, 1.5px chiziq.<br>
+        <b>Ikkalasi bo'lolmaydi.</b> Hozir hujjatda stroke turibdi (so'nggi so'zing). Qaysi biri qoladi?
+      </div>
+      <div class="rule rule--no">
+        <b>2. Pastki nav: oq bar yoki qora pill?</b><br>
+        Handoff §5: oq fon, tepasida 1px chiziq, 4 ta element, <b>har biriga 10px yorliq doim ko'rinadi</b>, padding 10/8/14, ikonka 24 fill.<br>
+        Sening so'nggi ko'rsatmang: <i>"4-rasmdagi menu bar bizniki ham shunaqa bo'lsin"</i> — qora suzuvchi pill, faqat faol yorliq ko'rinadi.<br>
+        <b>Ikkalasi bo'lolmaydi.</b> Hozir hujjatda pill turibdi. Qaysi biri qoladi?
+      </div>
+    </div>
+
+    <div class="doc-h3">Men o'zim hal qilganlar (rozi bo'lmasang ayt)</div>
+    <div class="grid g3">
+      <div class="rule rule--key"><b>Orange hero.</b> Handoff §3.1 <code>setHeaderColor('#F5F5F7')</code> deydi. Hero faqat auth/onboarding'da, o'sha ekranda <code>setHeaderColor('#F26430')</code>. Feed va qolgan hamma joyda <code>#F5F5F7</code> — handoff o'z kuchida.</div>
+      <div class="rule rule--key"><b>Onboarding CTA.</b> Handoff §3.3 bo'yicha ular <code>tg.MainButton</code> bo'ladi. Maketdagi sticky orange tugma — faqat ko'rgazma.</div>
+      <div class="rule rule--key"><b>Avatar gradienti.</b> "Gradient yo'q" qoidasidan yagona istisno — handoff §7 shunday belgilagan, u identifikator.</div>
+    </div>
+
+    <div class="doc-h3">Rasmiy tokenlardagi ikkita a'zolik muammosi</div>
+    <div class="grid g2">
+      <div class="rule rule--no"><b>Focus halqasi ko'rinmaydi.</b> Handoff §2.6: <code>0 0 0 3px rgba(242,100,48,.22)</code>. 22% shaffoflik oq fonda ≈ <code>#FCE0D5</code> — kontrast ~<b>1.1:1</b>. Ya'ni klaviatura bilan yurgan odam qayerdaligini ko'rmaydi (WCAG 2.4.11 uchun 3:1 kerak). Men <code>rgba(184,67,26,.34)</code> qo'ydim. Tasdiqlaysanmi?</div>
+      <div class="rule rule--no"><b>Oq matn <code>#F26430</code> ustida = 3.16:1.</b> Brend rangi qulflangani uchun tegmadim, lekin uchta shart bilan: yorliq 17/700, 3:1 UI-komponent chegarasi, va 15px dan kichik matnda hech qachon. Kichik matn kerak bo'lsa — <code>--action-ink #B8431A</code> (5.45:1).</div>
+    </div>
+
+    <div class="panel" style="margin-top:32px;background:var(--t-ink-1);color:#fff">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:#9A9AA6">Handoff javob berdi — yopilgan savollar</div>
+      <div style="font-size:17px;line-height:1.6;font-weight:500;margin-top:16px;max-width:820px">
+        ✓ Tekshiruvning uchta o'lchovi: <b>KIM</b> (arxetip, 6 tur) · <b>NIMA QILADI</b> (test 0–100) · <b>QANDAY</b> (suhbat 1–5).<br>
+        ✓ Auth: Mini App'da parol yo'q — <code>initData → HMAC → JWT</code>. Email+parol faqat <code>apps/admin</code>da.<br>
+        ✓ Izlovchi nav'ining 4-tab'i: <b>Ko'proq</b> (Nomzodlar · Doskam · Chat · Ko'proq).
+      </div>
+    </div>
+</section>
+
+</div>
+</body>
+</html>

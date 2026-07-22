@@ -28,6 +28,12 @@ export type TalentStatus =
 
 export type RequestStatus = "yuborildi" | "korildi" | "boglanildi" | "yopildi";
 
+export interface WorkExperienceItem {
+  company: string;
+  role: string;
+  period: string;
+}
+
 export interface TalentProfile {
   fullName: string;
   birthYear: number | null;
@@ -36,6 +42,7 @@ export interface TalentProfile {
   direction: Direction | null;
   level: Level | null;
   experienceYears: number | null;
+  workExperience: WorkExperienceItem[];
   skills: string[];
   workFormats: WorkFormat[];
   salaryFrom: number | null;
@@ -44,9 +51,22 @@ export interface TalentProfile {
   portfolioUrl: string | null;
 }
 
+export interface SkillTestSummary {
+  /** Oxirgi urinish bali */
+  score: number;
+  /** 60+ to'plandimi */
+  passed: boolean;
+  /** Qolgan urinishlar (o'tilgan bo'lsa null) */
+  attemptsLeft: number | null;
+  /** Cooldown tugash vaqti ISO (aks holda null) */
+  retryAt: string | null;
+}
+
 export interface TalentSnapshot {
   status: TalentStatus;
   score: number | null;
+  /** Ko'nikma testining oxirgi holati (topshirilmagan bo'lsa null) */
+  skillTest?: SkillTestSummary | null;
   archetype: string | null;
   interviewAt: string | null;
   cvReady: boolean;

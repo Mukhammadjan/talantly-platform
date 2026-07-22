@@ -13,6 +13,7 @@ export interface TalentRowV2 {
   direction: string | null;
   level: string | null;
   experience_years: number | null;
+  work_experience: unknown;
   skill_tags: string[];
   work_formats: string[];
   salary_from: number | null;
@@ -24,6 +25,25 @@ export interface TalentRowV2 {
   archetype: string | null;
   status: string;
   is_demo: boolean;
+}
+
+export interface WorkExperienceItem {
+  company: string;
+  role: string;
+  period: string;
+}
+
+/** JSONB ustunini xavfsiz tarzda tozalangan ish tajribasi ro'yxatiga aylantiradi. */
+export function normalizeWorkExperience(raw: unknown): WorkExperienceItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((it): it is Record<string, unknown> => Boolean(it) && typeof it === "object")
+    .map((it) => ({
+      company: typeof it.company === "string" ? it.company : "",
+      role: typeof it.role === "string" ? it.role : "",
+      period: typeof it.period === "string" ? it.period : "",
+    }))
+    .filter((it) => it.company.length > 0 || it.role.length > 0);
 }
 
 /** Sessiya egasining talents qatori — bo'lmasa yaratiladi (status: yangi). */
@@ -100,11 +120,9 @@ export async function buildSnapshot(
     await Promise.all([
     db
       .from("skill_tests")
-      .select("score")
+      .select("score, created_at, passed_at")
       .eq("talent_id", talent.id)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle(),
+      .order("created_at", { ascending: false }),
     db
       .from("interviews")
       .select("scheduled_at")
@@ -137,6 +155,30 @@ export async function buildSnapshot(
       (lastInt as { decision_reason: string } | null)?.decision_reason ?? "test_past";
   }
 
+  // Ko'nikma testi xulosasi (hub + testlar sahifasi uchun) — /api/skill-test
+  // qoidalariga mos: o'tish 60, cooldown 24 soat, 3 urinish.
+  const attempts = (test ?? []) as {
+    score: number;
+    created_at: string;
+    passed_at: string | null;
+  }[];
+  const lastTest = attempts[0] ?? null;
+  const skillPassed = attempts.some((a) => a.passed_at != null || a.score >= 60);
+  const failedAttempts = attempts.filter((a) => a.score < 60).length;
+  let retryAt: string | null = null;
+  if (lastTest && !skillPassed && lastTest.score < 60) {
+    const nextTs = new Date(lastTest.created_at).getTime() + 24 * 60 * 60 * 1000;
+    if (nextTs > Date.now()) retryAt = new Date(nextTs).toISOString();
+  }
+  const skillTest = lastTest
+    ? {
+        score: lastTest.score,
+        passed: skillPassed,
+        attemptsLeft: skillPassed ? null : Math.max(0, 3 - failedAttempts),
+        retryAt,
+      }
+    : null;
+
   return {
     status: talent.status,
     isHidden: (talent as { is_hidden?: boolean }).is_hidden ?? false,
@@ -144,7 +186,8 @@ export async function buildSnapshot(
     // To'lov qadami hub'da to'g'ri ko'rsatilishi uchun — narx settings'dan.
     cvPaymentRequired: (payReq ?? "true").toLowerCase() === "true",
     cvPrice: Number(cvPrice) > 0 ? Number(cvPrice) : 35000,
-    score: (test as { score: number } | null)?.score ?? null,
+    score: lastTest?.score ?? null,
+    skillTest,
     archetype: talent.archetype,
     interviewAt:
       (interview as { scheduled_at: string } | null)?.scheduled_at ?? null,
@@ -157,6 +200,7 @@ export async function buildSnapshot(
       direction: talent.direction,
       level: talent.level,
       experienceYears: talent.experience_years,
+      workExperience: normalizeWorkExperience(talent.work_experience),
       skills: talent.skill_tags ?? [],
       workFormats: talent.work_formats ?? [],
       salaryFrom: talent.salary_from,

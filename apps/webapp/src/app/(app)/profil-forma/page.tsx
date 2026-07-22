@@ -15,7 +15,12 @@ import {
   WORK_FORMAT_LABELS,
 } from "@/lib/labels";
 import { haptic, initTelegram } from "@/lib/telegram";
-import type { Direction, Level, WorkFormat } from "@/lib/types";
+import type {
+  Direction,
+  Level,
+  WorkExperienceItem,
+  WorkFormat,
+} from "@/lib/types";
 import { useBackButton } from "@/lib/useBackButton";
 import styles from "./forma.module.css";
 
@@ -31,6 +36,7 @@ interface FormState {
   direction: Direction | null;
   level: Level | null;
   experience: string;
+  workExperience: WorkExperienceItem[];
   skills: string[];
   workFormats: WorkFormat[];
   salary: string;
@@ -46,6 +52,7 @@ const EMPTY: FormState = {
   direction: null,
   level: null,
   experience: "",
+  workExperience: [],
   skills: [],
   workFormats: [],
   salary: "",
@@ -78,6 +85,7 @@ export default function ProfilFormaPage(): JSX.Element {
         direction: p.direction,
         level: p.level,
         experience: p.experienceYears ? String(p.experienceYears) : "",
+        workExperience: p.workExperience ?? [],
         skills: p.skills,
         workFormats: p.workFormats,
         salary: p.salaryFrom ? String(p.salaryFrom) : "",
@@ -110,6 +118,26 @@ export default function ProfilFormaPage(): JSX.Element {
     });
   };
 
+  const addExp = (): void =>
+    setF((p) => ({
+      ...p,
+      workExperience: [...p.workExperience, { company: "", role: "", period: "" }],
+    }));
+
+  const updateExp = (i: number, patch: Partial<WorkExperienceItem>): void =>
+    setF((p) => ({
+      ...p,
+      workExperience: p.workExperience.map((it, idx) =>
+        idx === i ? { ...it, ...patch } : it,
+      ),
+    }));
+
+  const removeExp = (i: number): void =>
+    setF((p) => ({
+      ...p,
+      workExperience: p.workExperience.filter((_, idx) => idx !== i),
+    }));
+
   const buildPayload = (confirmSealReset: boolean) => ({
     fullName: f.fullName.trim(),
     birthYear: f.birthYear ? Number(f.birthYear) : null,
@@ -118,6 +146,13 @@ export default function ProfilFormaPage(): JSX.Element {
     direction: f.direction,
     level: f.level,
     experienceYears: f.experience ? Number(f.experience) : null,
+    workExperience: f.workExperience
+      .map((it) => ({
+        company: it.company.trim(),
+        role: it.role.trim(),
+        period: it.period.trim(),
+      }))
+      .filter((it) => it.company.length > 0 || it.role.length > 0),
     skills: f.skills,
     workFormats: f.workFormats,
     salaryFrom: f.salary ? Number(f.salary) : null,
@@ -232,6 +267,51 @@ export default function ProfilFormaPage(): JSX.Element {
                 onChange={(e) => set({ experience: e.target.value })}
               />
             ) : null}
+
+            <div className={styles.expBlock}>
+              <div className={styles.expHead}>
+                <span className={styles.flabel}>Ish tajribasi</span>
+                <span className={styles.expHint}>Bir nechta ish joyini qo&apos;shishingiz mumkin</span>
+              </div>
+
+              {f.workExperience.map((it, i) => (
+                <div key={i} className={styles.expCard}>
+                  <div className={styles.expCardTop}>
+                    <span className={styles.expNum}>#{i + 1}</span>
+                    <button
+                      type="button"
+                      className={styles.expRemove}
+                      onClick={() => removeExp(i)}
+                      aria-label="O'chirish"
+                    >
+                      O&apos;chirish
+                    </button>
+                  </div>
+                  <Input
+                    label="Kompaniya"
+                    placeholder="Masalan: Uzum"
+                    value={it.company}
+                    onChange={(e) => updateExp(i, { company: e.target.value })}
+                  />
+                  <Input
+                    label="Lavozim"
+                    placeholder="Masalan: Frontend dasturchi"
+                    value={it.role}
+                    onChange={(e) => updateExp(i, { role: e.target.value })}
+                  />
+                  <Input
+                    label="Davri"
+                    placeholder="Masalan: 2022 – 2024"
+                    value={it.period}
+                    onChange={(e) => updateExp(i, { period: e.target.value })}
+                  />
+                </div>
+              ))}
+
+              <Button variant="ghost" full onClick={addExp}>
+                + Ish joyi qo&apos;shish
+              </Button>
+            </div>
           </>
         ) : null}
 

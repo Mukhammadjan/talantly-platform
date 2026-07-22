@@ -26,8 +26,11 @@ export default function TestlarPage(): JSX.Element {
     };
   }, []);
 
+  const PASS_SCORE = 60;
   const personalityDone = Boolean(snap?.archetype);
-  const skillDone = snap?.score != null;
+  const skillScore = snap?.score ?? null;
+  const skillPassed = skillScore != null && skillScore >= PASS_SCORE;
+  const skillFailed = skillScore != null && skillScore < PASS_SCORE;
 
   return (
     <main className="screen">
@@ -56,12 +59,20 @@ export default function TestlarPage(): JSX.Element {
         </IconTile>
         <span className={styles.texts}>
           <span className={styles.ttitle}>Ko&apos;nikma testi</span>
-          <span className={styles.ttext}>10 savol · yo&apos;nalish bo&apos;yicha ball</span>
+          <span className={styles.ttext}>
+            {skillFailed
+              ? `${skillScore} ball · o'tish uchun ${PASS_SCORE} kerak — qayta urinib ko'ring`
+              : skillPassed
+                ? `${skillScore} ball · muvaffaqiyatli o'tildi`
+                : "10 savol · yo'nalish bo'yicha ball"}
+          </span>
         </span>
-        {skillDone ? (
+        {skillPassed ? (
           <Badge variant="verified" icon={<Icon name="check" size={14} />}>
-            {snap?.score}
+            {skillScore}
           </Badge>
+        ) : skillFailed ? (
+          <Badge variant="danger">Qayta · {skillScore}</Badge>
         ) : (
           <Icon name="chevron" size={20} className={styles.chev} />
         )}

@@ -22,6 +22,7 @@ export const TALENT: TalentSnapshot = {
     direction: "dasturlash",
     level: "intern",
     experienceYears: null,
+    workExperience: [],
     skills: ["JavaScript", "React", "HTML", "CSS"],
     workFormats: ["ofis", "masofaviy"],
     salaryFrom: 4000000,

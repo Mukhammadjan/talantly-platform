@@ -95,16 +95,45 @@ const ROADMAP_RANK: Record<TalentStatus, number> = {
 // malumot_toldirilgan uch bosqichni qamraydi: shaxsiyat testi →
 // to'lov (payment ON) yoki to'g'ri ko'nikma testi (payment OFF).
 // Status faqat chek_yuborildi/test_otdi eventlarida o'zgaradi.
+function formatRetry(iso: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Tashkent",
+    day: "numeric",
+    month: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
+
+// Ko'nikma testi qadami — oxirgi urinish yiqilgan bo'lsa "qayta topshirish"
+// holatini ko'rsatadi (aks holda oddiy "Testni boshlash").
+function skillTestStep(snap: TalentSnapshot): NextStep {
+  const st = snap.skillTest;
+  if (st && !st.passed) {
+    const text = st.retryAt
+      ? `Bu safar ${st.score} ball — o'tish uchun 60 kerak. Keyingi urinish ${formatRetry(st.retryAt)} dan ochiladi${st.attemptsLeft != null ? ` · ${st.attemptsLeft} urinish qoldi` : ""}.`
+      : `Bu safar ${st.score} ball — o'tish uchun 60 kerak. Qayta urinib ko'ring${st.attemptsLeft != null ? ` · ${st.attemptsLeft} urinish qoldi` : ""}.`;
+    return {
+      title: "Ko'nikma testi — qayta topshiring",
+      text,
+      cta: "Qayta topshirish",
+      href: "/konikma",
+    };
+  }
+  return {
+    title: "Ko'nikma testi",
+    text: "Yo'nalishingiz bo'yicha 10 savollik test.",
+    cta: "Testni boshlash",
+    href: "/konikma",
+  };
+}
+
 function nextStepFor(snap: TalentSnapshot): NextStep | null {
+  if (snap.status === "cv_tayyor") return skillTestStep(snap);
   if (snap.status !== "malumot_toldirilgan") return NEXT_STEP[snap.status];
   if (!snap.archetype) return NEXT_STEP.malumot_toldirilgan;
   if (snap.cvPaymentRequired === false) {
-    return {
-      title: "Ko'nikma testi",
-      text: "Yo'nalishingiz bo'yicha 10 savollik test.",
-      cta: "Testni boshlash",
-      href: "/konikma",
-    };
+    return skillTestStep(snap);
   }
   const price = (snap.cvPrice ?? 35000).toLocaleString("ru-RU");
   return {

@@ -25,6 +25,7 @@ interface ProfileBody {
   direction?: string | null;
   level?: string | null;
   experienceYears?: number | null;
+  workExperience?: unknown;
   skills?: string[];
   workFormats?: string[];
   salaryFrom?: number | null;
@@ -71,6 +72,18 @@ export async function PATCH(req: Request): Promise<NextResponse> {
     body.experienceYears <= 50
   ) {
     patch.experience_years = Math.trunc(body.experienceYears);
+  }
+  if (Array.isArray(body.workExperience)) {
+    const items = body.workExperience
+      .filter((it): it is Record<string, unknown> => Boolean(it) && typeof it === "object")
+      .map((it) => ({
+        company: typeof it.company === "string" ? it.company.trim().slice(0, 120) : "",
+        role: typeof it.role === "string" ? it.role.trim().slice(0, 120) : "",
+        period: typeof it.period === "string" ? it.period.trim().slice(0, 60) : "",
+      }))
+      .filter((it) => it.company.length > 0 || it.role.length > 0)
+      .slice(0, 15);
+    patch.work_experience = items;
   }
   if (Array.isArray(body.skills)) {
     patch.skill_tags = body.skills
