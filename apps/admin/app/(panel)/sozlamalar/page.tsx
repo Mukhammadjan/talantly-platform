@@ -1,5 +1,7 @@
 import { requireRole } from "@/lib/auth";
 import { getServiceClient } from "@/lib/supabase/service";
+import { DemoModeControl } from "./DemoModeControl";
+import { loadDemoMode } from "./demoActions";
 import { SettingsForm, type SettingsValues } from "./SettingsForm";
 
 export const dynamic = "force-dynamic";
@@ -24,14 +26,13 @@ async function loadSettings(): Promise<SettingsValues> {
     success_fee_tech: s("success_fee_tech"),
     payment_card_number: s("payment_card_number"),
     payment_card_owner: s("payment_card_owner"),
-    show_demo_data: b("show_demo_data"),
     cv_payment_required: b("cv_payment_required"),
   };
 }
 
 export default async function SozlamalarPage() {
   await requireRole("admin");
-  const values = await loadSettings();
+  const [values, demoMode] = await Promise.all([loadSettings(), loadDemoMode()]);
 
   return (
     <div className="mx-auto max-w-[900px]">
@@ -42,6 +43,9 @@ export default async function SozlamalarPage() {
           kuchga kiradi.
         </p>
       </header>
+      <div className="mb-6">
+        <DemoModeControl initial={demoMode} />
+      </div>
       <SettingsForm values={values} />
     </div>
   );

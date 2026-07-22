@@ -15,6 +15,8 @@ import {
   STATUS_ORDER,
 } from "@/lib/labels";
 import { getServiceClient } from "@/lib/supabase/service";
+import { DemoModeControl } from "../sozlamalar/DemoModeControl";
+import { loadDemoMode } from "../sozlamalar/demoActions";
 
 export const dynamic = "force-dynamic";
 
@@ -30,11 +32,12 @@ const FUNNEL_STATUSES: TalentStatus[] = [
 
 export default async function DashboardPage() {
   const client = getServiceClient();
-  const [talents, companies, requests, placements] = await Promise.all([
+  const [talents, companies, requests, placements, demoMode] = await Promise.all([
     talentsRepo.listAll(client),
     companiesRepo.listAll(client),
     requestsRepo.listWithRelations(client),
     placementsRepo.listAll(client),
+    loadDemoMode(),
   ]);
 
   const verifiedCount = talents.filter(
@@ -98,6 +101,10 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-[1100px]">
       <h1 className="mb-6 text-[24px] font-bold text-ink">Boshqaruv</h1>
+
+      <div className="mb-6">
+        <DemoModeControl initial={demoMode} />
+      </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {counters.map((c) => (

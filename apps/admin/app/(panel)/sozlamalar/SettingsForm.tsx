@@ -12,7 +12,6 @@ export interface SettingsValues {
   success_fee_tech: string;
   payment_card_number: string;
   payment_card_owner: string;
-  show_demo_data: boolean;
   cv_payment_required: boolean;
 }
 
@@ -160,12 +159,6 @@ export function SettingsForm({ values }: { values: SettingsValues }) {
 
       <section className="grid gap-3">
         <h2 className="section-title">Rejim</h2>
-        <Toggle
-          name="show_demo_data"
-          label="Demo ma'lumotni ko'rsatish"
-          hint="Saytda demo talant/kompaniyalar ko'rinadi"
-          def={values.show_demo_data}
-        />
         <Toggle
           name="cv_payment_required"
           label="CV uchun to'lov majburiy"

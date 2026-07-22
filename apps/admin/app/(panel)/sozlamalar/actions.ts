@@ -14,7 +14,8 @@ const NUMERIC_KEYS = [
 ] as const;
 
 const TEXT_KEYS = ["payment_card_number", "payment_card_owner"] as const;
-const BOOL_KEYS = ["show_demo_data", "cv_payment_required"] as const;
+// show_demo_data — DemoModeControl (demoActions.ts) orqali boshqariladi.
+const BOOL_KEYS = ["cv_payment_required"] as const;
 
 export interface SaveState {
   ok: boolean;
