@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ImageUpload } from "@/components/ImageUpload";
 import { Button } from "@/components/Button";
 import { Chip } from "@/components/Chip";
 import { Input } from "@/components/Input";
@@ -58,6 +59,7 @@ export default function ProfilFormaPage(): JSX.Element {
   const [saving, setSaving] = useState(false);
   const [sealOpen, setSealOpen] = useState(false);
   const [f, setF] = useState<FormState>(EMPTY);
+  const [photo, setPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     initTelegram();
@@ -66,6 +68,7 @@ export default function ProfilFormaPage(): JSX.Element {
     api.getTalent().then((s) => {
       if (!live) return;
       const p = s.profile;
+      setPhoto(p.photoUrl ?? null);
       if (!p.fullName) return;
       setF({
         fullName: p.fullName,
@@ -165,6 +168,11 @@ export default function ProfilFormaPage(): JSX.Element {
         {step === 1 ? (
           <>
             <h1 className={styles.h}>Shaxsiy ma&apos;lumot</h1>
+            <ImageUpload
+              kind="avatar"
+              initialUrl={photo}
+              label="Profil rasmi (ixtiyoriy)"
+            />
             <Input
               label="Ism familiya"
               placeholder="Ism familiyangiz"
