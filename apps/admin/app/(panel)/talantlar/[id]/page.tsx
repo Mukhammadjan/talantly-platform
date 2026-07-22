@@ -8,6 +8,7 @@ import {
   talentsRepo,
 } from "@talantly/shared";
 import { LevelChip, StatusChip, Tag } from "@/components/chips";
+import { ImageUpload } from "@/components/ImageUpload";
 import { formatDateTimeUz, formatDateUz } from "@/lib/format";
 import {
   ARCHETYPE_LABELS,
@@ -68,12 +69,20 @@ export default async function TalantDetailPage({
         ← Talantlar
       </Link>
 
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <h1 className="text-[24px] font-bold text-ink">
-          {talent.full_name ?? "Nomsiz"}
-        </h1>
-        <StatusChip status={talent.status} />
-        <LevelChip level={talent.level} />
+      <div className="mb-6 flex flex-wrap items-center gap-4">
+        <ImageUpload
+          kind="avatar"
+          id={talent.id}
+          initialUrl={(talent as { photo_url?: string | null }).photo_url ?? null}
+          size={72}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-[24px] font-bold text-ink">
+            {talent.full_name ?? "Nomsiz"}
+          </h1>
+          <StatusChip status={talent.status} />
+          <LevelChip level={talent.level} />
+        </div>
       </div>
       {talent.headline ? (
         <p className="-mt-4 mb-6 text-[14px] text-ink-soft">

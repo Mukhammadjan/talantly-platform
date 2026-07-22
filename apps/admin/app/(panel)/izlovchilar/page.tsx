@@ -1,6 +1,7 @@
 import type { CompanyRow, Urgency } from "@talantly/shared";
 import { companiesRepo } from "@talantly/shared";
 import { Tag } from "@/components/chips";
+import { ImageUpload } from "@/components/ImageUpload";
 import { formatDateUz } from "@/lib/format";
 import {
   COMPANY_KIND_LABELS,
@@ -119,14 +120,24 @@ export default async function IzlovchilarPage({
                   className="border-b border-line align-top transition-colors last:border-b-0 hover:bg-cream"
                 >
                   <td className="px-4 py-3.5">
-                    <p className="text-[14px] font-semibold text-ink">
-                      {company.name}
-                    </p>
-                    <p className="text-[12px] text-ink-faint">
-                      {[company.contact_name, company.phone_tg]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <ImageUpload
+                        kind="logo"
+                        id={company.id}
+                        initialUrl={company.logo_url}
+                        size={44}
+                      />
+                      <div>
+                        <p className="text-[14px] font-semibold text-ink">
+                          {company.name}
+                        </p>
+                        <p className="text-[12px] text-ink-faint">
+                          {[company.contact_name, company.phone_tg]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-3.5 text-[13px] text-ink-soft">
                     <p>
