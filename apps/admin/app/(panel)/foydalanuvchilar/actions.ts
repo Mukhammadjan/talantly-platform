@@ -40,6 +40,10 @@ export async function freezeUser(
     .eq("id", id);
   if (error) return { ok: false, error: error.message };
 
+  // Feed/qidiruv filtri is_hidden'ga tayanadi — muzlatilgan talant darhol
+  // yashiriladi (jonli feed so'roviga tegilmaydi).
+  await db.from("talents").update({ is_hidden: true }).eq("user_id", id);
+
   await logStatus({
     entity: "user",
     entityId: id,
@@ -71,6 +75,9 @@ export async function restoreUser(
     })
     .eq("id", id);
   if (error) return { ok: false, error: error.message };
+
+  // Feedga qaytariladi (muzlatishда yashirilgan edi).
+  await db.from("talents").update({ is_hidden: false }).eq("user_id", id);
 
   await logStatus({
     entity: "user",

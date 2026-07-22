@@ -3,6 +3,7 @@ import { requireRole } from "@/lib/auth";
 import { getServiceClient } from "@/lib/supabase/service";
 import { formatDateUz } from "@/lib/format";
 import { RowActions } from "@/app/(panel)/foydalanuvchilar/RowActions";
+import { AssignModerator } from "./AssignModerator";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,12 @@ export default async function ModeratorlarPage({
           Admin va moderatorlar. Muzlatilgan moderator huquqini yo&apos;qotadi.
         </p>
       </header>
+
+      {!frozen ? (
+        <div className="mb-5">
+          <AssignModerator />
+        </div>
+      ) : null}
 
       <div className="mb-4 flex gap-2">
         <Link
